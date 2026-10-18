@@ -92,14 +92,23 @@ class CTCTimingTests(unittest.TestCase):
 
     def test_reads_actual_frontend_descriptors_and_fail_closed_capability(self):
         extractor = SimpleNamespace(layer_descs=[(512, 10, 5)] + [(512, 3, 2)] * 4 + [(512, 2, 2)] * 2)
-        pipeline = SimpleNamespace(model=SimpleNamespace(encoder_frontend=SimpleNamespace(feature_extractor=extractor), register_forward_hook=lambda _hook: None), tokenizer=SimpleNamespace(vocab_info=SimpleNamespace(pad_idx=0)), token_decoder=decode)
+        pipeline = SimpleNamespace(model=SimpleNamespace(encoder_frontend=SimpleNamespace(feature_extractor=extractor), register_forward_hook=lambda _hook: None), tokenizer=SimpleNamespace(vocab_info=SimpleNamespace(bos_idx=0, pad_idx=1, eos_idx=2, unk_idx=3)), token_decoder=decode)
         self.assertEqual(frontend_geometry(pipeline), (320, 400))
         self.assertTrue(timing_supported(pipeline))
-        pipeline.tokenizer.vocab_info.pad_idx = 1
+        pipeline.tokenizer.vocab_info.pad_idx = 0
         self.assertFalse(timing_supported(pipeline))
         extractor.layer_descs = [(512, 10, 10)]
         self.assertFalse(timing_supported(pipeline))
         self.assertFalse(timing_supported(object()))
+
+    def test_written_v2_blank_is_bos_zero_not_padding_one(self):
+        pipeline = FakePipeline()
+        self.assertTrue(timing_supported(pipeline))
+        for field, invalid in (("bos_idx", 1), ("pad_idx", 0), ("eos_idx", None), ("unk_idx", 99), ("bos_idx", False)):
+            original = getattr(pipeline.tokenizer.vocab_info, field)
+            setattr(pipeline.tokenizer.vocab_info, field, invalid)
+            self.assertFalse(timing_supported(pipeline))
+            setattr(pipeline.tokenizer.vocab_info, field, original)
 
 
 class FakePredictions:
@@ -126,14 +135,15 @@ class FakeCTCModel:
 
 
 class FakePipeline:
-    def __init__(self, *, forwards=1, fail=False, valid=49):
+    def __init__(self, *, forwards=1, fail=False, valid=49, tokens=None):
         self.model, self.forwards, self.fail, self.valid = FakeCTCModel(), forwards, fail, valid
-        self.tokenizer = SimpleNamespace(vocab_info=SimpleNamespace(pad_idx=0, unk_idx=99, bos_idx=100, eos_idx=101))
-        self.token_decoder, self.device = decode, "cpu"
+        self.tokens = [4, 5, 6, 7] if tokens is None else tokens
+        self.tokenizer = SimpleNamespace(vocab_info=SimpleNamespace(bos_idx=0, pad_idx=1, eos_idx=2, unk_idx=3))
+        self.token_decoder, self.device = lambda ids: decode([token - 3 for token in ids]), "cpu"
     def transcribe(self, inputs, *, lang, batch_size):
         assert len(inputs) == 1 and lang is None and batch_size == 1
         for _index in range(self.forwards):
-            self.model.callback(self.model, (), (FakeLogits(frame_ids([1, 2, 3, 4])), SimpleNamespace(seq_lens=[self.valid])))
+            self.model.callback(self.model, (), (FakeLogits(frame_ids(self.tokens)), SimpleNamespace(seq_lens=[self.valid])))
         if self.fail: raise RuntimeError("sensitive native failure")
         return ["ñawi"]
 
@@ -179,6 +189,13 @@ class CTCHookTests(unittest.TestCase):
         pipeline.model = object()
         with self.assertRaises(TimingUnavailable):
             self.infer(pipeline)
+
+    def test_actual_written_v2_padding_unknown_and_eos_are_not_timed_as_speech(self):
+        for token in (1, 2, 3):
+            pipeline = FakePipeline(tokens=[4, token, 5])
+            with self.assertRaises(TimingUnavailable):
+                self.infer(pipeline)
+            self.assertTrue(pipeline.model.removed)
 
 
 if __name__ == "__main__":

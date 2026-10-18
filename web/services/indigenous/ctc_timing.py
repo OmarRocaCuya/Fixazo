@@ -6,7 +6,6 @@ download happens at module import. Uncertain decoding fails closed.
 
 from __future__ import annotations
 
-import math
 import unicodedata
 from typing import Any, Callable, Sequence
 
@@ -47,7 +46,12 @@ def frontend_geometry(pipeline: Any) -> tuple[int, int]:
 def timing_supported(pipeline: Any) -> bool:
     try:
         frontend_geometry(pipeline)
-        return pipeline.tokenizer.vocab_info.pad_idx == 0 and callable(pipeline.model.register_forward_hook) and callable(pipeline.token_decoder)
+        vocab = pipeline.tokenizer.vocab_info
+        # The pinned written-v2 tokenizer uses BOS=0 as the CTC blank; PAD=1
+        # is a different control symbol. Do not equate padding and CTC blank.
+        # Match the actual immutable vocabulary contract, not just the model ID.
+        indices = (vocab.bos_idx, vocab.pad_idx, vocab.eos_idx, vocab.unk_idx)
+        return all(type(value) is int for value in indices) and indices == (0, 1, 2, 3) and callable(pipeline.model.register_forward_hook) and callable(pipeline.token_decoder)
     except (AttributeError, TimingUnavailable):
         return False
 
@@ -154,7 +158,7 @@ def infer_asr_timed(pipeline: Any, audio: Any, language: str) -> tuple[str, list
             raise TimingUnavailable("Missing CTC emissions")
         text = normalized_text(result[0])
         vocab = pipeline.tokenizer.vocab_info
-        specials = [value for name in ("unk_idx", "bos_idx", "eos_idx") if (value := getattr(vocab, name, None)) is not None]
+        specials = [value for name in ("unk_idx", "bos_idx", "eos_idx", "pad_idx") if (value := getattr(vocab, name, None)) is not None]
 
         def decode(ids: list[int]) -> str:
             return pipeline.token_decoder(torch.tensor(ids, dtype=torch.int64, device=pipeline.device))
