@@ -3,3 +3,6 @@
 node_modules/
 .vercel/
 .DS_Store
+
+# Registro de uso: identificadores de alumnos, no va al repo
+web/data/registro/

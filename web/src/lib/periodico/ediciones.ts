@@ -1,0 +1,68 @@
+// Lee las noticias que deja el pipeline (pipeline/correr.mjs) en data/ediciones/<día>/<hora>-<slug>.json.
+// Solo para el servidor: contiene los criterios privados. Al navegador va noticiaPublica().
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
+import type { Noticia, NoticiaPublica, PasoPublico, PreguntaVoz } from "./tipos";
+
+/** En un servidor propio (por ejemplo Hetzner) se puede apuntar a otra carpeta con EDICIONES_DIR. */
+const DIR = process.env.EDICIONES_DIR ?? join(process.cwd(), "data", "ediciones");
+
+export interface NoticiaGuardada extends Noticia {
+  creada: string;
+  fuentes: Array<{ medio: string; fecha: string; titular: string; url: string }>;
+}
+
+interface Registro {
+  id: string;
+  creada: string;
+  estado: "publicada" | "rechazada";
+  fuentes: NoticiaGuardada["fuentes"];
+  noticia: Noticia | null;
+}
+
+/** Noticias publicadas, de la más nueva a la más antigua. */
+export async function noticiasPublicadas(): Promise<NoticiaGuardada[]> {
+  let dias: string[] = [];
+  try {
+    dias = (await readdir(DIR, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
+  } catch {
+    return [];
+  }
+  const registros: Registro[] = [];
+  for (const dia of dias) {
+    for (const f of await readdir(join(DIR, dia))) {
+      if (!f.endsWith(".json")) continue;
+      try {
+        registros.push(JSON.parse(await readFile(join(DIR, dia, f), "utf8")));
+      } catch {
+        /* un archivo a medio escribir no tumba la portada */
+      }
+    }
+  }
+  return registros
+    .filter((r): r is Registro & { noticia: Noticia } => r.estado === "publicada" && r.noticia !== null)
+    .map((r) => ({ ...r.noticia, creada: r.creada, fuentes: r.fuentes }))
+    .sort((a, b) => b.creada.localeCompare(a.creada));
+}
+
+export async function buscarNoticia(id: string): Promise<NoticiaGuardada | null> {
+  return (await noticiasPublicadas()).find((n) => n.id === id) ?? null;
+}
+
+export async function buscarPreguntaVoz(noticiaId: string, preguntaId: string): Promise<{ noticia: NoticiaGuardada; pregunta: PreguntaVoz } | null> {
+  const noticia = await buscarNoticia(noticiaId);
+  const pregunta = noticia?.pasos.find((p): p is PreguntaVoz => p.tipo === "voz" && p.id === preguntaId);
+  return noticia && pregunta ? { noticia, pregunta } : null;
+}
+
+const sinPrivado = (p: Noticia["pasos"][number]): PasoPublico => {
+  if (p.tipo !== "voz") return p;
+  const { privado, ...publica } = p;
+  void privado; // se descarta a propósito: no viaja al navegador
+  return publica;
+};
+
+/** Lo que viaja al navegador: sin criterios, respuesta modelo ni frases prohibidas. */
+export function noticiaPublica<T extends Noticia>(n: T): Omit<T, "pasos"> & NoticiaPublica {
+  return { ...n, pasos: n.pasos.map(sinPrivado) };
+}
