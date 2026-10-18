@@ -1,2 +1,5 @@
-.playwright-mcp/
-*.zip
+.env
+.env.*
+node_modules/
+.vercel/
+.DS_Store

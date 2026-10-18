@@ -1,0 +1,10 @@
+{
+  "name": "fixazo",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "node dev.js",
+    "test": "node --test"
+  }
+}

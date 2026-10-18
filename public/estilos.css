@@ -1,0 +1,206 @@
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --ink: #1b1d1f;
+  --muted: #5d6166;
+  --line: #d9d8d2;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --soft: #e6eef9;
+  --a: #a3392b;
+  --a-soft: #f6e4e0;
+  --b: #1f5fbf;
+  --b-soft: #e3ecf9;
+  --ok: #1d6b4f;
+  --ok-soft: #dff0e8;
+  --warn-soft: #fbf1d6;
+  --luz-1: #3d7cc9;
+  --luz-2: #3fa883;
+  --nivel: 0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121416; --surface: #1c1f22; --ink: #e8e9ea; --muted: #a3a8ad; --line: #33373b;
+    --accent: #7aa8f0; --accent-ink: #0d1520; --soft: #1d2a3c;
+    --a: #ef9a8b; --a-soft: #3a211c; --b: #7aa8f0; --b-soft: #1b2638;
+    --ok: #7fd1ad; --ok-soft: #173126; --warn-soft: #3a3118;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121416; --surface: #1c1f22; --ink: #e8e9ea; --muted: #a3a8ad; --line: #33373b;
+  --accent: #7aa8f0; --accent-ink: #0d1520; --soft: #1d2a3c;
+  --a: #ef9a8b; --a-soft: #3a211c; --b: #7aa8f0; --b-soft: #1b2638;
+  --ok: #7fd1ad; --ok-soft: #173126; --warn-soft: #3a3118;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 18px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.barra {
+  display: flex; justify-content: space-between; align-items: center;
+  max-width: 680px; margin: 0 auto; padding: 14px 16px;
+}
+.marca { font-weight: 800; letter-spacing: .02em; }
+.progreso { max-width: 680px; margin: 0 auto; padding: 0 16px; position: sticky; top: 0; background: var(--bg); z-index: 1; }
+.progreso:empty { display: none; }
+.segmentos { display: flex; gap: 4px; padding-top: 6px; }
+.segmentos span { flex: 1; height: 4px; border-radius: 999px; background: var(--line); }
+.segmentos .hecho { background: var(--ink); }
+.segmentos .actual { background: var(--accent); }
+.etapa { font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--muted); padding: 6px 0 8px; }
+
+.autor-fuente { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 26px; }
+.lectura { border-left: 4px solid var(--line); padding-left: 16px; margin: 16px 0; }
+.lectura.A { border-left-color: var(--a); }
+.lectura.B { border-left-color: var(--b); }
+.parrafo { font-size: 20px; line-height: 1.7; transition: opacity .25s; }
+.parrafo.pendiente { opacity: .22; }
+.parrafo.leido { opacity: .5; }
+@media (prefers-reduced-motion: reduce) { .parrafo { transition: none; } }
+.acciones.fijas { position: sticky; bottom: 0; background: linear-gradient(transparent, var(--bg) 30%); padding: 20px 0 12px; }
+.acciones.fijas .btn { flex: 1; }
+.eleccion-hecha { font-size: 15px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; display: inline-block; }
+.app { max-width: 680px; margin: 0 auto; padding: 0 16px 48px; }
+.cargando { color: var(--muted); }
+
+a { color: var(--accent); }
+[tabindex="-1"]:focus { outline: none; }
+h1 { font-size: 30px; line-height: 1.2; margin: 24px 0 12px; }
+h2 { font-size: 22px; line-height: 1.3; margin: 20px 0 10px; }
+p { margin: 0 0 12px; }
+.muted { color: var(--muted); }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 20px 0 4px; }
+
+.tarjeta { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 14px 0; }
+.ficha { border-left: 6px solid var(--line); }
+.ficha.A, .fuente.A { border-left-color: var(--a); }
+.ficha.B, .fuente.B { border-left-color: var(--b); }
+.ficha .autor { font-weight: 700; }
+.fuente { border-left: 6px solid var(--line); }
+.fuente .texto { font-size: 19px; line-height: 1.7; }
+.fuente .ref { font-size: 14px; color: var(--muted); margin-top: 10px; }
+.fuente .ref a { color: inherit; }
+details.fuente summary { cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; }
+details.fuente[open] summary { margin-bottom: 8px; }
+
+button { font: inherit; color: inherit; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 12px 22px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; font-weight: 600;
+}
+.btn.primario { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:focus-visible, .opcion:focus-visible, .frag:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+.opciones { display: grid; gap: 10px; margin: 12px 0; }
+.opcion {
+  text-align: left; min-height: 52px; padding: 12px 16px; border-radius: 12px;
+  border: 1px solid var(--line); background: var(--surface); cursor: pointer;
+}
+.opcion[aria-pressed="true"] { border: 2px solid var(--accent); background: var(--soft); }
+
+.orden { display: grid; gap: 10px; margin: 12px 0; }
+.orden .fila { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.orden .grupo { display: flex; gap: 8px; margin-top: 8px; }
+.orden .grupo .opcion { flex: 1; min-height: 44px; text-align: center; padding: 8px; }
+
+.frag { display: inline; padding: 2px 3px; border-radius: 6px; border: none; background: transparent; cursor: pointer; text-align: left; line-height: 1.7; font-size: 19px; }
+.frag:hover { background: var(--b-soft); }
+.frag[aria-pressed="true"] { background: var(--b-soft); outline: 2px solid var(--b); }
+
+.respuesta textarea {
+  width: 100%; min-height: 110px; padding: 14px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font: inherit; resize: vertical;
+}
+.retro { background: var(--warn-soft); border-radius: 12px; padding: 14px 16px; margin: 14px 0; }
+.retro.bien { background: var(--ok-soft); }
+.aviso { font-size: 15px; color: var(--muted); }
+.esperando { color: var(--muted); font-style: italic; }
+
+.prediccion { background: var(--soft); border-radius: 12px; padding: 12px 16px; margin: 12px 0; }
+
+.habilidades { display: grid; gap: 12px; margin: 16px 0; }
+.habilidades .tarjeta { margin: 0; }
+.habilidad .nombre { font-weight: 700; display: flex; justify-content: space-between; gap: 8px; }
+.barra-nivel { height: 10px; border-radius: 999px; background: var(--line); margin: 8px 0; overflow: hidden; }
+.barra-nivel span { display: block; height: 100%; background: var(--ok); }
+.cita { font-size: 15px; color: var(--muted); }
+
+@media (max-width: 420px) {
+  h1 { font-size: 26px; }
+  .acciones .btn { flex: 1; }
+}
+
+/* --- Voz: respuesta, botón del micrófono y brillo en los bordes ---------------------------- */
+.transcripcion {
+  width: 100%; border: 1px solid transparent; border-radius: 12px; background: transparent; color: var(--ink);
+  font: inherit; font-size: 20px; line-height: 1.5; padding: 8px 10px; margin: 4px 0 0 -10px; resize: none;
+}
+.transcripcion:focus { border-color: var(--line); background: var(--surface); outline: none; }
+.transcripcion::placeholder { color: var(--muted); }
+
+/* Zona del pulgar: abajo al centro, objetivo grande y separado del borde (Hoober). */
+.zona-mic {
+  position: sticky; bottom: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 24px 0 calc(16px + env(safe-area-inset-bottom, 0px)); margin-top: 24px;
+  background: linear-gradient(transparent, var(--bg) 35%);
+}
+.estado-voz { font-size: 15px; color: var(--muted); margin: 0; text-align: center; }
+.mic-grande {
+  width: 76px; height: 76px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-ink); box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 30%, transparent);
+  transition: transform .15s ease;
+}
+.mic-grande:active { transform: scale(.96); }
+.mic-grande:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.mic-grande .ico svg { width: 30px; height: 30px; display: block; }
+.mic-grande .stop { display: none; width: 22px; height: 22px; border-radius: 5px; background: currentColor; }
+.mic-grande.activo .ico { display: none; }
+.mic-grande.activo .stop { display: block; }
+.pensando .mic-grande { opacity: .4; pointer-events: none; }
+.escribir { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 15px; padding: 8px; min-height: 44px; }
+
+/* Brillo: línea nítida + halo difuso con degradado azul y verde que gira despacio y respira.
+   Grosor y desenfoque fijos; la voz solo sube la intensidad (sin saltos). */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.luz { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity .6s ease; z-index: 5; }
+.luz.linea, .luz.halo > i {
+  position: absolute; inset: 0;
+  background: conic-gradient(from var(--ang), var(--luz-1), var(--luz-2), var(--luz-1), var(--luz-2), var(--luz-1));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: gira 7s linear infinite;
+}
+.luz.linea { padding: 3px; filter: opacity(calc(.65 + var(--nivel) * .35)); }
+.luz.halo { filter: blur(18px) opacity(calc(.45 + var(--nivel) * .55)); }
+.luz.halo > i { padding: 18px; }
+.escuchando .luz.halo { animation: respira 2.6s ease-in-out infinite alternate; }
+.escuchando .luz.linea { animation: gira 7s linear infinite, respira-linea 2.6s ease-in-out infinite alternate; }
+.pensando .luz.halo { animation: respira-lento 4s ease-in-out infinite alternate; }
+.pensando .luz.linea { animation: gira 9s linear infinite, respira-lento 4s ease-in-out infinite alternate; }
+@keyframes gira { to { --ang: 360deg; } }
+@keyframes respira { from { opacity: .35; } to { opacity: .95; } }
+@keyframes respira-linea { from { opacity: .55; } to { opacity: 1; } }
+@keyframes respira-lento { from { opacity: .15; } to { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) {
+  .luz, .luz > i { animation: none !important; transition: none; }
+  .escuchando .luz { opacity: .8; }
+  .pensando .luz { opacity: .35; }
+}
+
+/* PC: la misma columna, con más aire y letra un poco más grande. */
+@media (min-width: 1024px) {
+  .barra, .progreso, .app { max-width: 760px; }
+  body { font-size: 19px; }
+  .parrafo { font-size: 22px; }
+}
+
+/* La pantalla de explicar ocupa todo el alto para que el micrófono quede abajo, en la zona del pulgar. */
+.explicar { min-height: calc(100dvh - 120px); display: flex; flex-direction: column; }
+.explicar .zona-mic { margin-top: auto; }
