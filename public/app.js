@@ -511,7 +511,7 @@ function resumen() {
     });
   return el('section', {},
     el('p', { class: 'eyebrow' }, 'Terminaste'),
-    el('h1', { tabindex: '-1' }, 'Así leíste como historiador'),
+    el('h1', { tabindex: '-1' }, 'Lo que lograste en este caso'),
     el('p', { class: 'muted' }, 'Cada barra es una habilidad. No es una nota: muestra qué ya haces y qué practicar.'),
     el('div', { class: 'habilidades' }, filas),
     !hizoRepaso && el('p', { class: 'prediccion' }, 'En 2 días, cuando vuelvas, te haremos una pregunta de este caso para repasar.'),

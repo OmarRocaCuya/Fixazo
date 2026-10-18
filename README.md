@@ -1,8 +1,8 @@
-# Fixazo · Lee como historiador
+# Fixazo
 
 Web para escolares (12 a 16 años) que entrena **lectura crítica de fuentes**. El alumno lee dos fuentes reales que cuentan distinto el mismo hecho, predice qué dirá cada una, elige y **explica con su voz por qué**. La IA no da respuestas: revisa la explicación y devuelve una pista para que el alumno la encuentre solo.
 
-Primer caso: **Sputnik, 1957**, contado por TASS (agencia del gobierno soviético) y por Eisenhower (presidente de EE. UU.).
+Texto de prueba inicial: **Sputnik, 1957**, contado por TASS (agencia del gobierno soviético) y por Eisenhower (presidente de EE. UU.). Vamos a probar con otros textos; cada uno es un archivo en `casos/`.
 
 Hack the Andes 2026 · track Educación Escolar · equipo Fixazo.
 
@@ -15,7 +15,7 @@ Ficha de la fuente ─► Predice ─► Lee (un párrafo en foco) ─► Elige 
 ```
 
 - **Las fuentes son reales y curadas a mano.** La IA nunca escribe textos históricos (`casos/`).
-- **Las preguntas siguen las habilidades del historiador** (Stanford History Education Group): procedencia, contexto, corroboración y lectura atenta, más una de comprensión.
+- **Las preguntas siguen las habilidades de lectura de fuentes** del Stanford History Education Group: procedencia, contexto, corroboración y lectura atenta, más una de comprensión.
 - **Lo cerrado lo corrige el código** (elegir, ordenar, tocar la frase). **La explicación la revisa la IA** con criterios de cumple / no cumple.
 - **La IA tiene que citar la frase del alumno** que prueba cada criterio. Si la cita no aparece literal en la respuesta, el criterio no cuenta (`lib/reglas.js`).
 - **Guardia:** si la retroalimentación de la IA revela la respuesta, se reemplaza por una repregunta escrita por nosotros.
@@ -73,7 +73,7 @@ Fragmentos con fin educativo. La traducción al español es nuestra.
 
 ## Evidencia detrás del diseño
 
-- Wineburg (1991) y Reisman (2012): leer como historiador mejora el pensamiento histórico y la comprensión lectora.
+- Wineburg (1991) y Reisman (2012): trabajar con fuentes que se contradicen mejora el razonamiento y la comprensión lectora.
 - Richland, Kornell y Kao (2009): intentar responder antes de leer mejora el aprendizaje aunque se falle.
 - Bastani et al. (2025, *PNAS*): la IA que da respuestas empeora el examen; con pistas, ese daño desaparece.
 - Wisniewski, Zierer y Hattie (2020): la retroalimentación con información sobre el proceso funciona (d = 0.48).
