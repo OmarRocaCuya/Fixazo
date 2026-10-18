@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con-",
+  "creada": "2026-10-18T11:23:58.968Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El Espectador",
+      "fecha": "17 de octubre de 2026",
+      "titular": "La operación que tumbó 240 sitios web usados para estafar con criptomonedas | EL ESPECTADOR",
+      "url": "https://www.elespectador.com/economia/la-operacion-que-tumbo-240-sitios-web-usados-para-estafar-con-criptomonedas/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 6,
+    "usd": 0.08874,
+    "segundos": 110
+  },
+  "noticia": {
+    "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con-",
+    "seccion": "Tecnología",
+    "titular": "Autoridades cierran 240 sitios web de estafas con criptomonedas",
+    "bajada": "Compara cómo cuenta la nota el trabajo de la fiscal y piensa qué dice cada parte.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El Espectador",
+        "texto": "la operación que tumbó 240 sitios web"
+      },
+      {
+        "medio": "El Espectador",
+        "texto": "Fue muy difícil contárselo a mi familia"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio la operación contra las estafas?",
+        "opciones": [
+          "Como un triunfo de la justicia contra los estafadores",
+          "Como un problema que aún no se resuelve",
+          "Como una noticia sin importancia para la gente común"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El Espectador",
+        "fecha": "17 de octubre de 2026",
+        "titular": "La operación que tumbó 240 sitios web usados para estafar con criptomonedas | EL ESPECTADOR",
+        "texto": "Las estafas eran sencillas. Las víctimas eran contactadas a través de redes sociales como Facebook y persuadidas para invertir unos cientos de dólares en criptomonedas. (…) Cuando las víctimas finalmente intentaban cobrar, les decían que debían pagar costosas comisiones para obtener sus ganancias, o simplemente desaparecían sin dejar rastro.",
+        "url": "https://www.elespectador.com/economia/la-operacion-que-tumbo-240-sitios-web-usados-para-estafar-con-criptomonedas/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿cómo funcionaban las estafas?",
+        "opciones": [
+          "Los estafadores pedían grandes sumas desde el primer contacto",
+          "Las víctimas eran contactadas por redes sociales y las animaban a invertir más",
+          "Las víctimas ganaban mucho dinero y nunca lo perdían"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que las víctimas eran contactadas por redes sociales y que, con las supuestas ganancias, los estafadores las animaban a invertir más.",
+        "otra": "Fíjate en el primer fragmento: habla de contactos por Facebook y de invertir cada vez más cuando aparecían ganancias falsas.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién cuenta la experiencia de estafa en el texto?",
+        "opciones": [
+          "Un funcionario del FBI",
+          "Mark, un inmigrante ucraniano que perdió dinero",
+          "Un abogado de una empresa de criptomonedas"
+        ],
+        "correcta": 1,
+        "bien": "Mark es una víctima. Su interés es contar lo que le pasó, así que su mirada es de quien sufrió el daño.",
+        "otra": "Fíjate en quién aparece en el segundo fragmento y qué le pasó a esa persona.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "Si quieres verificar que los 240 sitios fueron cerrados, ¿qué buscarías?",
+        "opciones": [
+          "La opinión de un solo vecino",
+          "Un comunicado oficial o una fuente de la fiscalía",
+          "Un comentario anónimo en redes sociales"
+        ],
+        "correcta": 1,
+        "bien": "Lo más seguro es buscar un comunicado oficial o una fuente de la propia fiscalía, porque son quienes realizaron la operación.",
+        "otra": "Piensa en qué fuente puede confirmar un hecho de este tipo con datos reales.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que las redes sociales deberían controlar mejor los anuncios de inversión?",
+        "opciones": [
+          "Sí, deberían revisar más los anuncios",
+          "No, cada persona debe cuidarse sola",
+          "Depende de qué tan riesgosa sea la oferta"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El Espectador",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "«Al principio son muy educados y correctos, pero cuando empiezas a pedir que te devuelvan el dinero, se vuelven groseros», dijo Mark. (…) «Sentí estrés y rabia», dijo Mark. «Fue muy difícil contárselo a mi familia».",
+        "url": "https://www.elespectador.com/economia/la-operacion-que-tumbo-240-sitios-web-usados-para-estafar-con-criptomonedas/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la víctima Mark dice que fue difícil contárselo a su familia?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en la cantidad de dinero que menciona la nota.",
+          "Piensa en cómo se siente alguien que cayó en una trampa que él mismo no vio venir."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_de_la_nota",
+              "nombre": "Usa algo concreto de la nota",
+              "descripcion": "La respuesta menciona un dato o frase real del texto, como la cantidad perdida o lo que dijo Mark.",
+              "ejemploCumple": "Perdió unos 200.000 dólares y se sintió avergonzado.",
+              "ejemploNoCumple": "Seguro se sintió mal, como todos.",
+              "repregunta": "¿Qué dato de la nota te ayuda a explicarlo?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué pasó eso, no solo lo describe.",
+              "ejemploCumple": "Porque se sintió responsable al haber caído en la estafa.",
+              "ejemploNoCumple": "Porque fue una experiencia triste.",
+              "repregunta": "¿Por qué crees que una víctima podría sentir vergüenza al contarlo?"
+            }
+          ],
+          "respuestaModelo": "Mark perdió unos 200.000 dólares y puede sentir vergüenza o culpa por haber confiado, por eso fue difícil contárselo a su familia.",
+          "prohibido": [
+            "perdió 200.000 dólares",
+            "sintió vergüenza",
+            "se sintió culpable por confiar",
+            "no quería que su familia lo supiera"
+          ]
+        }
+      }
+    ]
+  }
+}

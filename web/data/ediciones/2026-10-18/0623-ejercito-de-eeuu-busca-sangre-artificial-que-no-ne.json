@@ -1,0 +1,25 @@
+{
+  "id": "2026-10-18-0623-ejercito-de-eeuu-busca-sangre-artificial-que-no-ne",
+  "creada": "2026-10-18T11:23:24.255Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "fragmento_b.citas[2] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "20minutos",
+      "fecha": "17 de octubre de 2026",
+      "titular": "El Pentágono quiere fabricar sangre artificial que no necesite refrigeración para salvar a soldados heridos en combate",
+      "url": "https://www.20minutos.es/tecnologia/actualidad/pentagono-quiere-fabricar-sangre-artificial-salvar-soldados-heridos-combate_7049822_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.07089,
+    "segundos": 76
+  },
+  "noticia": null
+}

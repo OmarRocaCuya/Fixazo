@@ -5,7 +5,7 @@ Un periódico web para jóvenes de secundaria (12 a 16 años) que entrena el **p
 Hack the Andes 2026 · track Educación Escolar · equipo Fixazo (Mateo Rodríguez, Omar Roca y Daniel Marron).
 
 - **Demo:** https://nawinchay-voice-mvp.vercel.app/ (la portada es el periódico).
-- **La app está en `web/`** (Next.js). **El pipeline de noticias está en `pipeline/`.**
+- **La app está en `web/`** (Next.js). **El pipeline de noticias está en `web/pipeline/`**, y también se puede correr en vivo desde la página `/generar` (botón "Buscar una noticia nueva").
 
 ## Por qué
 
@@ -17,7 +17,7 @@ Hack the Andes 2026 · track Educación Escolar · equipo Fixazo (Mateo Rodrígu
 ## Cómo funciona
 
 ```
-pipeline (Node, se corre a mano o con cron)
+pipeline (Node: a mano, con cron o con el botón de /generar)
   Exa busca noticias de IA de las últimas 24 h, solo en 19 medios confiables
   → filtra (temas no aptos para menores, opinión, comunicados, idioma)
   → busca el mismo hecho en un segundo medio
@@ -56,7 +56,7 @@ Responder, aunque sea mal, desbloquea el siguiente paso. Cada respuesta trae una
 ### Voz
 
 - La voz se transcribe en el navegador. La IA solo recibe texto y nunca habla.
-- La capa de voz de Daniel mide **señales del proceso**: pausas largas, muletillas y palabras de duda. **No intenta reconocer emociones**, porque la Ley de IA de la Unión Europea (art. 5.1.f) lo prohíbe en educación.
+- La capa de voz de Daniel mide **señales del proceso**: pausas largas, muletillas y palabras de duda, y además da una **estimación experimental de emociones** desde el audio (emotion2vec+). Es una estimación, no un diagnóstico.
 - `web/services/indigenous` es el servidor de voz de Daniel, con modelos de Meta, para castellano, quechua y aimara y con el tiempo de cada palabra. Ver [web/README.md](web/README.md).
 
 ### Mis insights y racha
@@ -76,7 +76,7 @@ Responder, aunque sea mal, desbloquea el siguiente paso. Cada respuesta trae una
 | **Progreso en el navegador, sin cuentas** | Privacidad de menores y menos piezas. El costo es que no pasa de un dispositivo a otro |
 
 **Límites actuales:**
-- En la web publicada las noticias no se actualizan solas: el pipeline se corre a mano.
+- En la web publicada las noticias no se actualizan solas: el pipeline se corre a mano. El botón de `/generar` arma una noticia en vivo, pero en Vercel no se puede guardar (el disco es de solo lectura), así que ahí se ve como vista previa.
 - La voz del navegador funciona en Chrome y Edge, y en iPhone se responde escribiendo.
 - No está validado con escolares todavía.
 - El juez puede equivocarse. Por eso hay 3 corridas, cita literal y "no evaluable".
@@ -89,9 +89,10 @@ web/                 la app: portada, noticia, juez, insights, racha (Next.js 16
   src/lib/server/      juez de noticias (Haiku vía OpenRouter)
   data/ediciones/      noticias generadas por el pipeline (JSON)
   services/indigenous  servidor de voz de Daniel (Python)
-pipeline/            pipeline de noticias (Node, sin dependencias)
-  pasos.mjs            filtros, lista de medios, validación y armado (con pruebas)
-  correr.mjs           búsqueda, extracción, generación y guardado
+  pipeline/            pipeline de noticias (Node, sin dependencias)
+    pasos.mjs            filtros, lista de medios, validación y armado (con pruebas)
+    correr.mjs           búsqueda, extracción, generación y guardado
+  src/app/generar      botón de demo que corre el pipeline en vivo y muestra cada paso
 PENDIENTES.md        tareas acordadas
 public/ api/ lib/ casos/ test/ dev.js   primera versión (prototipo de Sputnik, 17 oct); no se usa en la demo
 ```
@@ -106,11 +107,11 @@ cd web && npm install
 npm run dev                      # http://localhost:3000
 npm test                         # pruebas (vitest)
 
-# Pipeline: necesita TAVILY_API_KEY y OPENROUTER_API_KEY; EXA_API_KEY es opcional
-# (sin ella busca con Tavily). Se ponen en .env.local, en la raíz.
-node pipeline/correr.mjs             # genera una noticia
-node pipeline/correr.mjs --cada 30   # una cada 30 minutos
-node --test pipeline/                # pruebas del pipeline
+# Pipeline (desde web/): necesita TAVILY_API_KEY y OPENROUTER_API_KEY; EXA_API_KEY es opcional
+# (sin ella busca con Tavily). Van en web/.env.local. Para el botón de /generar: PERIODICO_DEMO_GENERAR=true.
+node pipeline/correr.mjs                 # genera una noticia
+node pipeline/correr.mjs --cada 30       # una cada 30 minutos
+node --test pipeline/pasos.test.mjs      # pruebas del pipeline
 ```
 
 Las variables de la app (juez y voz) y el despliegue están en [web/DEPLOYMENT.md](web/DEPLOYMENT.md).
