@@ -1,10 +1,10 @@
-// Pipeline del periódico: Tavily busca → filtra → empareja 2 medios → extrae → Haiku genera → el código valida → guarda.
+// Pipeline del periódico: Exa busca en la lista cerrada de medios → filtra → empareja 2 medios → Tavily extrae → Haiku genera → el código valida → guarda.
 // Uso:  node pipeline/correr.mjs            (una noticia)
 //       node pipeline/correr.mjs --cada 30  (una noticia cada 30 minutos, para la demo)
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { armarNoticia, dominio, filtrarCandidatas, limpiarTexto, mismoHecho, validarGeneracion } from './pasos.mjs';
+import { armarNoticia, dominio, esNota, filtrarCandidatas, limpiarTexto, MEDIOS, medioDe, mismoHecho, validarGeneracion } from './pasos.mjs';
 
 try {
   process.loadEnvFile('.env.local');
@@ -44,12 +44,32 @@ async function tavily(ruta, cuerpo, costo) {
   return r;
 }
 
-const buscar = (query, days, max = 10) => tavily('search', { query, topic: 'news', days, search_depth: 'advanced', max_results: max }, 2).then((d) => d.results ?? []);
+// Búsqueda solo dentro de la lista cerrada. Exa busca mejor (notas con fecha, rutas del servicio en español);
+// sin EXA_API_KEY se usa Tavily con los mismos dominios. El texto siempre lo extrae Tavily, que lo trae completo.
+const DOMINIOS = { A: Object.keys(MEDIOS.A), AB: [...Object.keys(MEDIOS.A), ...Object.keys(MEDIOS.B)] };
+
+async function buscar(query, days, max = 10, lista = 'A') {
+  if (!process.env.EXA_API_KEY) {
+    const hosts = [...new Set(DOMINIOS[lista].map((d) => d.split('/')[0]))];
+    const d = await tavily('search', { query, topic: 'news', days, search_depth: 'advanced', max_results: max, include_domains: hosts }, 2);
+    return d.results ?? [];
+  }
+  const d = await reintentar(async () => {
+    const res = await fetch('https://api.exa.ai/search', {
+      method: 'POST',
+      signal: AbortSignal.timeout(60000),
+      headers: { 'x-api-key': process.env.EXA_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, type: 'auto', category: 'news', numResults: max, includeDomains: DOMINIOS[lista], startPublishedDate: new Date(Date.now() - days * 864e5).toISOString() }),
+    });
+    if (!res.ok) throw new Error(`Exa ${res.status}`);
+    return res.json();
+  });
+  usd += d.costDollars?.total ?? 0;
+  return (d.results ?? []).map((r) => ({ url: r.url, title: r.title ?? '', content: '', published_date: r.publishedDate }));
+}
 const extraer = (urls) => tavily('extract', { urls, extract_depth: 'advanced' }, 2).then((d) => d.results ?? []);
 
-// Medios reconocidos primero: más confiables para menores y más fáciles de emparejar.
-const CONOCIDOS = /(infobae|elpais|bbc|cnn|latimes|univision|eltiempo|clarin|lanacion|elcomercio|larepublica|rpp|gestion|eluniverso|abc\.es|elmundo|20minutos|xataka|wired|genbeta|hipertextual|france24|dw\.com|euronews|efe\.com|europapress|expansion|forbes|elfinanciero|milenio|eluniversal|semana|elespectador|eldiario|elconfidencial|lavanguardia|rtve|nytimes|apnews|reuters|elobservador|emol|latercera|eltiempo|perfil|pagina12|ambito|tn\.com|xataka|computerhoy|wwwhatsnew|pasionmovil|infonegocios)/i;
-const conocido = (u) => (CONOCIDOS.test(dominio(u)) ? 1 : 0);
+const deLista = (u) => (medioDe(u)?.lista === 'A' ? 1 : 0);
 const ESPANOL = /\b(de|la|el|los|las|en|que|por|para|una|con)\b/gi;
 const enEspanol = (t) => (String(t).match(ESPANOL) ?? []).length >= 2;
 const fecha = (s) => {
@@ -157,18 +177,18 @@ export async function unaNoticia() {
   // 1 · Recolectar y 2 · filtrar
   const resultados = (await Promise.all(CONSULTAS.map((q) => buscar(q, 1)))).flat();
   const candidatas = filtrarCandidatas(resultados, usadas)
-    .filter((r) => enEspanol(r.title))
-    .sort((a, b) => conocido(b.url) - conocido(a.url) || new Date(b.published_date ?? 0) - new Date(a.published_date ?? 0));
+    .filter((r) => enEspanol(r.title) && esNota(r.url) && medioDe(r.url).lista === 'A')
+    .sort((a, b) => new Date(b.published_date ?? 0) - new Date(a.published_date ?? 0));
   log(`1-2 · ${resultados.length} resultados, ${candidatas.length} candidatas aptas en español`);
 
   for (const principal of candidatas.slice(0, 4)) {
     log(`→ probando: ${principal.title.slice(0, 80)} (${dominio(principal.url)})`);
     // 3 · Emparejar con otro medio que cuente el mismo hecho
     const palabrasClave = principal.title.split(/\s+/).filter((w) => w.length > 4).slice(0, 7).join(' ');
-    const encontradas = [...(await buscar(principal.title, 4, 8)), ...(await buscar(palabrasClave, 4, 8))];
-    const parecidas = filtrarCandidatas(encontradas, usadas).filter(
-      (r) => dominio(r.url) !== dominio(principal.url) && mismoHecho(principal.title, r.title, 2) && enEspanol(r.title),
-    );
+    const encontradas = [...(await buscar(principal.title, 4, 8, 'AB')), ...(await buscar(palabrasClave, 4, 8, 'AB'))];
+    const parecidas = filtrarCandidatas(encontradas, usadas)
+      .filter((r) => esNota(r.url) && medioDe(r.url).medio !== medioDe(principal.url).medio && mismoHecho(principal.title, r.title, 2) && enEspanol(r.title))
+      .sort((a, b) => deLista(b.url) - deLista(a.url)); // primero un segundo medio de la lista A
     const pareja = parecidas[0] ?? null;
     log(`3 · pareja: ${pareja ? `${pareja.title.slice(0, 70)} (${dominio(pareja.url)})` : 'ninguna; se usará otra voz de la misma nota'}`);
 
@@ -199,10 +219,11 @@ export async function unaNoticia() {
     const dia = ahora.toLocaleDateString('sv-SE', { timeZone: 'America/Lima' });
     const hora = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Lima' }).replace(':', '');
     const id = `${dia}-${hora}-${slug(g.titular || principal.title)}`;
-    const fuenteA = { medio: g.fuente_a?.medio || dominio(principal.url), fecha: fecha(principal.published_date), titular: principal.title, url: principal.url };
+    // El nombre del medio sale de la lista, no de la IA.
+    const fuenteA = { medio: medioDe(principal.url).medio, fecha: fecha(principal.published_date), titular: principal.title, url: principal.url };
     const fuenteB = g.fuente_b?.misma_nota || !pareja
       ? { ...fuenteA, titular: `Otra voz en la misma nota` }
-      : { medio: g.fuente_b?.medio || dominio(pareja.url), fecha: fecha(pareja.published_date), titular: pareja.title, url: pareja.url };
+      : { medio: medioDe(pareja.url).medio, fecha: fecha(pareja.published_date), titular: pareja.title, url: pareja.url };
     const registro = {
       id,
       creada: ahora.toISOString(),

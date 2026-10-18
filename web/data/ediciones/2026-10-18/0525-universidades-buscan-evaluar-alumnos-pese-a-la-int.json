@@ -1,0 +1,197 @@
+{
+  "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int",
+  "creada": "2026-10-18T10:25:04.437Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "17 de octubre de 2026",
+      "titular": "El colosal reto de evaluar a los universitarios en la era de la IA: ¿prohibirla o usarla como aliada? | Educación | EL PAÍS",
+      "url": "https://elpais.com/educacion/2026-10-18/el-colosal-reto-de-evaluar-a-los-universitarios-en-la-era-de-la-ia-prohibirla-o-usarla-como-aliada.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.06941,
+    "segundos": 43
+  },
+  "noticia": {
+    "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int",
+    "seccion": "Educación",
+    "titular": "Universidades buscan evaluar alumnos pese a la inteligencia artificial",
+    "bajada": "Compara qué proponen Europa, Estados Unidos y Asia para evaluar sin que la IA sirva de atajo.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El País",
+        "texto": "El colosal reto de evaluar"
+      },
+      {
+        "medio": "El País",
+        "texto": "no vetan la tecnología"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio el tema de la IA en los exámenes universitarios?",
+        "opciones": [
+          "Como un problema que hay que frenar prohibiendo la IA por completo.",
+          "Como un reto complicado que las universidades intentan resolver de distintas formas.",
+          "Como una herramienta que hace inútiles los exámenes y las universidades deben cerrarse."
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "El colosal reto de evaluar a los universitarios en la era de la IA: ¿prohibirla o usarla como aliada? | Educación | EL PAÍS",
+        "texto": "En Europa y EE UU, los campus apuestan por exámenes orales o manuscritos y casos prácticos, mientras que en el sudeste asiático se apoyan en la tecnología para evaluar (…) Por el momento, las universidades de Europa y Estados Unidos se inclinan por esquivar la IA con otro tipo de exámenes y ensayos, orales o prácticos, mientras que en Asia se integra en la evaluación.",
+        "url": "https://elpais.com/educacion/2026-10-18/el-colosal-reto-de-evaluar-a-los-universitarios-en-la-era-de-la-ia-prohibirla-o-usarla-como-aliada.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿qué hacen las universidades de Europa y Estados Unidos?",
+        "opciones": [
+          "Integran la IA en la evaluación como parte del examen.",
+          "Esquivan la IA con exámenes orales, manuscritos o prácticos.",
+          "Compran detectores de radiofrecuencia para todas las pruebas."
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que se inclinan por esquivar la IA con exámenes orales o prácticos, y por eso la opción dos es la correcta.",
+        "otra": "Fíjate en la frase que empieza con 'Por el momento' y compara con lo que dice sobre Asia.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla en el fragmento de Asia que describe herramientas educativas?",
+        "opciones": [
+          "Un profesor de Derecho que simula juicios en su clase.",
+          "Un periodista de El País que sigue el tema desde Madrid.",
+          "Un rector que decide la compra de detectores."
+        ],
+        "correcta": 0,
+        "bien": "Quien habla es el texto de la nota, que describe a profesores y universidades que diseñan bots; el interés es explicar la tendencia, no vender nada.",
+        "otra": "Fíjate en quién describe el uso de bots para recrear juicios y qué busca mostrar con ese ejemplo.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "Si quisieras comprobar que las universidades asiáticas usan IA educativa, ¿qué buscarías?",
+        "opciones": [
+          "Un comunicado oficial de una universidad o un estudio que describa esas herramientas.",
+          "La opinión de un amigo que estudia fuera.",
+          "Solo el titular de la noticia, porque resume todo."
+        ],
+        "correcta": 0,
+        "bien": "Para comprobar algo así conviene buscar fuentes oficiales o estudios que describan las herramientas, no solo opiniones.",
+        "otra": "Piensa en qué fuente podría confirmar una afirmación sobre universidades de otro país.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué opinas: deberían las universidades prohibir la IA en los exámenes o usarla como aliada?",
+        "opciones": [
+          "Prohibirla, porque evita el fraude.",
+          "Usarla como aliada, si se enseña a aprender con ella.",
+          "Depende de cada materia y de cómo se regule."
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Mientras, en el sudeste asiático, a diferencia de Estados Unidos y Europa, sí se están diseñando herramientas expresamente educativas, no vetan la tecnología y la emplean a la carta, según los puntos fuertes y débiles. (…) Estas herramientas tienen un perfil socrático: retan al estudiante, le preguntan y le fuerzan a pensar.",
+        "url": "https://elpais.com/educacion/2026-10-18/el-colosal-reto-de-evaluar-a-los-universitarios-en-la-era-de-la-ia-prohibirla-o-usarla-como-aliada.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que es más útil usar la IA como aliada que prohibirla? Justifica con algo de la noticia.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en lo que hacen las herramientas educativas de Asia según el fragmento.",
+          "Piensa en si prohibir la IA impide que los alumnos la usen fuera del examen."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona un ejemplo, dato o caso que aparece en la nota.",
+              "ejemploCumple": "En Asia diseñan herramientas que preguntan y obligan a pensar.",
+              "ejemploNoCumple": "Creo que la IA es buena para todo.",
+              "repregunta": "¿Qué ejemplo de la noticia podrías usar para apoyar tu idea?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué, no solo qué opina.",
+              "ejemploCumple": "Porque si la IA ayuda a aprender, el examen mide mejor lo que el alumno sabe.",
+              "ejemploNoCumple": "Me parece bien usarla.",
+              "repregunta": "¿Por qué crees que eso hace mejor la evaluación?"
+            }
+          ],
+          "respuestaModelo": "Es más útil como aliada porque, según la nota, herramientas educativas como los bots socráticos obligan al estudiante a pensar, mientras que prohibirla no resuelve el problema del fraude.",
+          "prohibido": [
+            "herramientas educativas que obligan a pensar",
+            "bots socráticos",
+            "prohibirla no resuelve el fraude"
+          ]
+        }
+      }
+    ]
+  }
+}

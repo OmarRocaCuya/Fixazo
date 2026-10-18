@@ -1,0 +1,23 @@
+{
+  "id": "2026-10-18-0524-minoristas-de-eeuu-adoptan-precios-con-inteligenci",
+  "creada": "2026-10-18T10:24:50.973Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_b.citas[0] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "AP",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Aumenta la inquietud de consumidores mientras minoristas de EEUU adoptan precios con IA | AP News",
+      "url": "https://apnews.com/article/tecnologia-precios-variables-b7b01b0548a597200e66f58e118ac382"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05346,
+    "segundos": 29
+  },
+  "noticia": null
+}

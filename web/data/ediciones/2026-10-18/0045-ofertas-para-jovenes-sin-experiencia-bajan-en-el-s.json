@@ -1,8 +1,10 @@
 {
   "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s",
   "creada": "2026-10-18T05:45:27.847Z",
-  "estado": "publicada",
-  "motivo": null,
+  "estado": "retirada",
+  "motivo": [
+    "Medio fuera de la lista cerrada de medios confiables (18 oct 2026)"
+  ],
   "fuentes": [
     {
       "medio": "El Plural",

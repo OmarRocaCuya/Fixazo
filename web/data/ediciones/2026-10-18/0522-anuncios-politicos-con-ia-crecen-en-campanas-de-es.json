@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es",
+  "creada": "2026-10-18T10:22:34.674Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "18 de octubre de 2026",
+      "titular": "Los anuncios políticos hechos con IA irrumpen en las campañas para las ‘midterms’ | EL PAÍS US",
+      "url": "https://elpais.com/us/2026-10-18/los-anuncios-politicos-hechos-con-ia-irrumpen-en-las-campanas-para-las-midterms.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05068,
+    "segundos": 13
+  },
+  "noticia": {
+    "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es",
+    "seccion": "Mundo",
+    "titular": "Anuncios políticos con IA crecen en campañas de Estados Unidos",
+    "bajada": "Compara qué dice la nota sobre el uso de IA y cómo sabemos si algo es real.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El País",
+        "texto": "Es una herramienta accesible y barata"
+      },
+      {
+        "medio": "El País",
+        "texto": "Lo que no sabemos es si un votante"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio los anuncios hechos con IA?",
+        "opciones": [
+          "Como una herramienta barata que ayuda a candidatos con pocos recursos",
+          "Como un peligro que engaña a todos los votantes sin excepción",
+          "Como un fenómeno nuevo con efectos que aún no se conocen del todo"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El País",
+        "fecha": "18 de octubre de 2026",
+        "titular": "Los anuncios políticos hechos con IA irrumpen en las campañas para las ‘midterms’ | EL PAÍS US",
+        "texto": "Se han identificado más de 200 comerciales producidos usando la tecnología, cuyo uso en política no está regulado a nivel federal. (…) Este relativamente bajo gasto refleja que la IA es una herramienta accesible y barata que permite a los candidatos con menos recursos producir anuncios creativos sin los altos costos de un rodaje tradicional.",
+        "url": "https://elpais.com/us/2026-10-18/los-anuncios-politicos-hechos-con-ia-irrumpen-en-las-campanas-para-las-midterms.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿por qué la IA permite producir anuncios más baratos?",
+        "opciones": [
+          "Porque evita los altos costos de un rodaje tradicional",
+          "Porque las leyes federales la permiten sin límites",
+          "Porque los votantes la piden en todas las campañas"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que la IA evita los altos costos de un rodaje tradicional.",
+        "otra": "Fíjate en la frase sobre el rodaje tradicional: ahí está la razón.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién aporta los datos sobre la cantidad de anuncios con IA?",
+        "opciones": [
+          "Travis Ridout, codirector del Wesleyan Media Project",
+          "El fiscal general Ken Paxton, rival de Talarico",
+          "Una encuesta sobre opiniones de los estadounidenses"
+        ],
+        "correcta": 0,
+        "bien": "Ridout dirige un laboratorio universitario que hace seguimiento del gasto publicitario político, lo que le da interés en contar bien los datos.",
+        "otra": "Paxton es quien difundió un anuncio, pero no es quien hace el conteo de anuncios.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "La nota dice que hay más de 200 anuncios con IA. ¿Qué buscarías para comprobarlo?",
+        "opciones": [
+          "Revisar la base de datos del Wesleyan Media Project y cómo cuentan los anuncios",
+          "Confiar en que la cifra es exacta porque aparece en un periódico",
+          "Preguntar a cualquier votante cuántos anuncios vio"
+        ],
+        "correcta": 0,
+        "bien": "Conviene buscar la fuente del conteo y cómo lo hicieron, porque la nota dice que la identificación fue manual.",
+        "otra": "Un periódico cita datos, pero siempre conviene revisar de dónde salen.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué crees que deberían hacer las leyes sobre anuncios con IA?",
+        "opciones": [
+          "Exigir un aviso claro cuando un anuncio usa IA",
+          "No regularlos porque el votante puede notar que no es real",
+          "Prohibir todos los deepfakes en política"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El País",
+        "fecha": "18 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "“Lo que no sabemos es si un votante ve eso y sabe que no es real, ¿aún así tiene un impacto en cómo piensa?”, plantea. (…) “Casi todos pudieron darse cuenta de que era generado con IA”.",
+        "url": "https://elpais.com/us/2026-10-18/los-anuncios-politicos-hechos-con-ia-irrumpen-en-las-campanas-para-las-midterms.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la preocupación de Ridout es más importante que el hecho de que un anuncio sea falso a simple vista?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en la última parte de la cita de Ridout sobre lo que queda después de ver el anuncio.",
+          "Piensa en la diferencia entre notar que algo es falso y dejar que te influya."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_nota",
+              "nombre": "Usa algo concreto de la nota",
+              "descripcion": "La respuesta menciona un dato, una persona o una idea de la nota.",
+              "ejemploCumple": "Ridout dice que el votante puede saber que algo no es real, pero aún así le puede influir.",
+              "ejemploNoCumple": "Creo que la IA es mala.",
+              "repregunta": "¿Qué dice Ridout exactamente sobre lo que queda en la mente del votante?"
+            },
+            {
+              "id": "da_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué, no solo lo afirma.",
+              "ejemploCumple": "Porque aunque sepas que es falso, la idea se queda y puede cambiar cómo actúas.",
+              "ejemploNoCumple": "Porque sí.",
+              "repregunta": "¿Qué pasa después de ver el anuncio, según la nota?"
+            }
+          ],
+          "respuestaModelo": "Ridout se preocupa porque aunque el votante sepa que el anuncio no es real, la imagen puede quedarse en su mente e influir en cómo piensa y se comporta después.",
+          "prohibido": [
+            "se queda en mi mente",
+            "puede afectar cómo piensa",
+            "sé que no es real",
+            "impacto en cómo piensa",
+            "afecta cómo se comporta"
+          ]
+        }
+      }
+    ]
+  }
+}

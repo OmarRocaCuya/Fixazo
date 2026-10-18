@@ -1,0 +1,28 @@
+{
+  "id": "2026-10-18-0523-estudio-halla-que-agentes-de-ia-femeninos-reciben-",
+  "creada": "2026-10-18T10:23:54.239Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_a.citas[0] no está literal en la nota"
+  ],
+  "fuentes": [
+    {
+      "medio": "elDiario.es",
+      "fecha": "18 de octubre de 2026",
+      "titular": "La brecha salarial llega hasta la inteligencia artificial: los agentes masculinos cobran más que los femeninos por el mismo trabajo",
+      "url": "https://www.eldiario.es/spin/brecha-salarial-llega-inteligencia-artificial-agentes-masculinos-cobran-femeninos-trabajo-pm_1_13594669.html"
+    },
+    {
+      "medio": "20minutos",
+      "fecha": "14 de octubre de 2026",
+      "titular": "7 de cada 10 líderes empresariales anticipan un cambio radical en el trabajo: las personas pasarán a supervisar agentes de IA",
+      "url": "https://computerhoy.20minutos.es/tecnologia/7-cada-10-lideres-empresariales-anticipan-cambio-radical-trabajo-personas-pasaran-supervisar-agentes-ia_7048994_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.07045,
+    "segundos": 51
+  },
+  "noticia": null
+}

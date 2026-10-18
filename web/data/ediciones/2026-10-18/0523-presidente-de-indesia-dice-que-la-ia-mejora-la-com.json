@@ -1,0 +1,24 @@
+{
+  "id": "2026-10-18-0523-presidente-de-indesia-dice-que-la-ia-mejora-la-com",
+  "creada": "2026-10-18T10:23:26.808Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_a.citas[2] no está literal en la nota",
+    "fragmento_a: más de 90 palabras (96)",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "ABC",
+      "fecha": "18 de octubre de 2026",
+      "titular": "«La IA no viene a quitar empleos, sino a mejorar la competitividad»",
+      "url": "https://www.abc.es/economia/ia-viene-quitar-empleos-mejorar-competitividad-20261018111037-nt.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05261,
+    "segundos": 23
+  },
+  "noticia": null
+}
