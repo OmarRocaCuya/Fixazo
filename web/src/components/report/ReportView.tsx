@@ -111,6 +111,16 @@ export function ReportView({ report }: { report: Report }) {
         <p className="small" role="status">{reviewMessage}</p>
       </section>
 
+      <section className="card stack-sm" aria-labelledby="transcription-title">
+        <h2 id="transcription-title">De dónde viene la transcripción</h2>
+        {r.transcription?.length ? r.transcription.map((source, index) => <div key={`${source.provider}-${index}`} className="stack-sm">
+          <SignalRow name="Fuente y modelo" value={<span style={{ overflowWrap: "anywhere" }}>{source.provider} · {source.model}</span>} />
+          <SignalRow name="Idioma configurado" value={source.language === "qu" ? "quechua" : "castellano"} />
+          <SignalRow name="Tiempos por palabra" value={source.timingsAvailable ? "el reconocedor suministró estimaciones; no se guardan los tiempos" : "no disponibles en esta evidencia"} />
+        </div>) : <p className="small muted">Informe anterior sin procedencia del reconocedor. No se puede deducir el modelo usado.</p>}
+        <p className="small muted">El reconocimiento puede normalizar el habla, omitir muletillas o cambiar palabras; la transcripción manual también puede omitirlas. Los tiempos ASR no son alineación exacta con el pasaje. La confianza del modelo no es una nota del niño.</p>
+      </section>
+
       <div className="metric-grid">
         <MetricCard
           title="Fluidez"
@@ -145,15 +155,15 @@ export function ReportView({ report }: { report: Report }) {
             <>
               <SignalRow name="Tiempo para responder" value={r.process.latencyMs === null ? "—" : `${(r.process.latencyMs / 1000).toFixed(1)} s${r.simulated ? " (escrito)" : ""}`} />
               <SignalRow name="Pausas largas (> 2 s)" value={r.process.audioAvailable ? (r.process.longPauses ?? "—") : "no disponible en simulación"} />
-              <SignalRow name="Autocorrecciones al leer" value={r.process.selfCorrections} />
-              <SignalRow name="Palabras de duda" value={r.process.fillers ? `${r.process.fillers}${r.process.hedges.length ? ` (${r.process.hedges.join(", ")})` : ""}` : "0"} />
+              <SignalRow name="Posibles autocorrecciones en el texto" value={r.process.selfCorrections || "no encontradas en la transcripción"} />
+              <SignalRow name="Palabras de duda en el texto" value={r.process.fillers ? `${r.process.fillers}${r.process.hedges.length ? ` (${r.process.hedges.join(", ")})` : ""}` : "no encontradas en la transcripción"} />
               <SignalRow
                 name="Seguridad y acierto"
                 value={r.process.confidence ? CONFIDENCE_LABELS[r.process.confidence] : "—"}
               />
               <p className="small">{calibration[r.process.calibration]}</p>
               {r.process.finalIntonation && <SignalRow name="Entonación al final de su opinión" value={intonation[r.process.finalIntonation]} />}
-              <p className="small muted">Describe su proceso, no cuánto sabe.</p>
+              <p className="small muted">Describe señales del texto disponible, no cuánto sabe ni cómo se siente. No encontrar una muletilla o autocorrección no demuestra que no ocurrió: el ASR puede normalizarla.</p>
             </>
           ) : (
             <p className="small muted">Desactivado por la familia en Privacidad.</p>

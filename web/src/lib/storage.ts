@@ -3,6 +3,7 @@
 import type { Consent, Mission, Profile, Report } from "./types";
 import { assertReportIsClean } from "./guardrails";
 import { z } from "zod";
+import { cleanTranscriptionProvenance } from "./transcription";
 
 const PREFIX = "nw.";
 const K = {
@@ -80,6 +81,7 @@ const pausedSchema = z.object({
     }).nullable(),
     simulatedLatencyMs: nullableNumber.optional(), readingSeconds: z.number().nonnegative().optional(),
     bargeIn: z.boolean().optional(), unobservable: z.boolean().optional(), at: z.number().finite(),
+    transcription: z.unknown().transform((value) => cleanTranscriptionProvenance(value) ?? undefined).optional(),
   })),
 });
 
@@ -169,8 +171,10 @@ export function createStore(primary?: Storage | null) {
     /** Guardrails run before every save; a dirty report is never persisted. */
     saveReport(r: Report) {
       assertReportIsClean(r);
+      const provenance = r.transcription?.map(cleanTranscriptionProvenance).filter((v) => v !== null);
+      const clean = { ...r, ...(r.transcription ? { transcription: provenance } : {}) };
       const all = get<Report[]>(K.reports, []).filter((x) => x.id !== r.id);
-      set(K.reports, [...all, r]);
+      set(K.reports, [...all, clean]);
     },
 
     loadChat: () => get<ChatMessage[]>(K.chat, []),

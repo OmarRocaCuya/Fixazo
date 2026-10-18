@@ -1,6 +1,6 @@
 # Desplegar Ñawinchay como MVP de demostración
 
-La aplicación a desplegar es **`web/`**, no la raíz del repositorio (Fixazo). Esta guía prepara un despliegue Next.js con servidor; no afirma que ya exista un despliegue ni que el producto esté validado con niños.
+La aplicación a desplegar es **`web/`**, no la raíz del repositorio (Fixazo). Proyecto separado: **`nawinchay-voice-mvp`**, [sitio](https://nawinchay-voice-mvp.vercel.app), rama `codex/nawinchay-voice-mvp`. No cambiar el proyecto, dominios ni rama principal de Fixazo. Un despliegue correcto no implica validación con niños.
 
 ## 1. Verificar el paquete local
 
@@ -83,8 +83,37 @@ Para una regresión tras promover: vuelve al último despliegue estable con [Rol
 
 ## Alcance que no cambia al desplegar
 
-- ASR castellano: Web Speech del navegador; su proveedor y modelo no están fijados por la aplicación y puede procesar audio externamente.
-- Voz del agente: `speechSynthesis` del navegador/sistema operativo.
+- ASR castellano: Web Speech del navegador, Whisper base local tras descarga explícita, o Deepgram Nova-3 tras configuración y consentimiento separado. La disponibilidad se comprueba en ejecución.
+- Voz de la misión: `speechSynthesis` del navegador/sistema operativo. `/voz` añade una demo independiente OpenAI Realtime 2.1, no vinculada al informe ni activa sin claves.
 - IA opcional: [Claude Haiku 5.5](https://platform.claude.com/docs/en/models/haiku-5-5/overview) (`claude-haiku-5-5`) para misiones y juez de texto, no para escuchar ni alinear la lectura.
-- ASR quechua, separación de voces y alineación acústica con tiempos por palabra: pendientes. El seguimiento del texto no equivale a estas capacidades.
+- `/lenguas`: adaptador de Meta Omnilingual ASR autoalojado, distinto del seguimiento de lectura. Requiere un servidor de modelos externo operativo; Vercel NO ejecuta los pesos. Traducción NLLB únicamente de investigación no comercial. Separación de voces y alineación forzada con el pasaje no están implementadas.
 - Sin etiquetas emocionales inferidas, huella vocal, juicios de acento ni señales de salud. La evidencia educativa sigue requiriendo confirmación humana y las heurísticas no están validadas para evaluación de niños.
+
+## Servicios de voz nuevos: activación y límites
+
+El despliegue sin secretos mantiene **desactivados** Deepgram, OpenAI y el proxy Meta. No se incluyen claves de demostración. Whisper local se prepara desde la sesión, sin cuenta de proveedor; unos 80 MB más runtime, solo castellano en este MVP. En celulares puede ser lento y no sustituye el reconocimiento indígena.
+
+Variables del servidor: consultar `.env.example`. Para una demo cerrada con voces **adultas o sintéticas**:
+
+1. Proteger el despliegue y configurar presupuestos en los proveedores.
+2. Establecer `VOICE_CLOUD_MODE=adult-demo` y un `VOICE_ACCESS_CODE` aleatorio de al menos 16 caracteres; compartirlo fuera de la app solo con participantes autorizados.
+3. Añadir únicamente las claves necesarias: `DEEPGRAM_API_KEY` para streaming; `OPENAI_API_KEY` para `/voz`.
+4. Para Meta, desplegar y precalentar por separado [el servicio Python](services/indigenous/README.md), con su token de servidor. Configurar aquí `INDIGENOUS_BACKEND_URL` HTTPS y `INDIGENOUS_BACKEND_TOKEN`. No exponer los pesos, token ni un endpoint abierto en Vercel.
+5. Para NLLB, confirmar el uso **no comercial** y habilitar su opción de investigación tanto en ese backend como `INDIGENOUS_TRANSLATION_RESEARCH_ONLY=true` en Next.js. Revisar las traducciones con hablantes. No hay conversión implícita de quechua Cusco a Ayacucho.
+6. Redesplegar y verificar `/api/asr`, `/api/voice/session` y `/api/indigenous`. Configurado no significa alcanzable ni modelo listo. Probar un turno real autorizado antes de declarar operativo el proveedor.
+
+Para un piloto infantil, no basta cambiar una bandera: revisar consentimiento, responsables y ubicación/retención de datos. El código exige `VOICE_CLOUD_MODE=approved-pilot` y `CHILD_VOICE_PRIVACY_APPROVED=true`; OpenAI exige adicionalmente `OPENAI_ZDR_CONFIRMED=true` tras la aprobación real correspondiente. Mantener todo desactivado hasta completar esas gestiones.
+
+Los límites en memoria son una defensa adicional, **no cuotas distribuidas**. Los TTL de tokens y límites del cliente no son topes de gasto seguros. Las APIs existentes de Claude no tienen autenticación de aplicación: no activar Anthropic en una URL pública abierta. No registrar audio, códigos, claves ni respuestas personales. Las demos nuevas conservan contenido solo temporalmente en memoria y no lo agregan al informe educativo.
+
+### Build y dependencias
+
+Con `cacheComponents: true`, las rutas nuevas no exportan `runtime` ni `dynamic`; usan `connection()` en GET de capacidades para no congelar configuración durante el build. Node es el runtime predeterminado. No desactivar comprobaciones de tipos para desplegar.
+
+Vitest se actualizó a 4.1.11 para retirar avisos críticos de su cadena de desarrollo. `npm audit --omit=dev` debe revisarse por separado: las dependencias de herramientas también importan, pero no son lo mismo que código publicado en la función. No usar `npm audit fix --force` ni degradar Next para maquillar el informe. Ejecutar CI solo con código confiable; no exponer servidores Vite de pruebas a internet.
+
+### Publicar sin subir archivos de Fixazo
+
+Confirmar solo `web/` en la rama dedicada. Para despliegue CLI, crear un directorio de staging a partir de `git archive <commit> web/`; enlazar **ese staging** a `nawinchay-voice-mvp`, confirmar `Root Directory: web`, y desplegarlo. Excluir `.env*`, `node_modules`, `.next` y `outputs`. La CLI puede generar un token OIDC en un `.env.local` ignorado del staging: no copiarlo al código ni mostrarlo en logs. El primer despliegue de un proyecto nuevo puede asignarse automáticamente a producción; comprobar el resultado real de la CLI.
+
+La web no sincroniza automáticamente informes entre dominios: el almacenamiento sigue aislado por navegador/origen. Ver [evidencia, licencias y decisiones](docs/VOICE-RESEARCH.md).

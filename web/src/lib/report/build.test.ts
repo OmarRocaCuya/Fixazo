@@ -61,6 +61,18 @@ describe("report builder (F5)", () => {
     expect(() => assertReportIsClean(rep)).not.toThrow();
     expect(rep.notMeasured).toEqual(NOT_MEASURED);
   });
+  it("keeps optional minimal transcription provenance, deduplicates sources and drops provider payloads", () => {
+    const transcription = { provider: "deepgram", model: "nova-3", language: "es", timingsAvailable: true, normalization: "asr-may-normalize" } as const;
+    const dirty = { ...transcription, accessCode: "secret-access", tokens: "secret-token", words: [{ word: "Rosa", start: 0, end: 1, confidence: 0.99 }], rawAudio: [1, 2] };
+    const r = buildReport(record({ turns: record().turns.map((t) => ({ ...t, transcription: dirty })) }), { id: "provenance" });
+    expect(r.transcription).toEqual([transcription]);
+    const json = JSON.stringify(r);
+    expect(json).not.toMatch(/secret-access|secret-token|rawAudio|"words"|0\.99/);
+    expect(() => assertReportIsClean(r)).not.toThrow();
+  });
+  it("does not invent transcription provenance on legacy turns", () => {
+    expect(rep.transcription).toBeUndefined();
+  });
   it("headline ≤ 10 words, template-based", () => {
     expect(rep.headline).toBe("Yeni cambió de opinión con una buena razón");
     expect(rep.headline.split(/\s+/).length).toBeLessThanOrEqual(10);

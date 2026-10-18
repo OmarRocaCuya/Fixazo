@@ -1,0 +1,11 @@
+.venv*
+.test-deps/
+__pycache__/
+*.pyc
+.env*
+.cache/
+models/
+*.pt
+*.pth
+*.safetensors
+*.bin

@@ -85,6 +85,15 @@ export interface TurnAudioSummary {
 
 export type TurnState = "READ" | "Q_OBTIENE" | "Q_INFIERE" | "STANCE" | "REVISE";
 
+/** Provenance only: no word timings, confidence, credentials or raw audio. */
+export interface TranscriptionProvenance {
+  provider: "manual" | "web-speech" | "deepgram" | "local-whisper";
+  model: "human-entered" | "browser-managed" | "nova-3" | "onnx-community/whisper-base_timestamped";
+  language: Lang;
+  timingsAvailable: boolean;
+  normalization: "asr-may-normalize" | "manual-unverified";
+}
+
 export interface TurnRecord {
   state: TurnState;
   transcript: string;
@@ -100,6 +109,7 @@ export interface TurnRecord {
   bargeIn?: boolean;
   /** True when measurement conditions made the turn not observable. */
   unobservable?: boolean;
+  transcription?: TranscriptionProvenance;
   at: number;
 }
 
@@ -169,6 +179,8 @@ export interface Report {
   simulated: boolean;
   /** Missing on older reports: always treat them as provisional. */
   review?: ReportReview;
+  /** Optional on older reports. Does not contain audio or per-word timings. */
+  transcription?: TranscriptionProvenance[];
   headline: string;
   fluency: {
     /** Evidence to be checked by a person; absent on older reports. */

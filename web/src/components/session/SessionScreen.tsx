@@ -8,7 +8,7 @@ import { buildJudgmentChain, scoreInfiere, scoreObtiene, scoreReflexiona } from 
 import { PAUSE_OFFER } from "@/lib/signals/pace";
 import { CONFIDENCE_LABELS, Face, Icon, LevelCell, MoodPicker, SignalRow, moodLabel } from "@/components/ui";
 import { ReadingText } from "./ReadingText";
-import { READ_LIMIT_S, SessionController, type Snapshot } from "./controller";
+import { READ_LIMIT_S, SessionController, type SessionAsrProvider, type Snapshot } from "./controller";
 
 const PILLS = ["CHECK_IN", "READ", "Q_OBTIENE", "Q_INFIERE", "STANCE", "COUNTER", "CHECK_OUT"] as const;
 const PILL_LABEL: Record<(typeof PILLS)[number], string> = {
@@ -249,6 +249,8 @@ function KidZone({ snap, ctl, onDone }: { snap: Snapshot; ctl: SessionController
   return (
     <>
       <Orb snap={snap} />
+      {snap.asrConnecting && <p className="notice info" role="status">Preparando el reconocedor… El tiempo de lectura y de respuesta empieza cuando esté listo.</p>}
+      {snap.asrFinalizing && <p className="notice info" role="status">Terminando la transcripción… En el modelo local puede tardar. Este procesamiento no cuenta como tiempo de lectura ni como silencio.</p>}
       {snap.micError && (
         <div className="notice error row" role="alert" style={{ justifyContent: "space-between" }}>
           <span>{snap.micError}</span>
@@ -284,11 +286,11 @@ function KidZone({ snap, ctl, onDone }: { snap: Snapshot; ctl: SessionController
           <p className="small muted">
             {snap.simulation
               ? "Modo manual: comparamos el texto al enviarlo. No hay seguimiento de voz."
-              : `Seguimiento aproximado por transcripción${snap.readProvisional ? " provisional" : ""}. Puede corregirse mientras hablas; no mide el instante exacto de cada palabra.`}
+              : `Seguimiento aproximado por transcripción${snap.readProvisional ? " provisional" : ""}. Puede corregirse mientras hablas; los tiempos del reconocedor no son una alineación exacta con el pasaje.`}
           </p>
           {!snap.simulation && <div className="caption" aria-live="polite">{snap.caption || "…"}</div>}
           {!snap.simulation && (
-            <button type="button" className="btn kid" onClick={() => ctl.finishReading()}>
+            <button type="button" className="btn kid" onClick={() => ctl.finishReading()} disabled={!snap.listening || snap.asrConnecting || snap.asrFinalizing}>
               Terminé
             </button>
           )}
@@ -476,6 +478,8 @@ function ModeBar({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
           La transcripción puede enviar audio al proveedor del navegador y necesitar internet. El análisis de pausas y prosodia se hace en este dispositivo; la app no guarda grabaciones.
         </p>
       )}
+      {!snap.simulation && snap.voiceProvider === "deepgram" && <p className="small muted">Deepgram Nova-3 recibe la voz para transcribir. Conexión limitada por turno; la app no guarda grabaciones ni cambia de proveedor sin que lo elijas.</p>}
+      {!snap.simulation && snap.voiceProvider === "local-whisper" && <p className="small muted">Whisper base se ejecuta en este dispositivo. La inferencia puede tardar, especialmente en celulares; la app no envía esta voz al proveedor de ASR.</p>}
     </div>
   );
 }
@@ -488,11 +492,12 @@ function Intro({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
       <span className="eyebrow">Misión de hoy · {m.lang === "qu" ? "quechua" : "castellano"}</span>
       <h1>Hola, {alias}. Hoy leemos «{m.title}»</h1>
       <p>Vas a leer en voz alta, responder tres preguntas y pensar en un dato nuevo. No es un examen: nos interesa cómo piensas.</p>
+      <VoiceProviderSetup snap={snap} ctl={ctl} />
       {snap.voiceSupport && (
         <div className="card tight stack-sm" aria-label="Diagnóstico de voz">
           <strong>Antes de empezar: micrófono y transcripción son distintos</strong>
           <p className="small">Micrófono: {snap.voiceSupport.canRecord ? "API disponible; falta comprobar permiso y sonido" : "no disponible en esta página"}.</p>
-          <p className="small">Transcripción: {snap.voiceSupport.canTranscribe ? "API disponible; el servicio aún debe responder" : "no disponible; usa transcripción manual"}.</p>
+          <p className="small">Web Speech del navegador: {snap.voiceSupport.canTranscribe ? "API disponible; el servicio aún debe responder" : "no disponible; puedes elegir el modelo local, una nube autorizada o escribir"}.</p>
           <p className="small muted">{snap.voiceSupport.message}</p>
           <p className="small muted">La voz necesita HTTPS o localhost. Abrir una IP local con HTTP desde el celular no lo soluciona.</p>
           {snap.voiceSupport.canRecord && snap.permissions.voice && (
@@ -508,16 +513,16 @@ function Intro({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
       ) : (
         <p className="small muted">
           Al empezar, el navegador pedirá permiso para usar el micrófono. La app no guarda grabaciones. La transcripción puede enviar audio a un proveedor externo del navegador;
-          las señales de lectura se calculan en el dispositivo. Si prefieres, usa la transcripción manual.
+          las señales acústicas de lectura se calculan en el dispositivo. El modelo local evita enviar la voz al ASR; la nube requiere una autorización adicional. Si prefieres, escribe la transcripción.
         </p>
       )}
       <div className="big-actions">
         {snap.resumable && (
-          <button type="button" className="btn kid" onClick={() => void ctl.begin(true)} disabled={snap.micTesting}>
+          <button type="button" className="btn kid" onClick={() => void ctl.begin(true)} disabled={snap.micTesting || snap.localPreparing}>
             Retomar donde quedaste
           </button>
         )}
-        <button type="button" className={`btn kid${snap.resumable ? " ghost" : ""}`} onClick={() => void ctl.begin(false)} disabled={snap.micTesting} autoFocus>
+        <button type="button" className={`btn kid${snap.resumable ? " ghost" : ""}`} onClick={() => void ctl.begin(false)} disabled={snap.micTesting || snap.localPreparing} autoFocus>
           {snap.resumable ? "Empezar de nuevo" : "Empezar"}
         </button>
       </div>
@@ -527,6 +532,74 @@ function Intro({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
           Usar transcripción manual (sin micrófono: el adulto escribe lo que dice el niño)
         </label>
       )}
+    </div>
+  );
+}
+
+function VoiceProviderSetup({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
+  return (
+    <section className="stack-sm" aria-labelledby="asr-title">
+      <h2 id="asr-title">Cómo transcribimos la voz</h2>
+      <div className="field">
+        <label htmlFor="asr-provider">Reconocedor</label>
+        <select id="asr-provider" className="input" value={snap.voiceProvider} onChange={(event) => ctl.selectVoiceProvider(event.target.value as SessionAsrProvider)} disabled={snap.micTesting || snap.localPreparing}>
+          <option value="browser">Web Speech · servicio del navegador</option>
+          <option value="local-whisper">Whisper base · en este dispositivo</option>
+          <option value="deepgram">Deepgram Nova-3 · nube con autorización</option>
+        </select>
+      </div>
+      {snap.voiceProvider === "browser" && <p className="small muted">No elegimos el modelo interno del navegador. Puede enviar audio a su proveedor y no ofrece tiempos por palabra. Opera puede permitir el micrófono sin transcribir.</p>}
+      {snap.voiceProvider === "local-whisper" && (
+        <>
+          <p className="small muted">Descarga explícita de aproximadamente 80 MB más el motor de ejecución; necesita internet al prepararlo y memoria suficiente. Solo castellano en este MVP. No está validado como evaluación autónoma de lectura infantil.</p>
+          <button type="button" className="btn subtle" onClick={() => void ctl.prepareLocalVoice()} disabled={snap.localReady || snap.localPreparing || !snap.permissions.voice || snap.mission?.lang !== "es"}>
+            {snap.localPreparing ? "Preparando modelo…" : snap.localReady ? "Modelo local listo" : "Descargar y preparar modelo local (~80 MB)"}
+          </button>
+          {snap.localProgress && <p className="small" role="status">{snap.localProgress}</p>}
+        </>
+      )}
+      {snap.voiceProvider === "deepgram" && <CloudAuthorization key={snap.cloudStatus?.mode ?? "pending"} snap={snap} ctl={ctl} />}
+      <p className="small muted">Ningún reconocedor infiere emociones, identidad, salud ni calidad del acento. Sus transcripciones y tiempos requieren revisión humana; la confianza del ASR no es una nota.</p>
+    </section>
+  );
+}
+
+function CloudAuthorization({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
+  const [code, setCode] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [adult, setAdult] = useState(false);
+  const policy = snap.cloudStatus;
+  const demo = policy?.mode === "adult-demo";
+  const revoke = () => ctl.authorizeCloud(null);
+  if (snap.cloudStatusLoading) return <p className="small" role="status">Comprobando disponibilidad de Deepgram…</p>;
+  if (!policy?.enabled) return (
+    <div className="stack-sm">
+      <p className="notice">Deepgram no está habilitado o no se pudo comprobar en este despliegue. No se enviará audio. El responsable debe configurar el proveedor, acceso y modalidad de privacidad.</p>
+      <button type="button" className="btn subtle" onClick={() => void ctl.refreshAsrStatus()}>Comprobar otra vez</button>
+    </div>
+  );
+  return (
+    <div className="stack-sm">
+      <p className="notice info">{demo ? "Demo con voz adulta o sintética. No envíes voces de menores de 13 años. No sustituye una validación infantil." : "Piloto autorizado por el responsable del despliegue. Usa únicamente las condiciones y participantes aprobados para este piloto."}</p>
+      <p className="small muted">La voz se envía a Deepgram (Nova-3) para transcribir en castellano y obtener tiempos estimados. La app no almacena audio; el tratamiento del proveedor depende del acuerdo y la configuración del despliegue. Este permiso es separado del permiso general de micrófono.</p>
+      <label className="row small" style={{ gap: 8 }}>
+        <input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); revoke(); }} style={{ width: 22, height: 22 }} />
+        Autorizo enviar audio a Deepgram para esta sesión.
+      </label>
+      {demo && <label className="row small" style={{ gap: 8 }}>
+        <input type="checkbox" checked={adult} onChange={(event) => { setAdult(event.target.checked); revoke(); }} style={{ width: 22, height: 22 }} />
+        Confirmo que usaré solo voz adulta o sintética, no la voz de un menor de 13 años.
+      </label>}
+      {!snap.cloudReady && <div className="field">
+        <label htmlFor="cloud-code">Código de acceso del responsable</label>
+        <input id="cloud-code" type="password" className="input" value={code} maxLength={256} autoComplete="off" aria-describedby="cloud-code-help" onChange={(event) => { setCode(event.target.value); revoke(); }} />
+        <span id="cloud-code-help" className="small muted">Se usa solo en memoria durante esta sesión. No se guarda en el perfil ni en los informes.</span>
+      </div>}
+      {snap.cloudReady ? <p className="small" role="status">Autorización lista para esta sesión. El servidor comprobará el acceso al conectar.</p> : <button type="button" className="btn subtle" disabled={!consent || (demo && !adult) || !code.trim() || !snap.permissions.voice || snap.mission?.lang !== "es"} onClick={() => {
+        if (!policy || policy.mode === "disabled") return;
+        ctl.authorizeCloud({ accessCode: code, audience: policy.mode, consent: true, adultConfirmed: adult });
+        setCode("");
+      }}>Autorizar esta sesión con Deepgram</button>}
     </div>
   );
 }
@@ -551,6 +624,11 @@ function AdultPanel({ snap, open }: { snap: Snapshot; open: boolean }) {
   return (
     <aside className={`adult${open ? " open" : ""}`} aria-label="Vista del adulto">
       <span className="tag blue">Vista del adulto</span>
+      <div className="stack-sm">
+        <SignalRow name="Fuente ASR" value={<span style={{ overflowWrap: "anywhere" }}>{snap.simulation ? "manual" : snap.asrMetadata ? `${snap.asrMetadata.provider} · ${snap.asrMetadata.model}` : snap.voiceProvider === "browser" ? "Web Speech · modelo del navegador" : snap.voiceProvider === "deepgram" ? "Deepgram · esperando resultados" : "Whisper base · esperando resultados"}</span>} />
+        <SignalRow name="Tiempos ASR" value={snap.asrMetadata?.timedWords ? `${snap.asrMetadata.timedWords} palabras · ${snap.asrMetadata.firstStart?.toFixed(1)}–${snap.asrMetadata.lastEnd?.toFixed(1)} s` : "no disponibles"} />
+        <p className="small muted">Tiempos relativos del reconocedor, no alineación forzada con el pasaje ni evidencia de exactitud. Un ASR puede omitir muletillas: no encontrarlas no demuestra que no ocurrieran.</p>
+      </div>
       {st === "READ" || st === "CHECK_IN" ? (
         <>
           <h3>Lectura en curso</h3>

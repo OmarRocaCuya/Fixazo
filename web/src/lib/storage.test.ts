@@ -53,6 +53,13 @@ describe("local persistence", () => {
     expect(() => s.saveReport(fakeReport({ id: "r3", voiceprint: [1, 2] }))).toThrow();
     expect(s.listReports().map((r) => r.id)).toEqual(["r1"]);
   });
+  it("allowlists report provenance without saving credentials or per-word timings", () => {
+    const s = createStore(memoryStorage());
+    const provenance = { provider: "local-whisper", model: "onnx-community/whisper-base_timestamped", language: "es", timingsAvailable: true, normalization: "asr-may-normalize" };
+    s.saveReport(fakeReport({ transcription: [{ ...provenance, accessCode: "secret-access", token: "secret-token", words: [{ word: "Rosa", start: 0.1, end: 0.4 }] }] }));
+    expect(s.getReport("r1")?.transcription).toEqual([provenance]);
+    expect(s.exportAll()).not.toMatch(/secret-access|secret-token|"words"|"start": 0\.1/);
+  });
 
   it("deletes all data with the app prefix only", () => {
     const mem = memoryStorage();
@@ -113,6 +120,15 @@ describe("paused session privacy and lifetime", () => {
     expect(json).not.toMatch(/"(pace|baseline|emotion|voiceprint|rawAudio|samples)"/);
     expect(json).not.toContain("280");
     expect((saved?.turns[0] as { audio: { meanF0: null; possibleAdultHelp: boolean } }).audio).toMatchObject({ meanF0: null, possibleAdultHelp: false });
+  });
+  it("preserves minimal turn provenance through pause and drops unallowlisted ASR metadata", () => {
+    vi.useFakeTimers().setSystemTime(now);
+    const s = createStore(memoryStorage());
+    const p = paused();
+    const transcription = { provider: "deepgram", model: "nova-3", language: "es", timingsAvailable: true, normalization: "asr-may-normalize" };
+    s.savePaused({ ...p, turns: [{ ...(p.turns[0] as object), transcription: { ...transcription, accessCode: "secret-access", token: "secret-token", words: [{ start: 0.1, end: 0.9, word: "Rosa" }] } }] });
+    expect((s.loadPaused()?.turns[0] as { transcription: unknown }).transcription).toEqual(transcription);
+    expect(s.exportAll()).not.toMatch(/secret-access|secret-token|"words"/);
   });
   it("removes corrupt, future-dated, invalid-state and raw-audio payloads", () => {
     vi.useFakeTimers().setSystemTime(now);

@@ -45,7 +45,7 @@ function ConsentForm({ initialProfile, initialPerms }: { initialProfile: Profile
         <span className="eyebrow">Paso 1 de 2 · Familia</span>
         <h1>Antes de empezar con {cleanAlias || "tu hijo"}</h1>
         <p className="muted">
-          Tú decides qué se escucha durante la sesión. La app no guarda grabaciones. La transcripción del navegador puede procesar la voz en servidores externos.
+          Tú decides qué se escucha durante la sesión. La app no guarda grabaciones. Puedes preparar transcripción en el dispositivo, usar la del navegador o escribir. El navegador puede procesar la voz en servidores externos.
         </p>
       </div>
 
@@ -114,11 +114,11 @@ function ConsentForm({ initialProfile, initialPerms }: { initialProfile: Profile
             Leer cómo cuidamos los datos
           </summary>
           <div className="card tight stack-sm" style={{ marginTop: 12 }}>
-            <p className="small">• Las señales acústicas se calculan en el navegador. La app no graba ni almacena el audio.</p>
+            <p className="small">• Las señales acústicas se calculan en el navegador. La app no almacena grabaciones de audio.</p>
             <p className="small">
-              • Para transcribir en castellano usamos el reconocimiento de voz del navegador, que puede enviar audio a su proveedor. Si prefieres
-              no usar ese servicio, desactiva la voz y transcribe manualmente lo que dice el niño.
+              • En castellano puedes elegir Web Speech (puede enviar audio a su proveedor), Whisper local (descarga voluntaria del modelo, sin enviar voz al ASR) o escribir lo que escuchas.
             </p>
+            <p className="small">• Deepgram y la demo conversacional requieren acceso del responsable y autorización específica para esa sesión. Este permiso general no los activa. La demo adulta no acepta voces de menores de 13 años.</p>
             <p className="small">• Perfil, misiones e informes se guardan solo en este dispositivo. Puedes borrarlos en Privacidad.</p>
             <p className="small">• No detectamos emociones, no guardamos huellas de voz, no juzgamos el acento y no medimos la salud.</p>
           </div>

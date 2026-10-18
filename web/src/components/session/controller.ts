@@ -1,7 +1,7 @@
 // Session orchestrator for the browser. Owns the state machine, the agent voice,
 // the transcriber and the on-device audio analyzer, and exposes an immutable
 // snapshot to React (useSyncExternalStore).
-import type { Confidence, Consent, Decision, FrameFeature, Mission, Mood, Permissions, Profile, TurnRecord, TurnState } from "@/lib/types";
+import type { Confidence, Consent, Decision, FrameFeature, Mission, Mood, Permissions, Profile, TranscriptionProvenance, TurnRecord, TurnState } from "@/lib/types";
 import { initialContext, start, transition, type Effect, type MachineContext, type MachineEvent, type Utterance } from "@/lib/session/machine";
 import { liveReadingProgress, readingMetrics } from "@/lib/signals/reading";
 import { summarizeTurnAudio } from "@/lib/signals/summary";
@@ -17,6 +17,8 @@ import { AudioAnalyzer } from "@/lib/browser/audio";
 import { createTranscriber, type Transcriber } from "@/lib/browser/transcriber";
 import { getVoiceSupport, voiceErrorMessage, type VoiceSupport } from "@/lib/browser/voice-support";
 import type { JudgeResponse } from "@/lib/judge/rubric";
+import type { AsrResult, CloudVoiceAccess, VoicePolicyStatus } from "@/lib/voice/types";
+import { localAsrReady, prepareLocalAsr, releaseLocalAsr } from "@/lib/browser/local-whisper";
 
 export const READ_LIMIT_S = 60;
 const NO_RESPONSE_MS = 8000;
@@ -41,6 +43,19 @@ export interface LiveSignals {
   prosody: number | null;
   differentIdx: number[];
   noise: "ok" | "alto" | null;
+}
+
+export type SessionAsrProvider = "browser" | "deepgram" | "local-whisper";
+
+/** Live diagnostics only: no credentials, audio or per-word transcript is saved. */
+export interface AsrMetadata {
+  provider: AsrResult["provider"];
+  model: string;
+  language: string;
+  timedWords: number;
+  firstStart: number | null;
+  lastEnd: number | null;
+  isFinal: boolean;
 }
 
 export interface Snapshot {
@@ -73,6 +88,16 @@ export interface Snapshot {
   micTesting: boolean;
   micTestMessage: string | null;
   micBusy: boolean;
+  voiceProvider: SessionAsrProvider;
+  cloudStatus: VoicePolicyStatus | null;
+  cloudStatusLoading: boolean;
+  cloudReady: boolean;
+  asrConnecting: boolean;
+  asrFinalizing: boolean;
+  asrMetadata: AsrMetadata | null;
+  localReady: boolean;
+  localPreparing: boolean;
+  localProgress: string | null;
 }
 
 const EMPTY_LIVE: LiveSignals = { pcpm: null, accuracy: null, selfCorrections: 0, longPauses: null, prosody: null, differentIdx: [], noise: null };
@@ -111,6 +136,16 @@ function initialSnapshot(): Snapshot {
     micTesting: false,
     micTestMessage: null,
     micBusy: false,
+    voiceProvider: "browser",
+    cloudStatus: null,
+    cloudStatusLoading: true,
+    cloudReady: false,
+    asrConnecting: false,
+    asrFinalizing: false,
+    asrMetadata: null,
+    localReady: false,
+    localPreparing: false,
+    localProgress: null,
   };
 }
 
@@ -126,6 +161,8 @@ export class SessionController {
   private transcriber: Transcriber | null = null;
   private epoch = 0;
   private disposed = false;
+  private lifecycleRequest = 0;
+  private cloudAccess: CloudVoiceAccess | null = null;
 
   // Turn bookkeeping (derived numbers only; frames are dropped after summary).
   private turns: TurnRecord[] = [];
@@ -174,6 +211,8 @@ export class SessionController {
   // ------------------------------------------------------------- lifecycle
   init() {
     this.disposed = false;
+    const request = ++this.lifecycleRequest;
+    this.cloudAccess = null;
     this.snap = initialSnapshot();
     const store = getStore();
     const consent: Consent | null = store.loadConsent();
@@ -201,12 +240,81 @@ export class SessionController {
     });
     fetch("/api/judge")
       .then((r) => r.json())
-      .then((j: { mode?: "ia" | "reglas" }) => this.patch({ judgeMode: j.mode === "ia" ? "ia" : "reglas" }))
-      .catch(() => this.patch({ judgeMode: "reglas" }));
+      .then((j: { mode?: "ia" | "reglas" }) => request === this.lifecycleRequest && this.patch({ judgeMode: j.mode === "ia" ? "ia" : "reglas" }))
+      .catch(() => request === this.lifecycleRequest && this.patch({ judgeMode: "reglas" }));
+    void this.refreshAsrStatus();
+  }
+
+  async refreshAsrStatus() {
+    const request = this.lifecycleRequest;
+    this.patch({ cloudStatusLoading: true });
+    let status: VoicePolicyStatus;
+    try {
+      const response = await fetch("/api/asr", { cache: "no-store" });
+      if (response.ok === false) throw new Error("status unavailable");
+      const data = await response.json() as { providers?: { deepgram?: VoicePolicyStatus } };
+      const candidate = data.providers?.deepgram;
+      if (!candidate || !["disabled", "adult-demo", "approved-pilot"].includes(candidate.mode)) throw new Error("invalid status");
+      status = { enabled: candidate.enabled === true, mode: candidate.mode, reason: candidate.reason ?? null };
+    } catch {
+      status = { enabled: false, mode: "disabled", reason: "No pudimos comprobar el servicio. La voz en la nube permanece desactivada; puedes reintentar o escribir." };
+    }
+    if (this.disposed || request !== this.lifecycleRequest) return;
+    if (!status.enabled || status.mode !== this.cloudAccess?.audience) this.cloudAccess = null;
+    this.patch({ cloudStatus: status, cloudStatusLoading: false, cloudReady: !!this.cloudAccess });
+    if (this.snap.phase === "intro" && this.snap.voiceProvider === "deepgram") this.applyVoiceSetup();
+  }
+
+  /** Provider selection and cloud authorization are separate, explicit actions. */
+  selectVoiceProvider(provider: SessionAsrProvider) {
+    if (this.snap.phase !== "intro" || this.snap.micTesting || provider === this.snap.voiceProvider) return;
+    this.cloudAccess = null;
+    this.patch({ voiceProvider: provider, cloudReady: false, asrMetadata: null, localReady: localAsrReady() });
+    this.applyVoiceSetup();
+  }
+
+  authorizeCloud(access: CloudVoiceAccess | null) {
+    if (this.snap.phase !== "intro" || this.snap.voiceProvider !== "deepgram") return;
+    const policy = this.snap.cloudStatus;
+    const allowed = access?.consent === true && !!access.accessCode.trim() && policy?.enabled === true && policy.mode === access.audience
+      && (access.audience !== "adult-demo" || access.adultConfirmed === true);
+    this.cloudAccess = allowed ? { ...access, accessCode: access.accessCode.trim() } : null;
+    this.patch({ cloudReady: !!this.cloudAccess });
+    this.applyVoiceSetup();
+  }
+
+  private applyVoiceSetup() {
+    const forced = this.forcedSimulationReason();
+    this.patch({ simulationForced: forced, simulation: forced !== null, speechSupported: forced === null, micError: null });
+  }
+
+  /** Downloads model files only after an explicit adult action; never audio. */
+  async prepareLocalVoice() {
+    if (this.snap.phase !== "intro" || this.snap.voiceProvider !== "local-whisper" || this.snap.localPreparing) return;
+    const request = this.lifecycleRequest;
+    this.patch({ localPreparing: true, localProgress: "Preparando descarga del modelo local (~80 MB)…" });
+    try {
+      await prepareLocalAsr((progress) => {
+        if (request === this.lifecycleRequest) this.patch({ localProgress: `${progress.message}${Number.isFinite(progress.progress) && progress.progress > 0 ? ` · ${Math.round(progress.progress)} %` : ""}` });
+      });
+      if (this.disposed || request !== this.lifecycleRequest) return;
+      this.patch({ localReady: localAsrReady(), localProgress: "Modelo listo en este dispositivo. La voz se procesa aquí, sin enviarla a un proveedor de ASR." });
+    } catch {
+      if (this.disposed || request !== this.lifecycleRequest) return;
+      this.patch({ localReady: false, localProgress: "No pudimos preparar el modelo. Revisa internet, memoria y compatibilidad del navegador; puedes reintentar o escribir." });
+    } finally {
+      if (!this.disposed && request === this.lifecycleRequest) {
+        this.patch({ localPreparing: false });
+        this.applyVoiceSetup();
+      }
+    }
   }
 
   dispose() {
     this.disposed = true;
+    this.lifecycleRequest++;
+    this.cloudAccess = null;
+    releaseLocalAsr();
     this.epoch++;
     this.micRequest++;
     this.stopMicProbe();
@@ -221,6 +329,19 @@ export class SessionController {
 
   private forcedSimulationReason(support = getVoiceSupport(this.mission?.lang ?? "es")): string | null {
     if (!this.permissions.voice) return "La familia no dio permiso de voz: la sesión funciona escribiendo lo que dice el niño.";
+    if (this.snap.voiceProvider === "deepgram") {
+      if (!support.canRecord) return support.message;
+      if (this.mission?.lang !== "es") return "Deepgram no está habilitado para quechua en este MVP. Escribe lo que escuchas, sin traducir.";
+      if (!this.snap.cloudStatus?.enabled) return "La transcripción en la nube no está habilitada en este despliegue. Usa el modelo local o escribe; el responsable puede revisar la configuración.";
+      if (!this.cloudAccess) return "Falta la autorización específica para enviar audio a Deepgram. Sin ella la sesión funciona escribiendo.";
+      return null;
+    }
+    if (this.snap.voiceProvider === "local-whisper") {
+      if (!support.canRecord) return support.message;
+      if (this.mission?.lang !== "es") return "El modelo local aún no está validado para evaluar lectura en quechua. Usa la transcripción manual, sin traducir.";
+      if (!this.snap.localReady) return "Prepara primero el modelo local para usar transcripción sin enviar la voz a la nube.";
+      return null;
+    }
     return support.canTranscribe ? null : support.message;
   }
 
@@ -261,7 +382,7 @@ export class SessionController {
     const request = ++this.micRequest;
     const support = getVoiceSupport(this.mission?.lang ?? "es");
     const forced = this.forcedSimulationReason(support);
-    this.patch({ voiceSupport: support, speechSupported: support.canTranscribe, simulationForced: forced });
+    this.patch({ voiceSupport: support, speechSupported: forced === null, simulationForced: forced });
     if (forced) {
       this.useManualInput(forced);
       return false;
@@ -275,7 +396,7 @@ export class SessionController {
       }
       this.unsubscribeFrames?.();
       this.unsubscribeFrames = this.analyzer.subscribe((f) => this.onFrame(f));
-      this.transcriber = createTranscriber(this.mission?.lang ?? "es");
+      this.transcriber = createTranscriber(this.mission?.lang ?? "es", { provider: this.snap.voiceProvider, cloudAccess: this.cloudAccess ?? undefined });
       if (!this.transcriber) {
         this.useManualInput(voiceErrorMessage("unsupported"));
         return false;
@@ -360,7 +481,7 @@ export class SessionController {
     this.turnFrames = [];
     this.recentNoise = [];
     this.patch({
-      micError: message, simulation: true, usingWebSpeech: false,
+      micError: message, simulation: true, usingWebSpeech: false, asrConnecting: false, asrFinalizing: false, asrMetadata: null,
       agentSpeaking: false, caption: this.turnText || this.snap.caption,
       listening: this.snap.phase === "running" && !!this.ctx && (this.ctx.state === "READ" || (ANSWER_STATES.has(this.ctx.state) && !this.ctx.awaitingConfidence)),
       live: { ...this.snap.live, longPauses: null, prosody: null, noise: null },
@@ -449,13 +570,30 @@ export class SessionController {
     this.lastTextAt = 0;
     this.turnStart = this.clock();
     if (state === "READ") this.patch({ readElapsed: 0, readProgress: 0, readProvisional: false, live: EMPTY_LIVE });
-    this.patch({ listening: true, caption: preservedText });
+    this.patch({ listening: false, caption: preservedText, asrMetadata: null, asrFinalizing: false });
     const voiceMode = !this.snap.simulation && this.transcriber;
+    let ready = false;
+    const onReady = () => {
+      if (ready || this.disposed || epoch !== this.epoch) return;
+      ready = true;
+      // Model download, recognizer startup and cloud handshake are not reading
+      // time, response latency or evidence that the learner stayed silent.
+      this.turnStart = this.clock();
+      this.turnFrames = [];
+      this.patch({ listening: true, asrConnecting: false });
+      this.startTurnTicker(state, epoch, !!voiceMode);
+    };
 
     if (voiceMode && this.transcriber) {
+      this.patch({ asrConnecting: true });
       this.transcriber.start({
+        onReady,
+        onResult: (result) => {
+          if (this.disposed || (epoch !== this.epoch && !(this.snap.asrFinalizing && this.epoch === epoch + 1))) return;
+          this.patch({ asrMetadata: this.resultMetadata(result) });
+        },
         onText: (text, isFinal) => {
-          if (epoch !== this.epoch) return;
+          if (!ready || epoch !== this.epoch) return;
           this.turnText = [preservedText, text].filter(Boolean).join(" ");
           this.lastTextAt = this.clock();
           this.patch({ caption: this.turnText });
@@ -464,13 +602,44 @@ export class SessionController {
         onError: (code) => {
           if (this.disposed || epoch !== this.epoch) return;
           this.epoch++; // invalidate callbacks; do not restart or advance the question
-          this.useManualInput(voiceErrorMessage(code));
+          this.useManualInput(this.asrErrorMessage(code));
         },
       });
+    } else {
+      onReady();
     }
-    // start() may report an unsupported/service error synchronously.
-    if (epoch !== this.epoch || this.disposed) return;
+  }
 
+  private resultMetadata(result: AsrResult): AsrMetadata {
+    const words = result.words.filter((w) => Number.isFinite(w.start) && Number.isFinite(w.end) && w.start >= 0 && w.end >= w.start);
+    return { provider: result.provider, model: result.model, language: result.language,
+      timedWords: words.length, firstStart: words[0]?.start ?? null, lastEnd: words.at(-1)?.end ?? null, isFinal: result.isFinal };
+  }
+
+  private turnProvenance(manual = false): TranscriptionProvenance {
+    if (manual) return { provider: "manual", model: "human-entered", language: this.mission?.lang ?? "es", timingsAvailable: false, normalization: "manual-unverified" };
+    const provider = this.snap.voiceProvider === "browser" ? "web-speech" : this.snap.voiceProvider;
+    const model = provider === "web-speech" ? "browser-managed" : provider === "deepgram" ? "nova-3" : "onnx-community/whisper-base_timestamped";
+    return { provider, model, language: "es", timingsAvailable: !!this.snap.asrMetadata?.timedWords, normalization: "asr-may-normalize" };
+  }
+
+  private asrErrorMessage(code: string): string {
+    if (this.snap.voiceProvider === "local-whisper") {
+      if (code === "local-asr-not-ready") return "El modelo local no está preparado. Vuelve a la misión para descargarlo o continúa escribiendo; no cambiaremos a la nube automáticamente.";
+      if (code === "local-asr-timeout") return "El dispositivo tardó demasiado en transcribir. Conserva el texto disponible y completa el turno escribiendo; no cuenta como silencio del niño.";
+      if (code.startsWith("local-asr-")) return "No se pudo completar la transcripción en este dispositivo. Puedes continuar escribiendo; no se enviará esta voz a otro proveedor automáticamente.";
+    }
+    if (this.snap.voiceProvider === "deepgram") {
+      if (code === "not-allowed") return "No se autorizó el acceso a la voz en la nube o al micrófono. Revisa el código, los permisos y la autorización; puedes seguir escribiendo sin perder el texto.";
+      if (code === "asr-unavailable") return "Deepgram no está disponible en este despliegue. Continúa escribiendo; no se cambia de proveedor automáticamente.";
+      if (["asr-session-expired", "session-limit"].includes(code)) return "Se alcanzó el límite de esta conexión de voz. Reintenta para abrir una conexión nueva o continúa escribiendo; conservamos lo reconocido.";
+      if (code === "network") return "La conexión con Deepgram se interrumpió. Revisa internet y reintenta, o continúa escribiendo; conservamos lo reconocido.";
+    }
+    return voiceErrorMessage(code);
+  }
+
+  private startTurnTicker(state: TurnState, epoch: number, voiceMode: boolean) {
+    if (epoch !== this.epoch || this.disposed) return;
     this.ticker = setInterval(() => {
       if (epoch !== this.epoch) return;
       const now = this.clock();
@@ -558,8 +727,9 @@ export class SessionController {
     if (epoch !== this.epoch || !this.ctx) return;
     this.epoch++; // freeze this turn
     const frozen = this.epoch;
+    const turnEndedAt = this.clock();
     this.clearTimers();
-    this.patch({ listening: false });
+    this.patch({ listening: false, asrFinalizing: true });
     let text: string;
     try {
       // The handler may have included a preserved prefix from before a retry.
@@ -570,27 +740,33 @@ export class SessionController {
       return;
     }
     if (frozen !== this.epoch) return;
+    if ((this.snap.voiceProvider === "deepgram" || this.snap.voiceProvider === "local-whisper") && this.snap.asrMetadata?.isFinal !== true) {
+      this.turnText = text || this.turnText;
+      this.useManualInput("El reconocedor no confirmó el texto final. Revisa y completa la transcripción antes de enviarla; no lo contamos como un error del niño.");
+      return;
+    }
     if (!text) {
       this.useManualInput(voiceErrorMessage("no-speech"));
       return;
     }
     const frames = this.turnFrames;
+    const transcription = this.turnProvenance();
     this.turnFrames = [];
     const audio = this.analyzer.running
       ? summarizeTurnAudio(frames, { questionEndMs: this.turnStart, childBaselineF0: this.baseline?.meanF0 ?? null })
       : null;
 
     if (kind === "read") {
-      const readingSeconds = Math.min(READ_LIMIT_S, Math.max(1, (this.clock() - this.turnStart) / 1000));
+      const readingSeconds = Math.min(READ_LIMIT_S, Math.max(1, (turnEndedAt - this.turnStart) / 1000));
       this.baseline = computeBaseline(frames);
       const unobservable = liveReadingProgress(this.mission!.text, text).matchedWords === 0;
-      this.turns.push({ state: "READ", transcript: text, simulated: false, audio, readingSeconds, unobservable, at: Date.now() });
+      this.turns.push({ state: "READ", transcript: text, simulated: false, audio, readingSeconds, unobservable, transcription, at: Date.now() });
       this.finishReadingLive(text, readingSeconds, frames);
       this.forceDispatch({ type: "READ_DONE" });
       return;
     }
     const unobservable = audio ? audio.snrDb !== null && audio.snrDb < 6 && answerLength(text) < 2 : false;
-    this.turns.push({ state: this.ctx.state as TurnState, transcript: text, simulated: false, audio, bargeIn: this.turnBargeIn, unobservable, at: Date.now() });
+    this.turns.push({ state: this.ctx.state as TurnState, transcript: text, simulated: false, audio, bargeIn: this.turnBargeIn, unobservable, transcription, at: Date.now() });
     this.turnBargeIn = false;
     this.checkPace(frames, text);
     this.patch({ lines: [...this.snap.lines, { who: "nino" as const, show: text }].slice(-8) });
@@ -638,7 +814,7 @@ export class SessionController {
     if (this.ticker) clearInterval(this.ticker);
     this.ticker = null;
     this.transcriber?.abort();
-    if (this.snap.listening) this.patch({ listening: false });
+    if (this.snap.listening || this.snap.asrConnecting || this.snap.asrFinalizing) this.patch({ listening: false, asrConnecting: false, asrFinalizing: false });
   }
 
   private clearTimers() {
@@ -657,14 +833,14 @@ export class SessionController {
 
   /** "Terminé" during READ. */
   finishReading() {
-    if (this.ctx?.state !== "READ") return;
+    if (this.ctx?.state !== "READ" || !this.snap.listening) return;
     if (this.snap.simulation) return;
     void this.endVoiceTurn("read", this.epoch);
   }
 
   /** "Listo" during an answer turn (voice mode). */
   doneSpeaking() {
-    if (!this.ctx || !ANSWER_STATES.has(this.ctx.state) || this.snap.simulation) return;
+    if (!this.ctx || !ANSWER_STATES.has(this.ctx.state) || this.snap.simulation || !this.snap.listening) return;
     void this.endVoiceTurn("answer", this.epoch);
   }
 
@@ -678,7 +854,7 @@ export class SessionController {
     if (ctx.state === "READ") {
       const seconds = Math.min(READ_LIMIT_S, Math.max(1, readSeconds ?? READ_LIMIT_S));
       const unobservable = liveReadingProgress(this.mission.text, t).matchedWords === 0;
-      this.turns.push({ state: "READ", transcript: t, simulated: true, audio: null, readingSeconds: seconds, unobservable, at: Date.now() });
+      this.turns.push({ state: "READ", transcript: t, simulated: true, audio: null, readingSeconds: seconds, unobservable, transcription: this.turnProvenance(true), at: Date.now() });
       this.finishReadingLive(t, seconds, []);
       this.dispatch({ type: "READ_DONE" });
       return;
@@ -689,6 +865,7 @@ export class SessionController {
       transcript: t,
       simulated: true,
       audio: null,
+      transcription: this.turnProvenance(true),
       simulatedLatencyMs: pauseSeconds !== null && pauseSeconds >= 0 ? Math.round(pauseSeconds * 1000) : null,
       at: Date.now(),
     });

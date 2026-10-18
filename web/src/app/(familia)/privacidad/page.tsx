@@ -71,11 +71,12 @@ function Privacy({ initial, alias }: { initial: Permissions; alias: string }) {
 
       <section className="card stack-sm">
         <h2>Cómo cuidamos el audio</h2>
-        <p className="small">Las señales acústicas se calculan en el navegador. La app no graba ni almacena el audio.</p>
+        <p className="small">Las señales acústicas se calculan en el navegador. La app no almacena grabaciones de audio.</p>
         <p className="small">
-          El reconocimiento del navegador puede enviar audio a su proveedor. Si prefieres evitarlo, desactiva el permiso de voz y usa la transcripción manual.
+          El reconocimiento del navegador puede enviar audio a su proveedor. Whisper local descarga archivos del modelo al prepararlo, pero procesa la voz en este dispositivo. Si prefieres evitar ambos, escribe la transcripción.
           Si se configura el juez de IA, las respuestas escritas se envían al proveedor de IA; sin clave se usan reglas.
         </p>
+        <p className="small">Deepgram y la demo de voz conversacional envían audio al proveedor elegido solo tras autorización específica y código de acceso. El permiso general de voz no los activa. El código y los tokens permanecen en memoria, fuera de los informes y exportaciones. La retención externa depende del acuerdo y la configuración del responsable del despliegue.</p>
         <h3 style={{ marginTop: 8 }}>Lo que no medimos</h3>
         <ul className="stack-sm" style={{ margin: 0, paddingLeft: 20 }}>
           {NOT_MEASURED.map((n) => (

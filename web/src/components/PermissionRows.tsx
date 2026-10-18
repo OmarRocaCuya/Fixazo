@@ -7,12 +7,12 @@ const ROWS: Array<{ key: keyof Permissions; title: string; desc: string }> = [
   {
     key: "voice",
     title: "Voz durante la sesión",
-    desc: "La app no guarda grabaciones. El servicio de transcripción del navegador puede procesar la voz fuera del dispositivo; también puedes escribir.",
+    desc: "La app no guarda grabaciones. Puedes usar el reconocedor del navegador, preparar un modelo local o escribir. La voz en la nube requiere otra autorización por sesión.",
   },
   {
     key: "process",
     title: "Cómo lo dice",
-    desc: "Pausas, tiempo para responder, autocorrecciones y palabras de duda. Describen su proceso, no son una nota.",
+    desc: "Pausas, tiempo para responder y posibles autocorrecciones o palabras de duda. Son aproximaciones revisables; un reconocedor puede omitirlas. No son una nota.",
   },
   {
     key: "mood",

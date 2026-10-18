@@ -9,6 +9,8 @@ const NAV = [
   { href: "/chat", label: "Chat", icon: "chat" as const },
   { href: "/informe", label: "Sesiones", icon: "report" as const },
   { href: "/progreso", label: "Progreso", icon: "progress" as const },
+  { href: "/voz", label: "Voz (demo)", icon: "sound" as const },
+  { href: "/lenguas", label: "Lenguas (lab)", icon: "chat" as const },
   { href: "/privacidad", label: "Privacidad", icon: "privacy" as const },
 ];
 
@@ -60,7 +62,7 @@ export function FamilyShell({ children }: { children: React.ReactNode }) {
           <span>
             <span className="dot" /> Entiendo: integración pendiente
           </span>
-          <span>Tus datos se guardan solo en este dispositivo.</span>
+          <span>Perfil e informes en este dispositivo. La voz en la nube requiere autorización.</span>
         </div>
       </aside>
       <main className="main" id="contenido">

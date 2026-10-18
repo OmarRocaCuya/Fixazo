@@ -1,0 +1,10 @@
+-c constraints.txt
+torch
+torchaudio
+fairseq2[arrow]
+# Pinned source, not an unversioned moving main branch. Upstream version 0.2.0.
+omnilingual-asr @ git+https://github.com/facebookresearch/omnilingual-asr.git@81f51e224ce9e74b02cc2a3eaf21b2d91d743455
+# Optional NLLB research translation (code remains disabled unless BOTH flags).
+transformers
+huggingface-hub
+sentencepiece

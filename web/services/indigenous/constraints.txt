@@ -1,0 +1,18 @@
+# Exact direct pins for the tested API stack and reference model integration.
+# fairseq2 0.6's native extension MUST match Torch 2.8.0 + selected CUDA variant.
+fastapi==0.135.1
+uvicorn==0.41.0
+python-multipart==0.0.22
+httpx==0.28.1
+starlette==1.8.0
+pydantic==2.14.1
+anyio==4.15.1
+torch==2.8.0
+torchaudio==2.8.0
+fairseq2==0.6
+fairseq2n==0.6
+# fairseq2's ~=0.32 is >=0.32,<1.0 (not <0.33); this also satisfies
+# Transformers 4.57.6's >=0.34,<1.0 requirement.
+transformers==4.57.6
+huggingface-hub==0.36.2
+sentencepiece==0.2.1

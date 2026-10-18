@@ -9,6 +9,7 @@ import { buildJudgmentChain, calibrate, scoreInfiere, scoreObtiene, scoreReflexi
 import { NOT_MEASURED } from "../guardrails";
 import { findProtagonist, splitSentences } from "../mission/builder";
 import { mean } from "../dsp";
+import { cleanTranscriptionProvenance } from "../transcription";
 
 export interface JudgeOutcome {
   level: Level;
@@ -170,6 +171,10 @@ export function buildReport(rec: SessionRecord, { id, now }: { id: string; now?:
     .filter((v): v is number => typeof v === "number");
   const stanceAudio = turnsOf(turns, "STANCE").at(-1)?.audio ?? null;
   const p = permissions.process;
+  const provenance = [...new Map(turns.flatMap((turn) => {
+    const item = cleanTranscriptionProvenance(turn.transcription);
+    return item ? [[JSON.stringify(item), item] as const] : [];
+  })).values()];
   const process: Report["process"] = {
     enabled: p,
     audioAvailable: p && audioAvailable,
@@ -198,6 +203,7 @@ export function buildReport(rec: SessionRecord, { id, now }: { id: string; now?:
     lang: mission.lang,
     simulated: rec.simulated,
     review: provisionalReview(),
+    ...(provenance.length ? { transcription: provenance } : {}),
     headline: makeHeadline(rec.profile.alias, levels, ctx.decision, readObservable ? m.pcpm : null),
     fluency: {
       quote: read?.transcript ?? "",
