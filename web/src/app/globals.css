@@ -562,3 +562,12 @@ a.pd-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px;
 .pd-explorar-item h3 { margin: 0; }
 .pd-emocion { margin-top: 8px; }
 .pd-explorar-item .pd-leer { justify-self: start; margin-top: 8px; }
+.pd-reveladas { display: grid; gap: 14px; margin: 18px 0; }
+.pd-nueva { border: 2px solid var(--accent); animation: pd-entra 0.5s ease-out; }
+@keyframes pd-entra { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { .pd-nueva { animation: none; } }
+.pd-buscar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.pd-progreso { flex: 1; min-width: 220px; display: grid; gap: 6px; font-size: 0.9rem; color: var(--muted); }
+.pd-progreso-pista { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.pd-progreso-barra { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+@media (prefers-reduced-motion: reduce) { .pd-progreso-barra { transition: none; } }

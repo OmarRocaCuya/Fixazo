@@ -1,0 +1,26 @@
+{
+  "id": "2026-10-18-0639-gobierno-y-google-abren-15-000-becas-de-formacion-",
+  "creada": "2026-10-18T11:39:52.181Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_a: más de 90 palabras (95)",
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "fragmento_b.citas[2] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "El Tiempo",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Vicepresidente José Manuel Restrepo explica cómo inscribirse a las becas gratuitas de Google para aprender Inteligencia Artificial: hay 15 mil cupos",
+      "url": "https://www.eltiempo.com/politica/gobierno/vicepresidente-jose-manuel-restrepo-explica-como-inscribirse-a-las-becas-gratuitas-de-google-para-aprender-inteligencia-artificial-hay-15-mil-cupos-3594265"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05321,
+    "segundos": 30
+  },
+  "noticia": null
+}

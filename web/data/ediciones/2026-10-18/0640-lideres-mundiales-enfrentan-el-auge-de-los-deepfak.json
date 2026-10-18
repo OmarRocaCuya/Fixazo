@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak",
+  "creada": "2026-10-18T11:40:03.011Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El Comercio",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Videos y audios falsos e hiperrealistas: cómo los líderes mundiales enfrentan el auge de los ‘deepfakes’ | EL COMERCIO PERÚ",
+      "url": "https://elcomercio.pe/mundo/actualidad/videos-y-audios-falsos-e-hiperrealistas-como-los-lideres-mundiales-enfrentan-el-auge-de-los-deepfakes-noticia/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.06888,
+    "segundos": 40
+  },
+  "noticia": {
+    "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak",
+    "seccion": "Tecnología",
+    "titular": "Líderes mundiales enfrentan el auge de los deepfakes con leyes",
+    "bajada": "Compara cómo distintos gobiernos intentan frenar los videos y audios falsos hechos con inteligencia artificial.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El Comercio",
+        "texto": "Demostrar qué es real en los tiempos de la IA resulta cada vez más complicado."
+      },
+      {
+        "medio": "El Comercio",
+        "texto": "Hay que enseñarle a la ciudadanía cómo consumir contenidos"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio el auge de los deepfakes?",
+        "opciones": [
+          "Como una amenaza que los gobiernos deben combatir con leyes y protocolos.",
+          "Como un juego divertido que la gente usa en redes sociales.",
+          "Como un tema que no afecta a los líderes políticos."
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El Comercio",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Videos y audios falsos e hiperrealistas: cómo los líderes mundiales enfrentan el auge de los ‘deepfakes’ | EL COMERCIO PERÚ",
+        "texto": "Demostrar qué es real en los tiempos de la IA resulta cada vez más complicado. (…) La primera ministra decidió registrar su propia voz ante la oficina de patentes de la Unión Europea (UE) con el objetivo de protegerse de las falsedades profundas creadas con inteligencia artificial. (…) Los críticos de la norma la han bautizado como la “ley antimemes” y consideran que penalizaría la sátira política y violaría el derecho a la libertad de expresión.",
+        "url": "https://elcomercio.pe/mundo/actualidad/videos-y-audios-falsos-e-hiperrealistas-como-los-lideres-mundiales-enfrentan-el-auge-de-los-deepfakes-noticia/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿qué hizo la primera ministra italiana Giorgia Meloni?",
+        "opciones": [
+          "Registró su propia voz ante la oficina de patentes de la Unión Europea.",
+          "Cerró todas sus cuentas en redes sociales.",
+          "Pidió a Putin un alto el fuego."
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que registró su propia voz ante la oficina de patentes de la UE para protegerse de falsedades creadas con IA.",
+        "otra": "Compara la frase que habla de la oficina de patentes para encontrar la respuesta exacta.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que hay que enseñarle a la ciudadanía a validar información?",
+        "opciones": [
+          "Juan Carlos Luján, comunicador peruano y divulgador sobre IA.",
+          "La presidenta mexicana Claudia Sheinbaum.",
+          "Un diputado del Parlamento Europeo."
+        ],
+        "correcta": 0,
+        "bien": "Luján es comunicador y divulgador sobre IA, por eso habla de cómo consumir y verificar contenidos.",
+        "otra": "Fíjate en quién aparece antes de la frase citada para identificar al experto.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "Si ves un video que parece real, ¿qué harías para comprobarlo?",
+        "opciones": [
+          "Buscar herramientas como SynthID Detector o verificar el origen del contenido.",
+          "Compartirlo rápido para que otros lo vean.",
+          "Creerlo si tiene muchos likes en redes sociales."
+        ],
+        "correcta": 0,
+        "bien": "El texto menciona SynthID Detector y recomienda verificar el origen y contrastar la información.",
+        "otra": "Piensa en las recomendaciones que aparecen en la nota sobre cómo verificar lo que ves.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que las leyes son suficientes para frenar los deepfakes?",
+        "opciones": [
+          "Sí, las leyes estrictas son la mejor protección.",
+          "No, también hace falta educar a la gente para validar información.",
+          "Depende, pero ambas cosas son necesarias."
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El Comercio",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "“Estamos entrando en una etapa en la que la identidad digital se convierte en un bien para las personas y, al mismo tiempo, no existe registro, ley o patente que impida que se generen estas imágenes. (…) Hay que enseñarle a la ciudadanía cómo consumir contenidos y cómo validar información”, dice el experto.",
+        "url": "https://elcomercio.pe/mundo/actualidad/videos-y-audios-falsos-e-hiperrealistas-como-los-lideres-mundiales-enfrentan-el-auge-de-los-deepfakes-noticia/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que, según la nota, las leyes no bastan para frenar los deepfakes? Justifica con algo concreto del texto.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en lo que dice el experto sobre quién puede crear contenidos falsos.",
+          "Piensa en qué otra herramienta, además de la ley, menciona el texto."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona un dato, una persona o una situación que aparece en los fragmentos.",
+              "ejemploCumple": "Dice que cualquiera puede crear una cuenta falsa y generar un audio, como explica Luján.",
+              "ejemploNoCumple": "Dice que la IA es peligrosa y ya.",
+              "repregunta": "¿Qué parte de la nota te hace pensar eso? Menciona a quién se refiere o qué situación describe."
+            },
+            {
+              "id": "da_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué la ley no basta, no solo lo afirma.",
+              "ejemploCumple": "Porque cualquiera puede crear contenido falso aunque exista una ley, así que también hace falta educar.",
+              "ejemploNoCumple": "Porque sí.",
+              "repregunta": "¿Por qué crees que eso hace que una ley no alcance? Completa la idea con un motivo."
+            }
+          ],
+          "respuestaModelo": "Según Luján, una ley no basta porque cualquiera puede crear una cuenta falsa y generar imágenes o audios, por eso también hace falta enseñar a la ciudadanía a validar información.",
+          "prohibido": [
+            "cualquiera puede crear una cuenta falsa",
+            "enseñar a la ciudadanía",
+            "validar información"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 2
+}

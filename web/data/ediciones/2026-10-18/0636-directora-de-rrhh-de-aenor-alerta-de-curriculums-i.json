@@ -1,0 +1,197 @@
+{
+  "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i",
+  "creada": "2026-10-18T11:36:28.633Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "ABC",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Susana Pedrero, directora de RRHH: «Detectamos cada vez más currículums impecables en la forma, pero vacíos de contenido»",
+      "url": "https://www.abc.es/sevilla/economia/susana-pedrero-directora-rrhh-detectamos-vez-curriculums-20261018110849-nts.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05104,
+    "segundos": 17
+  },
+  "noticia": {
+    "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i",
+    "seccion": "Trabajo",
+    "titular": "Directora de RRHH de AENOR alerta de currículums impecables pero vacíos",
+    "bajada": "Compara lo que dice la directora con lo que tú esperas de un currículum real y de un buen empleo.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "ABC",
+        "texto": "me preocuparía que cerráramos la puerta"
+      },
+      {
+        "medio": "ABC",
+        "texto": "nadie nace con experiencia"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer, ¿cómo crees que contará este medio la entrevista sobre el empleo y la IA?",
+        "opciones": [
+          "Como una advertencia de que la IA destruirá todos los empleos",
+          "Como una entrevista en la que una experta da consejos sobre el trabajo y la IA",
+          "Como una noticia sobre una nueva ley que prohíbe usar la IA en las empresas"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "ABC",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Susana Pedrero, directora de RRHH: «Detectamos cada vez más currículums impecables en la forma, pero vacíos de contenido»",
+        "texto": "Como profesional de Recursos Humanos, me preocuparía que cerráramos la puerta a quienes empiezan. Todos necesitamos una primera oportunidad; nadie nace con experiencia. (…) Los reclutadores detectamos cada vez más currículums impecables en la forma, pero vacíos de contenido o demasiado genéricos. Mi consejo es sencillo; menos frases grandilocuentes y más ejemplos concretos. Qué hiciste, qué aprendiste y qué impacto generaste.",
+        "url": "https://www.abc.es/sevilla/economia/susana-pedrero-directora-rrhh-detectamos-vez-curriculums-20261018110849-nts.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿qué dice la directora sobre el primer empleo?",
+        "opciones": [
+          "Que las empresas deberían dejar de contratar jóvenes",
+          "Que todos necesitamos una primera oportunidad porque nadie nace con experiencia",
+          "Que el primer empleo ya no sirve para nada"
+        ],
+        "correcta": 1,
+        "bien": "Lo dice en sus palabras: nadie nace con experiencia, por eso hace falta una primera oportunidad.",
+        "otra": "Fíjate otra vez en la primera cita: habla de cerrar la puerta a quienes empiezan, no de dejar de contratar.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla en la noticia y qué papel tiene?",
+        "opciones": [
+          "Una periodista independiente que investiga el empleo",
+          "La directora corporativa de Personas y Organización de AENOR, una entidad de certificación",
+          "Un sindicalista que defiende a los trabajadores jóvenes"
+        ],
+        "correcta": 1,
+        "bien": "Es la directora de Personas de AENOR, una empresa que certifica sistemas de IA, así que tiene interés en cómo se usa la tecnología en las empresas.",
+        "otra": "Aunque la entrevista la hace ABC, quien opina es una profesional de una empresa concreta. Fíjate en su cargo.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Cuál de estas frases es un hecho y cuál una opinión?",
+        "opciones": [
+          "Susana Pedrero cree que los currículums genéricos son un problema",
+          "AENOR tiene un cargo de directora corporativa de Personas"
+        ],
+        "correcta": 1,
+        "bien": "Que AENOR tenga esa directora es un hecho que se puede comprobar. Lo que cree la directora es su opinión.",
+        "otra": "La frase sobre lo que cree la directora sí es opinión, pero aquí se busca lo que se puede comprobar.",
+        "habilidad": "Separar hechos de opiniones"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que la IA hace que los jóvenes tengan más difícil entrar al trabajo?",
+        "opciones": [
+          "Sí, porque las empresas prefieren la IA a contratar jóvenes",
+          "No, porque la IA crea nuevos puestos para quien sepa usarla",
+          "Depende de cómo cada empresa decida usar la tecnología"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "ABC",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "La mejor protección frente a la IA no es competir con ella, sino desarrollar aquello que no puede sustituir fácilmente; criterio, pensamiento crítico, capacidad de adaptación y habilidad para generar confianza. (…) La IA puede ayudarnos a encontrar candidatos, pero no a conocer personas.",
+        "url": "https://www.abc.es/sevilla/economia/susana-pedrero-directora-rrhh-detectamos-vez-curriculums-20261018110849-nts.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la directora dice que el currículum debe ser más concreto que lleno de frases grandilocuentes?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Piensa en lo que le interesa saber a quien revisa tu currículum.",
+          "Compara una frase genérica con una que cuente un logro real."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "dato_concreto",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona una frase, un consejo o una idea que aparece en la entrevista.",
+              "ejemploCumple": "Ella dice que hay que poner ejemplos concretos: qué hiciste, qué aprendiste y qué impacto generaste.",
+              "ejemploNoCumple": "Los currículums deben ser mejores para conseguir trabajo.",
+              "repregunta": "¿Qué frase de la entrevista te ayuda a responder? Búscala y úsala con tus palabras."
+            },
+            {
+              "id": "razon_clara",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué ese consejo sirve, no solo lo repite.",
+              "ejemploCumple": "Porque el reclutador quiere saber qué sabes hacer de verdad, y los ejemplos lo demuestran mejor que las frases bonitas.",
+              "ejemploNoCumple": "Ella lo dice y ya.",
+              "repregunta": "¿Qué crees que pasa cuando alguien lee un currículum lleno de frases bonitas pero sin ejemplos?"
+            }
+          ],
+          "respuestaModelo": "Porque un ejemplo concreto muestra qué hiciste y qué impacto tuvo, mientras que las frases grandilocuentes no dicen nada sobre tu experiencia real.",
+          "prohibido": [
+            "qué hiciste, qué aprendiste y qué impacto generaste",
+            "currículums impecables en la forma, pero vacíos de contenido",
+            "frases grandilocuentes"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 1
+}

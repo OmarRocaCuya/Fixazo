@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0642-la-ia-ya-hace-parte-del-trabajo-de-un-ingeniero",
+  "creada": "2026-10-18T11:42:11.672Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_a: más de 90 palabras (108)"
+  ],
+  "fuentes": [
+    {
+      "medio": "El Comercio",
+      "fecha": "16 de octubre de 2026",
+      "titular": "La IA ya hace parte del trabajo de un ingeniero: ¿qué debe aprender para no quedarse atrás?  | EL COMERCIO PERÚ",
+      "url": "https://elcomercio.pe/respuestas/que/la-ia-ya-hace-parte-del-trabajo-de-un-ingeniero-que-debe-aprender-para-no-quedarse-atras-tdpe-noticia/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.06828,
+    "segundos": 40
+  },
+  "noticia": null
+}

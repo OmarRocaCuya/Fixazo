@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia",
+  "creada": "2026-10-18T11:39:06.423Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "Swissinfo",
+      "fecha": "17 de octubre de 2026",
+      "titular": "El FMI anticipa un impulso duradero de la IA en la economía de Corea del Sur - SWI swissinfo.ch",
+      "url": "https://www.swissinfo.ch/spa/el-fmi-anticipa-un-impulso-duradero-de-la-ia-en-la-econom%C3%ADa-de-corea-del-sur/92233760"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05255,
+    "segundos": 40
+  },
+  "noticia": {
+    "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia",
+    "seccion": "Tecnología",
+    "titular": "El FMI prevé que la IA siga impulsando la economía surcoreana",
+    "bajada": "Compara cómo lo cuentan dos medios: qué dicen las voces y qué dudas aparecen.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "Swissinfo",
+        "texto": "El auge de la inteligencia artificial seguirá sosteniendo el crecimiento"
+      },
+      {
+        "medio": "Swissinfo",
+        "texto": "podría afrontar \"una corrección bursátil"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la noticia sobre la IA en Corea del Sur?",
+        "opciones": [
+          "Con mucha confianza en que la IA seguirá creciendo",
+          "Con dudas y advertencias sobre riesgos",
+          "Sin mencionar la IA, solo los números"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "Swissinfo",
+        "fecha": "17 de octubre de 2026",
+        "titular": "El FMI anticipa un impulso duradero de la IA en la economía de Corea del Sur - SWI swissinfo.ch",
+        "texto": "«Construir centros de datos de IA lleva mucho tiempo, potencialmente unos 10 años. La inversión apenas ha comenzado, y es poco probable que estos proyectos fracasen en un par de años y hagan que esa inversión pierda sentido» (…) Asimismo, el FMI elevó esta semana su previsión de crecimiento surcoreano para 2026 del 2,6 % al 3,3 %, una subida impulsada por la demanda de semiconductores vinculada a la IA.",
+        "url": "https://www.swissinfo.ch/spa/el-fmi-anticipa-un-impulso-duradero-de-la-ia-en-la-econom%C3%ADa-de-corea-del-sur/92233760"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento de swissinfo, ¿qué dijo el director del FMI sobre las inversiones en centros de datos?",
+        "opciones": [
+          "Que probablemente fracasarán en un par de años",
+          "Que construirlos lleva unos 10 años y la inversión apenas empieza",
+          "Que Corea del Sur debe dejar de invertir en IA"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que construir centros de datos lleva mucho tiempo, unos 10 años, y que la inversión apenas ha comenzado.",
+        "otra": "Fíjate en la frase que empieza con «Construir centros de datos de IA lleva mucho tiempo».",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla de que la inversión apenas ha comenzado?",
+        "opciones": [
+          "Choi Ji-young, director ejecutivo del FMI para Asia y el Pacífico",
+          "Lee Hyoung-il, ministro de Finanzas surcoreano",
+          "Kristalina Georgieva, directora del FMI"
+        ],
+        "correcta": 0,
+        "bien": "Choi Ji-young es director ejecutivo del FMI para Asia y el Pacífico. Su cargo le permite opinar sobre la economía de la región, y el FMI tiene interés en que la región confíe en su análisis.",
+        "otra": "Revisa quién aparece como director ejecutivo en el fragmento de la nota A.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Cuál de estas frases es un hecho y no una opinión?",
+        "opciones": [
+          "Corea del Sur podría afrontar una corrección bursátil",
+          "El FMI elevó su previsión de crecimiento del 2,6 % al 3,3 %",
+          "El auge de la IA seguirá sosteniendo el crecimiento"
+        ],
+        "correcta": 1,
+        "bien": "Es un hecho porque da cifras concretas de la previsión del FMI, que se pueden comprobar.",
+        "otra": "Las otras dos frases expresan qué creen o esperan las personas, y por eso son opiniones.",
+        "habilidad": "Separar hechos de opiniones"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que el crecimiento impulsado por la IA es una buena apuesta para un país?",
+        "opciones": [
+          "Sí, porque genera crecimiento y empleo",
+          "No, porque depende demasiado de un solo sector",
+          "Depende de cómo se controlen sus riesgos"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "Swissinfo",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "El director ejecutivo dijo que Corea del Sur podría afrontar \"una corrección bursátil, un ajuste de su cuenta corriente y efectos adversos sobre las empresas si el auge de la IA se debilita\", en medio de la reciente volatilidad del principal índice bursátil surcoreano, el Kospi.",
+        "url": "https://www.swissinfo.ch/spa/el-fmi-anticipa-un-impulso-duradero-de-la-ia-en-la-econom%C3%ADa-de-corea-del-sur/92233760"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que el FMI ve la inversión en IA como algo duradero? Justifica con el texto.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Mira el plazo que menciona el director del FMI.",
+          "Piensa qué pasaría si los proyectos tardan tanto en terminarse."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa un dato concreto",
+              "descripcion": "Menciona algo concreto de la noticia, como un dato, un plazo o quién lo dice.",
+              "ejemploCumple": "Porque el director dijo que construir centros de datos lleva unos 10 años.",
+              "ejemploNoCumple": "Porque el FMI sabe mucho de economía.",
+              "repregunta": "¿Qué dato de la nota A respalda eso? Fíjate en los plazos que menciona."
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "Explica por qué ese dato lleva a esa conclusión, no solo lo repite.",
+              "ejemploCumple": "Como los proyectos tardan años, es poco probable que la inversión se pierda pronto.",
+              "ejemploNoCumple": "Dicen que la inversión va a seguir.",
+              "repregunta": "¿Qué relación tiene ese plazo largo con que la inversión dure?"
+            }
+          ],
+          "respuestaModelo": "El director dijo que construir centros de datos lleva unos 10 años y que es poco probable que la inversión pierda sentido en un par de años, por eso el FMI la ve duradera.",
+          "prohibido": [
+            "unos 10 años",
+            "poco probable que fracasen",
+            "la inversión apenas ha comenzado"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 5
+}

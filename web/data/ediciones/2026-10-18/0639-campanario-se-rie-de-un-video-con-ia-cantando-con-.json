@@ -1,0 +1,205 @@
+{
+  "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con-",
+  "creada": "2026-10-18T11:39:22.434Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "20minutos",
+      "fecha": "17 de octubre de 2026",
+      "titular": "María José Campanario se ríe de su vídeo cantando con Belén Esteban hecho con IA",
+      "url": "https://www.20minutos.es/gente/maria-jose-campanario-se-rie-su-video-cantando-con-belen-esteban-hecho-con-ia_7049829_0.html"
+    },
+    {
+      "medio": "RTVE",
+      "fecha": "15 de octubre de 2026",
+      "titular": "Belén Esteban resuelve el enfrentamiento entre Marta Sánchez y una colaboradora de Sálvame",
+      "url": "https://stories.rtve.es/play/newstory/open-play/lo-que-une-belen-esteban-que-no-lo-separe-nadie"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05054,
+    "segundos": 16
+  },
+  "noticia": {
+    "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con-",
+    "seccion": "Sociedad",
+    "titular": "Campanario se ríe de un vídeo con IA cantando con Esteban",
+    "bajada": "Lee el texto y piensa: ¿qué parte es un hecho y qué parte es un chiste? Compara lo que dice la nota con lo que tú entiendes.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "20minutos",
+        "texto": "se ríe de su vídeo"
+      },
+      {
+        "medio": "RTVE",
+        "texto": "una persona de su círculo más cercano"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio la historia de un vídeo con IA de dos famosas?",
+        "opciones": [
+          "Como una broma de la farándula que se hizo viral",
+          "Como una denuncia grave contra quien hizo el vídeo",
+          "Como un anuncio oficial de una nueva serie de televisión"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "20minutos",
+        "fecha": "17 de octubre de 2026",
+        "titular": "María José Campanario se ríe de su vídeo cantando con Belén Esteban hecho con IA",
+        "texto": "María José Campanario se ríe de su vídeo cantando con Belén Esteban hecho con IA (…) El vídeo era una parodia del tema 'Ella y yo' de Aventura y Don Omar. (…) Sin embargo, en esta edición Santos pasaba a ser Campanario y Esteban se convertía en el reguetonero gracias a la inteligencia artificial. (…) El vídeo editado rápidamente se volvió viral y recibió miles de 'me gusta' y comentarios. (…) Mientras tanto, Belén Esteban no ha reaccionado al respecto. Por ello, se desconoce si ha visto o no la publicación.",
+        "url": "https://www.20minutos.es/gente/maria-jose-campanario-se-rie-su-video-cantando-con-belen-esteban-hecho-con-ia_7049829_0.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿quién hizo la versión del vídeo?",
+        "opciones": [
+          "La propia María José Campanario",
+          "Una persona de su círculo más cercano",
+          "Belén Esteban"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que la versión la hizo una persona de su círculo más cercano.",
+        "otra": "Fíjate en la frase que empieza con 'Utilizando la canción de Aventura'.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién cuenta que el vídeo se volvió viral y que Belén Esteban no ha reaccionado?",
+        "opciones": [
+          "El propio medio, en su redacción",
+          "La cuenta de Instagram Alexsinos, que compartió el vídeo",
+          "Un abogado que representa a Belén Esteban"
+        ],
+        "correcta": 0,
+        "bien": "Es el propio medio quien informa; sus periodistas deciden qué datos mostrar y cómo enmarcarlos.",
+        "otra": "Piensa en quién escribe la nota y qué quiere contar con ella.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Cuál de estas frases es un hecho que podrías comprobar?",
+        "opciones": [
+          "El vídeo se volvió viral y recibió miles de 'me gusta'",
+          "El vídeo es lo más gracioso que se ha visto este año",
+          "Campanario tiene mucho talento para la comedia"
+        ],
+        "correcta": 0,
+        "bien": "'Miles de me gusta' es algo que se puede contar y verificar en la plataforma.",
+        "otra": "Las otras dos frases expresan una opinión, aunque suenen a hechos.",
+        "habilidad": "Separar hechos de opiniones"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que este tipo de bromas con IA sobre famosos está bien?",
+        "opciones": [
+          "Sí, son parte del humor y ambas lo toman con gracia",
+          "No, pueden molestar aunque la persona no reaccione",
+          "Depende de si la persona da permiso para hacerlas"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "RTVE",
+        "fecha": "15 de octubre de 2026",
+        "titular": "Belén Esteban resuelve el enfrentamiento entre Marta Sánchez y una colaboradora de Sálvame",
+        "texto": "Utilizando la canción de Aventura, Ella y yo, una persona de su círculo más cercano decidió hacer su propia versión. (…) La cuenta, conocida por su contenido dedicado a la farándula, enseñó la edición que le enviaron por Whatsapp, donde se podían ver las dos televisivas convertidas en cantantes.",
+        "url": "https://stories.rtve.es/play/newstory/open-play/lo-que-une-belen-esteban-que-no-lo-separe-nadie"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la nota se centra en la reacción de Campanario y no en la de Esteban? Usa algo concreto del texto.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca qué escribió Campanario en su comentario.",
+          "Fíjate en la última frase del fragmento sobre Belén Esteban."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_del_texto",
+              "nombre": "Usa algo concreto del texto",
+              "descripcion": "La respuesta menciona una frase, un dato o quién lo cuenta de la nota.",
+              "ejemploCumple": "La nota dice que Campanario escribió 'Me muero' y que Esteban no ha reaccionado.",
+              "ejemploNoCumple": "Creo que las famosas siempre se pelean mucho.",
+              "repregunta": "¿Qué dice la nota exactamente sobre cada una de ellas? Busca una frase."
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué ocurre eso, no solo lo describe.",
+              "ejemploCumple": "Porque Campanario sí comentó el vídeo y Esteban aún no, así que hay más para contar de ella.",
+              "ejemploNoCumple": "Porque la nota lo dice.",
+              "repregunta": "¿Qué pasa en la nota que hace que una reacción aparezca y la otra no?"
+            }
+          ],
+          "respuestaModelo": "La nota se centra en Campanario porque ella sí reaccionó al vídeo con un comentario, y la nota dice que de Esteban no se sabe si lo vio.",
+          "prohibido": [
+            "Campanario comentó",
+            "no se sabe si lo vio",
+            "Esteban no ha reaccionado",
+            "reacción de Campanario"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 7
+}

@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0640-jovenes-indios-usan-ia-para-tareas-rutinarias-de-s",
+  "creada": "2026-10-18T11:40:27.669Z",
+  "estado": "rechazada",
+  "motivo": [
+    "procedencia: la respuesta usa «30», que no está en los fragmentos"
+  ],
+  "fuentes": [
+    {
+      "medio": "DW",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Los jóvenes de India tienen un nuevo colega: la IA",
+      "url": "https://www.dw.com/es/los-j%C3%B3venes-de-india-tienen-un-nuevo-compa%C3%B1ero-de-trabajo-la-ia/a-79685980"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05242,
+    "segundos": 25
+  },
+  "noticia": null
+}

@@ -9,13 +9,16 @@ const DIR = process.env.EDICIONES_DIR ?? join(process.cwd(), "data", "ediciones"
 
 export interface NoticiaGuardada extends Noticia {
   creada: string;
+  orden?: number;
   fuentes: Array<{ medio: string; fecha: string; titular: string; url: string }>;
 }
 
 interface Registro {
   id: string;
   creada: string;
-  estado: "publicada" | "rechazada";
+  orden?: number;
+  /** "reservada": generada de antemano por el mismo pipeline para la demo; no sale en la portada hasta que se revela. */
+  estado: "publicada" | "reservada" | "rechazada" | "retirada";
   fuentes: NoticiaGuardada["fuentes"];
   noticia: Noticia | null;
 }
@@ -23,7 +26,11 @@ interface Registro {
 // Dynamic operator paths opt out of automatic broad tracing; next.config.ts
 // explicitly includes only data/ediciones/**/*.json for deployed functions.
 /** Noticias publicadas, de la más nueva a la más antigua. */
-export async function noticiasPublicadas(): Promise<NoticiaGuardada[]> {
+export const noticiasPublicadas = () => leer(["publicada"]);
+/** Noticias reservadas para el botón de demo, en el orden en que se revelan (campo "orden" del JSON). */
+export const noticiasReservadas = async () => (await leer(["reservada"])).sort((a, b) => (a.orden ?? 99) - (b.orden ?? 99));
+
+async function leer(estados: Registro["estado"][]): Promise<NoticiaGuardada[]> {
   let dias: string[] = [];
   try {
     dias = (await readdir(/* turbopackIgnore: true */ DIR, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -42,13 +49,13 @@ export async function noticiasPublicadas(): Promise<NoticiaGuardada[]> {
     }
   }
   return registros
-    .filter((r): r is Registro & { noticia: Noticia } => r.estado === "publicada" && r.noticia !== null)
-    .map((r) => ({ ...r.noticia, creada: r.creada, fuentes: r.fuentes }))
+    .filter((r): r is Registro & { noticia: Noticia } => estados.includes(r.estado) && r.noticia !== null)
+    .map((r) => ({ ...r.noticia, creada: r.creada, orden: r.orden, fuentes: r.fuentes }))
     .sort((a, b) => b.creada.localeCompare(a.creada));
 }
 
 export async function buscarNoticia(id: string): Promise<NoticiaGuardada | null> {
-  return (await noticiasPublicadas()).find((n) => n.id === id) ?? null;
+  return (await leer(["publicada", "reservada"])).find((n) => n.id === id) ?? null;
 }
 
 export async function buscarPreguntaVoz(noticiaId: string, preguntaId: string): Promise<{ noticia: NoticiaGuardada; pregunta: PreguntaVoz } | null> {

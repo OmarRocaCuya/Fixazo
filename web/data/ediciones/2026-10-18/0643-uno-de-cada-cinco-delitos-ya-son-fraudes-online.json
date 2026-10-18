@@ -1,0 +1,28 @@
+{
+  "id": "2026-10-18-0643-uno-de-cada-cinco-delitos-ya-son-fraudes-online",
+  "creada": "2026-10-18T11:43:49.899Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_a: más de 90 palabras (94)"
+  ],
+  "fuentes": [
+    {
+      "medio": "ABC",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Uno de cada cinco delitos ya se comente por fraudes 'online' con nuestro dinero",
+      "url": "https://www.abc.es/economia/cuentas-corrientes/cinco-delitos-comente-fraudes-online-dinero-20261018010623-nt.html"
+    },
+    {
+      "medio": "El País",
+      "fecha": "14 de octubre de 2026",
+      "titular": "La justicia europea obliga a la banca a devolver el dinero de las ciberestafas aunque el cliente haya sido negligente | Empresas | Cinco Días",
+      "url": "https://cincodias.elpais.com/companias/2026-10-15/la-justicia-europea-obliga-a-la-banca-a-devolver-el-dinero-de-las-ciberestafas-aunque-el-cliente-haya-sido-negligente.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05292,
+    "segundos": 28
+  },
+  "noticia": null
+}

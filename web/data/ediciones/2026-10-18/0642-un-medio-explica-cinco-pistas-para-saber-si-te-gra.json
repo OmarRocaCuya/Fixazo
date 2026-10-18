@@ -1,0 +1,200 @@
+{
+  "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra",
+  "creada": "2026-10-18T11:42:38.670Z",
+  "estado": "retirada",
+  "motivo": [
+    "No trata de IA (gafas inteligentes)"
+  ],
+  "fuentes": [
+    {
+      "medio": "20minutos",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Las cinco claves en las que te debes fijar para saber si te están grabando con unas gafas inteligentes",
+      "url": "https://www.20minutos.es/internacional/claves-debes-fijar-saber-estan-grabando-gafas-inteligentes_7050068_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 8,
+    "usd": 0.09924,
+    "segundos": 67
+  },
+  "noticia": {
+    "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra",
+    "seccion": "Tecnología",
+    "titular": "Un medio explica cinco pistas para saber si te graban con gafas",
+    "bajada": "Lee las cinco claves y compara qué señales te parecen fiables y cuáles no.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "20minutos",
+        "texto": "la señal más reveladora suele estar oculta a plena vista"
+      },
+      {
+        "medio": "20minutos",
+        "texto": "puede ofrecer pistas"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que lo contará este medio?",
+        "opciones": [
+          "Como una alerta de que cualquiera te puede grabar sin que lo notes",
+          "Como una guía práctica para detectar si alguien te graba",
+          "Como una noticia sobre una nueva ley que prohíbe estas gafas"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "20minutos",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Las cinco claves en las que te debes fijar para saber si te están grabando con unas gafas inteligentes",
+        "texto": "Las gafas inteligentes están cada vez más desarrolladas y es más difícil que se detecten a simple vista. Esto conlleva en que podemos ser grabados en vídeo sin nuestro consentimiento. (…) Will Greenwald , redactor especializado en electrónica de consumo de PCMag, declara a este medio que la señal más reveladora suele estar oculta a plena vista. (…) Por último, la señal más fiable de que se está realizando una grabación es un pequeño indicador LED.",
+        "url": "https://www.20minutos.es/internacional/claves-debes-fijar-saber-estan-grabando-gafas-inteligentes_7050068_0.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿cuál es la señal más fiable de que se está grabando?",
+        "opciones": [
+          "Las patillas muy gruesas",
+          "Un pequeño indicador LED",
+          "Los toques repetidos en la montura"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que la señal más fiable es un pequeño indicador LED que se enciende al grabar.",
+        "otra": "Las patillas gruesas y los toques son pistas que el texto menciona, pero no como la más fiable.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que la señal más reveladora está a plena vista?",
+        "opciones": [
+          "Will Greenwald, redactor especializado en electrónica de consumo",
+          "Un vecino que vio las gafas en la calle",
+          "Un portavoz de la empresa Meta"
+        ],
+        "correcta": 0,
+        "bien": "Greenwald es redactor especializado en electrónica de consumo, así que sabe del tema, aunque su trabajo es escribir sobre tecnología.",
+        "otra": "El texto identifica a Greenwald como redactor de PCMag, no como vecino ni como portavoz de Meta.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "Si quisieras comprobar si alguien te graba con unas gafas, ¿qué buscarías primero?",
+        "opciones": [
+          "El pequeño LED y la lente en la montura",
+          "El color de la ropa de la persona",
+          "La hora del día en que hablan"
+        ],
+        "correcta": 0,
+        "bien": "Buscar el LED y la lente pequeña en la montura son señales concretas que se pueden observar en el fragmento.",
+        "otra": "El color de la ropa o la hora no aparecen en el texto como pistas para detectar una grabación.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Te parece justo que alguien pueda grabarte con gafas sin que lo sepas?",
+        "opciones": [
+          "Sí, siempre que no se publique el vídeo",
+          "No, deberían avisar antes de grabar",
+          "Depende del lugar donde estés"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "20minutos",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Dado que la cámara generalmente apunta hacia donde mira la persona que la lleva puesta, el lenguaje corporal puede ofrecer pistas. (…) Si alguien parece estar inusualmente concentrado en una persona en particular o gira la cabeza repetidamente para no perderla de vista, es posible que esté grabando un vídeo.",
+        "url": "https://www.20minutos.es/internacional/claves-debes-fijar-saber-estan-grabando-gafas-inteligentes_7050068_0.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que el lenguaje corporal puede ser una buena pista para detectar una grabación? Compara con lo que dice el LED.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Piensa en hacia dónde se dirige la cámara cuando alguien mira algo.",
+          "Compara qué pista se puede notar sin acercarte tanto como para ver el LED."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_del_texto",
+              "nombre": "Usa algo concreto del texto",
+              "descripcion": "La respuesta menciona al menos una pista concreta de la noticia, como el giro de cabeza o el LED.",
+              "ejemploCumple": "El lenguaje corporal ayuda porque la cámara apunta hacia donde mira quien la lleva, y si gira la cabeza para no perder a alguien puede estar grabando.",
+              "ejemploNoCumple": "Porque es más fácil ver a las personas que a las gafas.",
+              "repregunta": "¿Qué dice el texto sobre hacia dónde apunta la cámara?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué esa pista sirve, no solo la nombra.",
+              "ejemploCumple": "Sirve porque el LED se enciende solo cuando la cámara graba, pero el lenguaje corporal puede notarse aunque no veas el LED.",
+              "ejemploNoCumple": "Porque sí, es una pista.",
+              "repregunta": "¿Qué ventaja tiene el lenguaje corporal frente al LED, o al revés?"
+            }
+          ],
+          "respuestaModelo": "El lenguaje corporal sirve porque la cámara apunta donde mira la persona, así que girar la cabeza puede delatar una grabación, aunque el LED sea más fiable.",
+          "prohibido": [
+            "apunta hacia donde mira",
+            "gira la cabeza",
+            "el LED se enciende",
+            "más fiable"
+          ]
+        }
+      }
+    ]
+  }
+}

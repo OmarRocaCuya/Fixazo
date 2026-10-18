@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0641-policia-y-cni-advierten-de-ataques-con-inteligenci",
+  "creada": "2026-10-18T11:41:43.786Z",
+  "estado": "rechazada",
+  "motivo": [
+    "No apta: El texto describe ciberataques reales, un caso de menor que roba datos y estafas detalladas; aunque es informativo, el tono y el detalle técnico de ataques no son apropiados para entrenamiento de jóvenes de 12 a 16 años sin una adaptación previa, y no hay NOTA B para contrastar."
+  ],
+  "fuentes": [
+    {
+      "medio": "elDiario.es",
+      "fecha": "16 de octubre de 2026",
+      "titular": "“Puede colapsar las defensas”: dentro de la primera línea de Policía y CNI ante los ataques con IA",
+      "url": "https://www.eldiario.es/tecnologia/colapsar-defensas-primera-linea-policia-cni-ataques-ia_1_13584501.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05094,
+    "segundos": 12
+  },
+  "noticia": null
+}

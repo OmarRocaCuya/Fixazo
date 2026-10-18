@@ -31,6 +31,11 @@ const SENSIBLES = /(suicid|autolesi|se quit\w* la vida|abuso sexual|violaci|porn
 
 export const esSensible = (texto) => SENSIBLES.test(normalizar(texto));
 
+// El buscador a veces trae notas que solo se parecen a la consulta (estafas, empleo público...).
+// Una noticia entra solo si habla de IA de verdad: el titular cuenta doble y hacen falta 3 menciones.
+const IA = /inteligencia artificial|\bIA\b|\bAI\b|chatgpt|openai|chatbot|algoritm|gemini|copilot|deepfake|aprendizaje automatico|machine learning|modelos? de lenguaje|agentes? de ia/gi;
+export const trataDeIA = (titular, texto) => (String(titular).match(IA) ?? []).length * 2 + (normalizar(texto).match(IA) ?? []).length >= 3;
+
 export function filtrarCandidatas(resultados, usadas = new Set()) {
   const vistos = new Set();
   return resultados.filter((r) => {

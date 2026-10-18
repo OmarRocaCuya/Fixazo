@@ -1,0 +1,24 @@
+{
+  "id": "2026-10-18-0640-google-deepmind-advierte-posibles-incidentes-grave",
+  "creada": "2026-10-18T11:40:48.784Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "El Comercio",
+      "fecha": "16 de octubre de 2026",
+      "titular": "La IA podría causar “incidentes graves” en uno o dos años, advierte presidente de Google DeepMind | Estados Unidos | Demis Hassabis | EL COMERCIO PERÚ",
+      "url": "https://elcomercio.pe/tecnologia/inteligencia-artificial/la-ia-podria-causar-incidentes-graves-en-uno-o-dos-anos-advierte-presidente-de-google-deepmind-estados-unidos-demis-hassabis-noticia/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.07017,
+    "segundos": 46
+  },
+  "noticia": null
+}
