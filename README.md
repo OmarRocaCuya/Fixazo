@@ -1,80 +1,130 @@
 # Fixazo
 
-Web para escolares (12 a 16 años) que entrena **lectura crítica de fuentes**. El alumno lee dos fuentes reales que cuentan distinto el mismo hecho, predice qué dirá cada una, elige y **explica con su voz por qué**. La IA no da respuestas: revisa la explicación y devuelve una pista para que el alumno la encuentre solo.
+Un periódico web para jóvenes de secundaria (12 a 16 años) que entrena el **pensamiento crítico con noticias reales del día**. Cada noticia viene con unas pocas preguntas que se desbloquean una por una: predecir qué dirá el medio, leer un fragmento, ver **quién habla y qué gana**, comparar con cómo lo cuenta otro medio y, al final, **explicar con la propia voz por qué** se piensa lo que se piensa. La IA nunca da la respuesta: revisa si el joven dio razones sacadas de la noticia y, si le falta algo, le hace una pregunta para que lo encuentre solo.
 
-Texto de prueba inicial: **Sputnik, 1957**, contado por TASS (agencia del gobierno soviético) y por Eisenhower (presidente de EE. UU.). Vamos a probar con otros textos; cada uno es un archivo en `casos/`.
+Hack the Andes 2026 · track Educación Escolar · equipo Fixazo (Mateo Rodríguez, Omar Roca y Daniel Marron).
 
-Hack the Andes 2026 · track Educación Escolar · equipo Fixazo.
+- **Demo:** https://nawinchay-voice-mvp.vercel.app/ (la portada es el periódico).
+- **La app está en `web/`** (Next.js). **El pipeline de noticias está en `pipeline/`.**
 
-> El trabajo anterior del equipo sobre Ñawinchay (PRD, diseños e investigación) está en la rama [`nawinchay`](../../tree/nawinchay).
+## Por qué
+
+- Al terminar el colegio, solo 1 de cada 10 peruanos lee al nivel esperado, y solo el 8 % de los escolares no usa IA.
+- Cuando la IA les da la respuesta, rinden peor en el examen. Cuando los obliga a pensar, aprenden más (Bastani y otros, *PNAS* 2025).
+- Para 2050, Harari dice que nadie sabe qué enseñar, pero sí que hará falta **dar sentido a la información y distinguir lo importante**. PISA 2029 va a medir justamente el criterio frente a la IA.
+- El pensamiento crítico no se enseña en abstracto: depende de lo que se lee (Willingham). Por eso usamos noticias reales, y no ejercicios inventados.
 
 ## Cómo funciona
 
 ```
-Ficha de la fuente ─► Predice ─► Lee (un párrafo en foco) ─► Elige ─► Explica con la voz ─► Pista ─► Repaso en 2 días
+pipeline (Node, se corre a mano o con cron)
+  Exa busca noticias de IA de las últimas 24 h, solo en 19 medios confiables
+  → filtra (temas no aptos para menores, opinión, comunicados, idioma)
+  → busca el mismo hecho en un segundo medio
+  → Tavily extrae el texto
+  → Haiku 5.5 elige fragmentos TEXTUALES y escribe 8 pasos con estructura fija
+  → el código valida: citas literales, ≤ 90 palabras, índices, y que toda cifra de una respuesta correcta esté en el fragmento
+  → una ronda de corrección; si no pasa, se guarda como "rechazada"
+  → web/data/ediciones/<día>/<hora>-<slug>.json
+
+app (web/, Next.js)
+  portada → noticia paso a paso → respuesta con voz → juez → Mis insights
 ```
 
-- **Las fuentes son reales y curadas a mano.** La IA nunca escribe textos históricos (`casos/`).
-- **Las preguntas siguen las habilidades de lectura de fuentes** del Stanford History Education Group: procedencia, contexto, corroboración y lectura atenta, más una de comprensión.
-- **Lo cerrado lo corrige el código** (elegir, ordenar, tocar la frase). **La explicación la revisa la IA** con criterios de cumple / no cumple.
-- **La IA tiene que citar la frase del alumno** que prueba cada criterio. Si la cita no aparece literal en la respuesta, el criterio no cuenta (`lib/reglas.js`).
-- **Guardia:** si la retroalimentación de la IA revela la respuesta, se reemplaza por una repregunta escrita por nosotros.
-- **Si la IA falla o tarda, el alumno no se traba:** recibe una pista de plantilla.
-- **Voz:** se toca para hablar y se toca para terminar. El navegador convierte la voz en texto (Web Speech API) y la IA solo recibe texto. Mientras escucha, los bordes de la pantalla brillan y siguen el volumen.
-- **Registro de interacciones** (tiempo, pistas, cambios de opción, pegado de texto) para adaptar y medir.
+### Los 8 pasos de cada noticia
+
+1. **Predicción:** antes de leer, ¿cómo crees que lo contará este medio?
+2. **Fragmento A** del primer medio.
+3. **Comprensión:** qué dice el texto.
+4. **Procedencia:** quién habla y qué interés tiene.
+5. **Una pregunta variable**, según lo que tenga la nota: dato o afirmación sin fuente, palabra que convence, hecho u opinión, o cómo comprobarlo.
+6. **Postura y seguridad:** qué opinas y qué tan seguro estás.
+7. **Contraprueba:** fragmento B (otro medio u otra voz) y "¿mantienes o cambias tu idea?".
+8. **¿Por qué?, con tu voz.**
+
+Responder, aunque sea mal, desbloquea el siguiente paso. Cada respuesta trae una explicación, nunca solo ✓ o ✗. Las preguntas ya respondidas se cierran para que se vea una idea a la vez.
+
+### La IA y lo que la controla
+
+- **Un solo modelo:** `anthropic/claude-haiku-5.5` vía OpenRouter, sin razonamiento extendido y con salida JSON estricta.
+- **No reescribe noticias:** elige fragmentos literales y el código lo comprueba. Se muestran con el nombre del medio y el enlace a la nota completa.
+- **El juez de la respuesta de voz corre 3 veces en paralelo.** Un criterio cuenta solo si la mayoría coincide **y cita una frase que está literal en lo que dijo el joven**. Si las corridas no coinciden, el criterio queda como dudoso.
+- **Guardia:** si la retroalimentación de la IA revela la respuesta modelo, se reemplaza por una repregunta escrita por nosotros.
+- **Si la IA falla o no está disponible**, la respuesta queda "no evaluable" y no cuenta como error del joven.
+- **Los criterios, la respuesta modelo y las frases prohibidas nunca viajan al navegador.**
+
+### Voz
+
+- La voz se transcribe en el navegador. La IA solo recibe texto y nunca habla.
+- La capa de voz de Daniel mide **señales del proceso**: pausas largas, muletillas y palabras de duda. **No intenta reconocer emociones**, porque la Ley de IA de la Unión Europea (art. 5.1.f) lo prohíbe en educación.
+- `web/services/indigenous` es el servidor de voz de Daniel, con modelos de Meta, para castellano, quechua y aimara y con el tiempo de cada palabra. Ver [web/README.md](web/README.md).
+
+### Mis insights y racha
+
+- **Mis insights:** el avance por habilidad, cómo explica cuando habla y la comparación entre su seguridad declarada y lo que logró. Se guarda solo en el navegador del joven, no hay cuentas.
+- **Racha suave:** el día cuenta si termina al menos una noticia. Tiene un día libre por semana y nunca se muestra "perdiste tu racha". No hay puntos ni premios. Se basa en Cristia y otros (BID, 2024), un experimento con 60.000 escolares de Perú.
+
+## Decisiones y lo que quedó fuera
+
+| Decisión | Por qué |
+|---|---|
+| Solo **19 medios con señal de confianza** como fuente principal: Trust Project, certificación JTI, ranking del Digital News Report o servicio público o agencia. Hay 12 más de reserva, solo como segundo medio | Al principio entraban medios partidistas y estatales |
+| **Exa para buscar y Tavily para extraer** | Probamos los dos con 33 medios. Exa trae notas recientes con fecha y Tavily extrae el texto completo |
+| **Fragmentos cortos con enlace**, no la nota entera | Derechos de autor, y además se lee menos |
+| **Estructura fija de 8 pasos** | Se basa en el Historical Thinking Chart de Stanford: procedencia, contexto, corroboración y lectura atenta. También en que intentar responder antes de leer ayuda a aprender (Richland 2009) |
+| **Sin puntos, insignias ni rankings** | Los premios esperados bajan la motivación propia (Deci, Koestner y Ryan 1999) |
+| **Progreso en el navegador, sin cuentas** | Privacidad de menores y menos piezas. El costo es que no pasa de un dispositivo a otro |
+
+**Límites actuales:**
+- En la web publicada las noticias no se actualizan solas: el pipeline se corre a mano.
+- La voz del navegador funciona en Chrome y Edge, y en iPhone se responde escribiendo.
+- No está validado con escolares todavía.
+- El juez puede equivocarse. Por eso hay 3 corridas, cita literal y "no evaluable".
 
 ## Estructura
 
 ```
-public/        frontend (HTML, CSS y JS sin framework)
-api/           funciones del servidor (Vercel): caso, responder, eventos
-lib/           reglas en código, llamada al LLM, registro
-casos/         casos curados (fuentes, preguntas, criterios privados)
-test/          pruebas (node --test)
-dev.js         servidor local que imita a Vercel
+web/                 la app: portada, noticia, juez, insights, racha (Next.js 16, React 19)
+  src/lib/periodico/   reglas del juez, lectura de ediciones, progreso, racha (con pruebas)
+  src/lib/server/      juez de noticias (Haiku vía OpenRouter)
+  data/ediciones/      noticias generadas por el pipeline (JSON)
+  services/indigenous  servidor de voz de Daniel (Python)
+pipeline/            pipeline de noticias (Node, sin dependencias)
+  pasos.mjs            filtros, lista de medios, validación y armado (con pruebas)
+  correr.mjs           búsqueda, extracción, generación y guardado
+PENDIENTES.md        tareas acordadas
+public/ api/ lib/ casos/ test/ dev.js   primera versión (prototipo de Sputnik, 17 oct); no se usa en la demo
 ```
-
-Lo privado de cada caso (criterios, respuestas correctas y respuesta modelo) **nunca viaja al navegador**: `api/caso.js` lo quita y una prueba lo verifica.
 
 ## Correr en local
 
-Requiere Node 22 o más.
+Requiere Node 22 o más. Las claves van en archivos `.env.local`, que no se suben al repo.
 
 ```sh
-# 1. Crear .env.local con la clave de OpenRouter (no se sube al repo)
-echo 'OPENROUTER_API_KEY=tu_clave' > .env.local
+# App
+cd web && npm install
+npm run dev                      # http://localhost:3000
+npm test                         # pruebas (vitest)
 
-# 2. Levantar
-npm run dev        # http://localhost:3000
-
-# 3. Pruebas
-npm test
+# Pipeline: necesita TAVILY_API_KEY y OPENROUTER_API_KEY; EXA_API_KEY es opcional
+# (sin ella busca con Tavily). Se ponen en .env.local, en la raíz.
+node pipeline/correr.mjs             # genera una noticia
+node pipeline/correr.mjs --cada 30   # una cada 30 minutos
+node --test pipeline/                # pruebas del pipeline
 ```
 
-Sin clave, la app funciona igual con pistas de plantilla. Para hablar, usa Chrome o Edge (otros navegadores escriben).
+Las variables de la app (juez y voz) y el despliegue están en [web/DEPLOYMENT.md](web/DEPLOYMENT.md).
 
-## Desplegar (Vercel)
+## Costo medido (18 oct 2026)
 
-1. Importar el repo en Vercel (framework: Other, sin build).
-2. En *Settings → Environment Variables* agregar `OPENROUTER_API_KEY`.
-3. Vercel sirve `public/` y convierte `api/*.js` en funciones.
-
-## IA y costo
-
-- Modelo único: `anthropic/claude-haiku-5.5` vía OpenRouter, con salida JSON estructurada y sin razonamiento extendido.
-- Cerca de **US$0.0002 por respuesta** y **US$0.001 por alumno** (medido en pruebas el 17 oct 2026).
-
-## Fuentes
-
-- TASS, *Pravda*, 5 oct 1957, en F. J. Krieger, *Behind the Sputniks* (1958), pp. 311-312. NASA History Division: https://www.nasa.gov/history/sputnik/14.html
-- Eisenhower, conferencia de prensa del 9 oct 1957. The American Presidency Project (UC Santa Barbara): https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-308
-
-Fragmentos con fin educativo. La traducción al español es nuestra.
+- **Generar una noticia** cuesta entre US$ 0,05 y 0,09 (Exa más Haiku) y toma entre 13 y 78 segundos. En la corrida del 18 oct el validador rechazó 3 de 7.
+- **Revisar una respuesta de voz** son 3 llamadas cortas a Haiku, de 500 tokens como máximo cada una.
 
 ## Evidencia detrás del diseño
 
-- Wineburg (1991) y Reisman (2012): trabajar con fuentes que se contradicen mejora el razonamiento y la comprensión lectora.
-- Richland, Kornell y Kao (2009): intentar responder antes de leer mejora el aprendizaje aunque se falle.
-- Bastani et al. (2025, *PNAS*): la IA que da respuestas empeora el examen; con pistas, ese daño desaparece.
-- Wisniewski, Zierer y Hattie (2020): la retroalimentación con información sobre el proceso funciona (d = 0.48).
-- Hoober (2013, 2017): zona del pulgar y tamaño de los objetivos táctiles.
+- Wineburg (1991) y el Stanford History Education Group, con el Historical Thinking Chart: leer fuentes que se contradicen.
+- Richland, Kornell y Kao (2009): intentar antes de leer ayuda aunque se falle.
+- Bastani y otros (2025, *PNAS*): la IA que da respuestas empeora el examen, y con pistas el daño desaparece.
+- Wisniewski, Zierer y Hattie (2020): la retroalimentación con información sobre el proceso funciona (d = 0,48).
+- Silverman y Barasch (2023) y Cristia y otros (BID, 2024): cómo funcionan las rachas.
+- Nielsen Norman Group, *UX Design for Teenagers*: poco texto, nada infantil.
