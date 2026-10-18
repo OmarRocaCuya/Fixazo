@@ -12,7 +12,7 @@ type Capabilities = {
   translation: { model: string; languages: string[]; enabled: boolean; ready: boolean; researchOnly: true };
 };
 type Result = { text: string; language?: string; sourceLanguage?: string; targetLanguage?: string; model: string };
-type Access = { audience: "adult-demo" | "approved-pilot"; code: string };
+type Access = { audience: "adult-demo" | "approved-pilot" };
 const LANGUAGES: { value: Language; label: string }[] = [
   { value: "quy_Latn", label: "Quechua Ayacucho (quy)" }, { value: "quz_Latn", label: "Quechua Cusco (quz)" },
   { value: "ayr_Latn", label: "Aimara central (ayr)" }, { value: "spa_Latn", label: "Castellano (spa)" },
@@ -43,7 +43,6 @@ export function IndigenousPanel() {
   const [language, setLanguage] = useState<Language>("quy_Latn");
   const [target, setTarget] = useState<Language>("spa_Latn");
   const [text, setText] = useState("");
-  const [code, setCode] = useState("");
   const [recording, setRecording] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -63,7 +62,7 @@ export function IndigenousPanel() {
     };
     const stop = () => {
       release();
-      setRecording(false); setBusy(false); setCode("");
+      setRecording(false); setBusy(false);
       setText(""); setTranscript(null); setTranslation(null);
       setMessage("Se cerró la prueba al salir u ocultar la pestaña. El micrófono está apagado y se borró el contenido temporal.");
     };
@@ -95,14 +94,15 @@ export function IndigenousPanel() {
     } finally { if (!signal?.aborted) setChecking(false); }
   }
 
-  const accessReady = status?.enabled && status.mode !== "disabled" && code.trim().length >= 16;
+  // The self-hosted Meta backend is open (same-origin + per-IP limit): no private code.
+  const accessReady = status?.enabled && status.mode !== "disabled";
   const canRecord = !!accessReady && supported && status?.backendReachable === true && status.asr.ready && status.asr.languages.includes(language);
   const canTranslate = !!accessReady && status?.backendReachable === true && status.translation.enabled && status.translation.ready
     && status.translation.languages.includes(language) && status.translation.languages.includes(target) && language !== target && !!text.trim();
 
   function access(): Access | null {
     if (!accessReady || !status || status.mode === "disabled") return null;
-    return { audience: status.mode, code: code.trim() };
+    return { audience: status.mode };
   }
 
   function cancel() {
@@ -117,7 +117,7 @@ export function IndigenousPanel() {
     const abort = new AbortController(); request.current = abort;
     const timeout = setTimeout(() => abort.abort(), 60_000);
     try {
-      const response = await fetch("/api/indigenous", { method: "POST", headers: { "X-Voice-Access-Code": accessValue.code, ...(isJson ? { "Content-Type": "application/json" } : {}) }, body, signal: abort.signal });
+      const response = await fetch("/api/indigenous", { method: "POST", headers: isJson ? { "Content-Type": "application/json" } : {}, body, signal: abort.signal });
       const data = await response.json() as Result & { error?: string };
       if (token !== epoch.current) return null;
       if (!response.ok || typeof data.text !== "string") throw new Error(data.error ?? "indigenous-unavailable");
@@ -195,7 +195,6 @@ export function IndigenousPanel() {
         <p className="small muted">Audio o texto se envían al servidor externo configurado por el responsable. No se guardan en el perfil, informes ni almacenamiento local. El tratamiento externo depende del despliegue. No incluyas nombres completos, datos personales ni contenido sensible.</p>
         <fieldset className="stack-sm" style={{ border: 0, padding: 0, margin: 0 }} disabled={busy || !status?.enabled}>
           <legend className="sr-only">Acceso a la prueba de lenguas</legend>
-          <div className="field"><label htmlFor="indigenous-code">Código privado del responsable</label><input id="indigenous-code" type="password" className="input" value={code} minLength={16} maxLength={128} autoComplete="off" onChange={(event) => setCode(event.target.value)} /></div>
           {status?.mode === "approved-pilot" && <p className="small">Piloto autorizado: usa solo los participantes y condiciones aprobados por el responsable.</p>}
           <p className="small muted">La transcripción y la traducción requieren revisión de una persona hablante.</p>
         </fieldset>

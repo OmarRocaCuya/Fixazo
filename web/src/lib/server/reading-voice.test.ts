@@ -37,7 +37,10 @@ describe("reading capabilities and preflight", () => {
     const body = vi.fn(() => { throw new Error("must not read upload"); });
     const request = { url: "https://education.example/api/reading", headers: new Headers({ Origin: "https://evil.example", "X-Voice-Access-Code": "private-reading-code" }), get body() { return body(); } } as unknown as Request;
     expect(() => preflightReadingRequest(request)).toThrow("same-origin-required"); expect(body).not.toHaveBeenCalled();
-    expect(() => preflightReadingRequest(new Request(request.url, { headers: { Origin: "https://education.example", "X-Voice-Access-Code": "wrong" } }))).toThrow("voice-access-required");
+  });
+  it("lets same-origin reading requests through without the private access code", () => {
+    expect(() => preflightReadingRequest(new Request("https://education.example/api/reading", { headers: { Origin: "https://education.example" } }))).not.toThrow();
+    expect(() => preflightReadingRequest(new Request("https://education.example/api/reading", { headers: { Origin: "https://education.example", "X-Voice-Access-Code": "wrong" } }))).not.toThrow();
   });
   it("permits lazy MMS loading without inventing speech readiness or downloading a model in GET", async () => {
     fetcher.mockImplementation(() => Promise.resolve(Response.json(health())));

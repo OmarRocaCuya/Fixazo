@@ -1,4 +1,3 @@
-import { createHash, timingSafeEqual } from "node:crypto";
 import { GUIDED_READING_OPENING, guidedReadingReply, READING_LANGUAGES, type ReadingLanguage } from "@/lib/reading-dialogue";
 import { getIndigenousCapabilities, IndigenousProxyError, readIndigenousBody, translateIndigenousText, validateIndigenousWav } from "./indigenous-proxy";
 import { getIndigenousBackendConfig, getVoicePolicyStatus } from "./voice-policy";
@@ -18,19 +17,16 @@ function object(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
-/** Reject unauthorized uploads before buffering; full access and rate-limit
- * authorization still runs in the route handler. */
+/** Reject cross-origin uploads before buffering; rate-limit authorization
+ * still runs in the route handler. */
 export function preflightReadingRequest(request: Request): void {
   const policy = getVoicePolicyStatus("meta");
   if (!policy.enabled) throw new ReadingVoiceError(policy.reason ?? "cloud-disabled", 503);
   if (request.headers.get("origin") !== new URL(request.url).origin || request.headers.get("sec-fetch-site") === "cross-site") {
     throw new ReadingVoiceError("same-origin-required", 403);
   }
-  const code = request.headers.get("x-voice-access-code") ?? "";
-  const digest = (value: string) => createHash("sha256").update(value).digest();
-  if (code.length > 256 || !timingSafeEqual(digest(code), digest(process.env.VOICE_ACCESS_CODE ?? ""))) {
-    throw new ReadingVoiceError("voice-access-required", 401);
-  }
+  // The self-hosted Meta backend is open: no private access code; the route's
+  // per-IP rate limit (voice-policy "meta") bounds abuse.
 }
 
 const SAFE_ERRORS: Record<string, { upstream: number; status: number; code: string }> = {

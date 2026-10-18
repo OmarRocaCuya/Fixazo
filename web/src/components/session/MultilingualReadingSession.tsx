@@ -46,7 +46,6 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
   const [status, setStatus] = useState<ReadingCapabilities | null>(null);
   const [checking, setChecking] = useState(true);
   const [language, setLanguage] = useState<ReadingLanguage>("quy_Latn");
-  const [code, setCode] = useState("");
   const [authorized, setAuthorized] = useState(false);
   const [prepared, setPrepared] = useState<PreparedReading | null>(null);
   const [phase, setPhase] = useState<Phase>("setup");
@@ -96,7 +95,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     releaseAudio();
   }
   function pauseSession(copy = "Prueba pausada. El micrófono está apagado, se revocó la autorización y se borró el contexto de conversación. Puedes autorizar de nuevo sin perder el texto observado.") {
-    release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setCode(""); setPhase("paused"); setMessage(copy);
+    release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setPhase("paused"); setMessage(copy);
   }
   function fail(error: unknown) {
     const name = error instanceof Error ? error.message : "";
@@ -124,7 +123,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     const abort = new AbortController();
     void Promise.resolve().then(() => checkStatus(abort.signal));
     const stop = () => {
-      release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setCode(""); setPhase("paused");
+      release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setPhase("paused");
       setMessage("Se pausó la prueba al ocultar o salir de la pestaña. El micrófono está apagado y se borró el contexto de conversación; vuelve a autorizar para continuar.");
     };
     const hide = () => { if (document.hidden) stop(); };
@@ -140,7 +139,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     && status.asr.timingMethod === "ctc-greedy-frames" && status.asr.languages.includes(language)
     && status.translation.enabled && status.translation.ready && status.translation.languages.includes(language)
     && status.speech.enabled && status.speech.languages.includes(language);
-  const canAuthorize = available && code.trim().length >= 16;
+  const canAuthorize = available; // Meta backend is open: no private code.
   const supportsCapture = typeof window !== "undefined" && window.isSecureContext && !!navigator.mediaDevices?.getUserMedia && typeof AudioContext !== "undefined";
   const question = reply?.replyText ?? prepared?.opening ?? "";
   const dialogue = readingDialoguePresentation(status?.dialogue, reply);
@@ -150,8 +149,8 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     if (!canAuthorize || !status || status.mode === "disabled" || busy) return;
     release();
     const token = epoch.current;
-    const service = new MetaReadingClient({ accessCode: code.trim(), audience: status.mode });
-    client.current = service; setCode(""); setAuthorized(true);
+    const service = new MetaReadingClient({ accessCode: "", audience: status.mode });
+    client.current = service; setAuthorized(true);
     if (preparedRef.current) { setPhase(readingDone.current ? "conversation" : "ready"); setMessage("Autorización renovada. El micrófono solo se activa al pulsar el botón de lectura o respuesta."); return; }
     setPhase("preparing"); setMessage("Preparando el texto de la misión en la lengua elegida… No es una traducción validada por una persona.");
     try {
@@ -266,7 +265,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
 
   function changeLanguage(value: ReadingLanguage) {
     release(); setLanguage(value); setPrepared(null); preparedRef.current = null;
-    setAuthorized(false); setCode(""); setPhase("setup");
+    setAuthorized(false); setPhase("setup");
     setObserved([]); observedRef.current.clear(); cursor.current = 0; setTranscript(""); setReply(null); setHeard(""); setTurn(0);
     setElapsed(0); elapsedRef.current = 0; readingDone.current = false; setMessage("");
   }
@@ -283,10 +282,9 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
         <h2 id="reading-access-title">Preparar esta prueba</h2>
         <div className={styles.fields}>
           <div className="field"><label htmlFor="reading-language">Lengua de la lectura y la conversación</label><select id="reading-language" className="input" value={language} disabled={busy} onChange={(event) => changeLanguage(event.target.value as ReadingLanguage)}>{READING_LANGUAGES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></div>
-          <div className="field"><label htmlFor="reading-access-code">Código privado del responsable</label><input id="reading-access-code" className="input" type="password" value={code} minLength={16} maxLength={128} autoComplete="off" onChange={(event) => setCode(event.target.value)} /></div>
         </div>
         <p className="small muted">El texto de esta misión y los fragmentos de voz se envían al servidor configurado. Las transcripciones y traducciones necesitan revisión de una persona hablante.</p>
-        <p className="small muted">El código y el contenido de esta prueba solo viven en memoria. Esta vía no adjunta el perfil ni sus informes; evita datos personales en el texto y la voz. El servidor recibe audio para procesarlo; cancelar no retira lo ya recibido.</p>
+        <p className="small muted">El contenido de esta prueba solo vive en memoria. Esta vía no adjunta el perfil ni sus informes; evita datos personales en el texto y la voz. El servidor recibe audio para procesarlo; cancelar no retira lo ya recibido.</p>
         <div className="row"><button type="button" className="btn" disabled={!canAuthorize || checking || busy} onClick={() => void authorize()}>{prepared ? "Autorizar y continuar" : "Preparar lectura en esta lengua"}</button><button type="button" className="btn subtle" disabled={checking || busy} onClick={() => void checkStatus()}>{checking ? "Comprobando…" : "Comprobar modelos"}</button></div>
         {!checking && !available && <p className="small" role="status">No están disponibles todos los modelos necesarios para esta lengua. No se activará el micrófono. {status?.reason}</p>}
         {status && <p className="small muted">Conversación: {status.dialogue?.enabled ? `${status.dialogue.model ?? "modelo local"} · ${status.dialogue.ready ? "carga confirmada" : "carga aún no confirmada"}` : "guion de preguntas programadas; no hay un modelo conversacional habilitado"}. No se cambia de modo silenciosamente si falla el modelo.</p>}

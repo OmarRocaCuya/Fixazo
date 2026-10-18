@@ -5,7 +5,6 @@ import { guardarAvance, guardarResultado, leerAvance, leerResultados, type Avanc
 import type { Fragmento, NoticiaPublica, PreguntaOpciones, PreguntaVozPublica, RespuestaVoz } from "@/lib/periodico/tipos";
 import { apoyoAdaptativo, capacidadEvaluador, eleccionesParaJuez, MAX_INTENTOS_OPCIONES, opcionDesdeVoz, puedeContinuar, registrarIntento, restaurarIntentos, resumenProtocolo, type IntentosOpciones } from "@/lib/periodico/adaptacion";
 import { countFillers } from "@/lib/signals/prosody";
-import type { CloudVoiceAccess } from "@/lib/voice/types";
 import type { QuizAudioTranscript } from "@/lib/browser/quiz-microphone";
 import { applyVoiceEvaluation } from "./voz-state";
 import { QuizAudioPanel, type QuizAudioHandle } from "./QuizAudioPanel";
@@ -86,9 +85,9 @@ interface FinVoz {
 }
 
 /** Audio is owned by the single foreground panel; this block only reviews/submits text. */
-export function BloqueVoz({ p, noticiaId, onFin, access = null, elecciones = [], texto: textoExterno, onTextoChange, porVoz = false, onBusyChange }: {
+export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoExterno, onTextoChange, porVoz = false, onBusyChange }: {
   p: PreguntaVozPublica; noticiaId: string; onFin: (r: FinVoz) => void;
-  access?: CloudVoiceAccess | null; elecciones?: Array<{ preguntaId: string; opcion: number }>;
+  elecciones?: Array<{ preguntaId: string; opcion: number }>;
   texto?: string; onTextoChange?: (texto: string) => void; porVoz?: boolean; onBusyChange?: (busy: boolean) => void;
 }) {
   const [textoLocal, setTextoLocal] = useState("");
@@ -136,14 +135,14 @@ export function BloqueVoz({ p, noticiaId, onFin, access = null, elecciones = [],
   }
 
   async function enviar() {
-    if (!texto.trim() || texto.length > 800 || !capacidad.enabled || !access?.accessCode.trim() || estado !== "quieto") return;
+    if (!texto.trim() || texto.length > 800 || !capacidad.enabled || estado !== "quieto") return;
     const epoch = ++requestEpoch.current;
     const controller = new AbortController(); pending.current = controller;
     setEstado("pensando"); busyCallback.current?.(true);
     let d: RespuestaVoz;
     try {
       const r = await fetch("/api/periodico/responder", {
-        method: "POST", headers: { "content-type": "application/json", "x-voice-access-code": access.accessCode.trim() },
+        method: "POST", headers: { "content-type": "application/json" },
         signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20_000)]),
         body: JSON.stringify({ noticiaId, preguntaId: p.id, texto, intento: intentos.current + 1, elecciones }),
       });
@@ -169,7 +168,7 @@ export function BloqueVoz({ p, noticiaId, onFin, access = null, elecciones = [],
       <div className="pd-tipo">{p.etiqueta}</div>
       <h2>{p.titulo}</h2>
       <p className="muted small">Relaciona tu elección inicial, el fragmento nuevo y la decisión de mantener o cambiar. Usa evidencia del texto. El micrófono es opcional; solo se envía el texto visible. Revisa y edita la transcripción antes de enviar: el último audio puede seguir pendiente.</p>
-      <p className="muted small">La evaluación por IA es una demo y puede equivocarse. Usa el código privado del panel de voz, también para evaluar una respuesta escrita.</p>
+      <p className="muted small">La evaluación por IA es una demo y puede equivocarse.</p>
       <p className="pd-aviso" role="status">{capacidad.reason}</p>
       <label htmlFor={`r-${p.id}`}>Tu explicación ({texto.length}/800 caracteres)</label>
       <textarea id={`r-${p.id}`} className="pd-respuesta" rows={4} aria-label="Tu respuesta"
@@ -181,7 +180,7 @@ export function BloqueVoz({ p, noticiaId, onFin, access = null, elecciones = [],
       {estado === "listo" && retro?.bien === false && respondidas >= 2 && <p className="pd-aviso">Terminaste los intentos evaluados. Puedes revisar esta idea con un docente.</p>}
       {estado === "quieto" && (
         <div className="pd-acciones">
-          {capacidad.enabled && texto.trim() && <button type="button" className="btn primary" disabled={!access?.accessCode.trim() || texto.length > 800} onClick={() => void enviar()}>Pedir evaluación de mi respuesta</button>}
+          {capacidad.enabled && texto.trim() && <button type="button" className="btn primary" disabled={texto.length > 800} onClick={() => void enviar()}>Pedir evaluación de mi respuesta</button>}
           {pista < p.pistas.length && <button type="button" className="btn ghost" onClick={() => setPista((n) => n + 1)}>Pedir pista</button>}
           <button type="button" className="btn ghost" onClick={terminarSinEvaluacion}>Continuar sin evaluación</button>
         </div>
@@ -215,7 +214,6 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   const [respuestaVoz, setRespuestaVoz] = useState("");
   const [porVoz, setPorVoz] = useState(false);
   const [avisoAudio, setAvisoAudio] = useState("");
-  const [access, setAccess] = useState<CloudVoiceAccess | null>(null);
   const [judgeBusy, setJudgeBusy] = useState(false);
   const [capturePaused, setCapturePaused] = useState(false);
   const audio = useRef<QuizAudioHandle | null>(null);
@@ -284,7 +282,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         pausasLargas: null, segundosHablando: null, porVoz: v.porVoz,
       } : null,
     };
-    guardarResultado(r); setFin(r); setAccess(null); setRespuestaVoz(""); setBorradorOpcion(null);
+    guardarResultado(r); setFin(r); setRespuestaVoz(""); setBorradorOpcion(null);
     setTimeout(() => bajar(ultimo.current), 300);
   }
 
@@ -296,7 +294,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         <p className="pd-bajada">{noticia.bajada}</p>
         <p className="muted small">{noticia.minutos} min</p>
       </header>
-      {!fin && <QuizAudioPanel ref={audio} stepId={activeId} paused={judgeBusy || capturePaused} onTranscript={recibirTranscripcion} onAccessChange={setAccess} />}
+      {!fin && <QuizAudioPanel ref={audio} stepId={activeId} paused={judgeBusy || capturePaused} onTranscript={recibirTranscripcion} />}
       {avisoAudio && !fin && <p role="status" className="pd-aviso">{avisoAudio}</p>}
       {pasos.slice(0, visibles + 1).map((p, k) => (
         <div key={"id" in p ? p.id : `frag-${k}`} ref={k === visibles ? ultimo : undefined}>
@@ -314,7 +312,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
             apoyo={apoyoAdaptativo(pasos, p, intentosOpciones, elegidas)} borrador={borradorOpcion}
             onElegir={(opcion) => elegir(p, opcion)}
             onContinuar={() => { if (!fin && k === visibles && puedeContinuar(p, intentosOpciones)) { setBorradorOpcion(null); setHasta(k + 1); } }} />}
-          {p.tipo === "voz" && !fin && <BloqueVoz p={p} noticiaId={noticia.id} onFin={terminar} access={access}
+          {p.tipo === "voz" && !fin && <BloqueVoz p={p} noticiaId={noticia.id} onFin={terminar}
             elecciones={eleccionesParaJuez(pasos, elegidas)} texto={respuestaVoz} onTextoChange={setRespuestaVoz} porVoz={porVoz} onBusyChange={(busy) => { if (busy) audio.current?.stop(); setJudgeBusy(busy); }} />}
         </div>
       ))}

@@ -54,7 +54,10 @@ describe("research guided-reading route", () => {
     expect(result).toMatchObject({ heardSpanish: "dame la respuesta", replyText: result.replySpanish, requiresHumanReview: true });
     expect(result).not.toHaveProperty("score"); expect(result.dialogueMode).toBe("guided-reading"); expect(fetcher).toHaveBeenCalledOnce();
   });
-  it.each<Record<string, string>>([{ Origin: "https://evil.example" }, { "X-Voice-Access-Code": "wrong" }])("rejects unauthorized requests before buffering upload %j", async (headers) => {
+  it("accepts same-origin requests without the private access code", async () => {
+    expect((await POST(request({ ...input, action: "turn", heard: "hola", turn: 0 }, { "X-Voice-Access-Code": "" }))).status).toBe(200);
+  });
+  it.each<Record<string, string>>([{ Origin: "https://evil.example" }])("rejects unauthorized requests before buffering upload %j", async (headers) => {
     const read = vi.fn(); const req = request(input, headers);
     const wrapper = { url: req.url, headers: req.headers, get body() { read(); throw new Error("do not buffer"); } } as unknown as Request;
     const response = await POST(wrapper); expect([401, 403]).toContain(response.status); expect(read).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();

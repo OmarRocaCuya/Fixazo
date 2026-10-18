@@ -14,10 +14,9 @@ beforeEach(() => {
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
 
 describe("bounded periodico judge contract", () => {
-  it.each(["disabled", "key", "code"])("never calls a provider when %s configuration is missing", async (missing) => {
+  it.each(["disabled", "key"])("never calls a provider when %s configuration is missing", async (missing) => {
     if (missing === "disabled") vi.stubEnv("PERIODICO_JUDGE_ENABLED", "false");
     if (missing === "key") vi.stubEnv("OPENROUTER_API_KEY", "");
-    if (missing === "code") vi.stubEnv("VOICE_ACCESS_CODE", "");
     expect(await juzgarVoz(params)).toEqual([]); expect(fetcher).not.toHaveBeenCalled();
   });
   it("makes exactly three fixed-destination token/timeout-bounded calls and validates each run", async () => {

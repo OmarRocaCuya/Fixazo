@@ -56,7 +56,6 @@ export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(f
   }, [paused]);
   useEffect(() => {
     accessCallback.current?.(authorized ? { accessCode: "", audience: capability.mode } : null);
-    if (!authorized) controller.current?.pause("Micrófono apagado. Para usar voz, escribe el código privado.");
   }, [authorized, capability.mode]);
 
   function start() {

@@ -45,7 +45,7 @@ describe("multilingual reading surface (no adult gate)", () => {
     expect(markup).toContain("Demo no comercial");
     expect(markup).not.toMatch(/voz adulta|Confirmo|type="checkbox"/);
     expect(markup).toContain("según el modelo realmente habilitado");
-    expect(markup).toContain('type="password"');
+    expect(markup).not.toContain('type="password"'); // Meta backend is open: no private code field.
     expect(markup).toContain('value="quy_Latn"'); expect(markup).toContain('value="ayr_Latn"');
     expect(markup).not.toContain('value="quz_Latn"'); expect(markup).not.toContain('value="spa_Latn"');
     expect(markup).not.toContain("Comenzar lectura con micrófono");

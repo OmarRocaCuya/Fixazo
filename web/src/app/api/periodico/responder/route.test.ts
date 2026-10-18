@@ -20,21 +20,20 @@ const run = { criterios: [{ id: "evidencia", cumple: true, cita: "vende anuncios
 const input = { noticiaId: "noticia", preguntaId: "pregunta", texto: "El primero vende anuncios y el otro cuida los datos.", intento: 1 };
 let serial = 0;
 function request(body: unknown = input, headers: Record<string, string> = {}) {
-  return new Request("https://demo.example/api/periodico/responder", { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://demo.example", "X-Voice-Access-Code": process.env.VOICE_ACCESS_CODE ?? "", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
+  return new Request("https://demo.example/api/periodico/responder", { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://demo.example", "X-Forwarded-For": `192.0.2.${serial}`, ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
 }
 beforeEach(() => {
   vi.stubEnv("PERIODICO_JUDGE_ENABLED", "true"); vi.stubEnv("OPENROUTER_API_KEY", "unit-test-never-used-as-a-real-key");
-  vi.stubEnv("VOICE_ACCESS_CODE", `private-periodico-test-${++serial}`);
+  serial++; vi.stubEnv("VOICE_ACCESS_CODE", "");
   lookup.mockReset().mockResolvedValue(hit); judge.mockReset().mockResolvedValue([run, run, run]);
   vi.mocked(connection).mockClear();
 });
 afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
 
 describe("private periodico admission (no adult attestation) and no-evaluation", () => {
-  it.each(["disabled", "key", "code"])("fails closed when %s is absent, without parsing body or judging", async (missing) => {
+  it.each(["disabled", "key"])("fails closed when %s is absent, without parsing body or judging", async (missing) => {
     if (missing === "disabled") vi.stubEnv("PERIODICO_JUDGE_ENABLED", "");
     if (missing === "key") vi.stubEnv("OPENROUTER_API_KEY", "");
-    if (missing === "code") vi.stubEnv("VOICE_ACCESS_CODE", "");
     const read = vi.fn(() => { throw new Error("should not read"); });
     const response = await POST({ get body() { return read(); } } as unknown as Request);
     expect(response.status).toBe(200); expect(await response.json()).toMatchObject({ evaluacion: "no_evaluable", cuenta: false, listo: false, ia: false, criterios: [] });
@@ -49,10 +48,14 @@ describe("private periodico admission (no adult attestation) and no-evaluation",
     vi.stubEnv("PERIODICO_JUDGE_ENABLED", "true"); response = await GET();
     expect(await response.json()).toEqual({ enabled: true, reason: null });
   });
-  it.each<Record<string, string>>([{ Origin: "https://evil.example" }, { "X-Voice-Access-Code": "wrong" }, { "sec-fetch-site": "cross-site" }])("rejects forbidden caller before reading body: %j", async (headers) => {
+  it.each<Record<string, string>>([{ Origin: "https://evil.example" }, { "sec-fetch-site": "cross-site" }])("rejects forbidden caller before reading body: %j", async (headers) => {
     const req = request(input, headers); const read = vi.fn(() => { throw new Error("should not read"); });
     const response = await POST({ url: req.url, headers: req.headers, get body() { return read(); } } as unknown as Request);
-    expect([401, 403]).toContain(response.status); expect(read).not.toHaveBeenCalled(); expect(judge).not.toHaveBeenCalled();
+    expect(response.status).toBe(403); expect(read).not.toHaveBeenCalled(); expect(judge).not.toHaveBeenCalled();
+  });
+  it("evaluates a same-origin answer without any private access code", async () => {
+    const response = await POST(request());
+    expect(response.status).toBe(200); expect(await response.json()).toMatchObject({ evaluacion: "evaluada", cuenta: true });
   });
   it.each([{ consent: true }, { adultConfirmed: true }, { audience: "adult" }, { alumno: "never-store-student" }, { texto: "x".repeat(801) }, { intento: 3 }, { intento: "1" }, { noticiaId: 5 }, { preguntaId: "" }])("rejects invalid, retired consent or identifying fields before lookup/inference: %j", async (extra) => {
     expect((await POST(request({ ...input, ...extra }))).status).toBe(422); expect(judge).not.toHaveBeenCalled(); expect(lookup).not.toHaveBeenCalled();
@@ -152,21 +155,19 @@ describe("private periodico admission (no adult attestation) and no-evaluation",
     judge.mockResolvedValue([negative, negative]);
     expect(await (await POST(request())).json()).toMatchObject({ evaluacion: "evaluada", cuenta: true, listo: false, criterios: [{ cumple: false }] });
   });
-  it("has only one in-flight judge and releases after infrastructure failure", async () => {
-    let reject!: (error: Error) => void;
-    judge.mockImplementationOnce(() => new Promise((_resolve, fail) => { reject = fail; }));
-    const first = POST(request());
-    await vi.waitFor(() => expect(judge).toHaveBeenCalledOnce());
-    const second = await POST(request()); expect(second.status).toBe(429); expect(await second.json()).toMatchObject({ cuenta: false, error: "periodico-judge-busy" });
-    reject(new Error("offline")); await first;
-    expect((await POST(request())).status).toBe(200); expect(judge).toHaveBeenCalledTimes(2);
+  it("bounds in-flight judges to three and releases after infrastructure failure", async () => {
+    const rejects: Array<(error: Error) => void> = [];
+    for (let i = 0; i < 3; i++) judge.mockImplementationOnce(() => new Promise((_resolve, fail) => { rejects.push(fail); }));
+    const pending = [POST(request()), POST(request()), POST(request())];
+    await vi.waitFor(() => expect(judge).toHaveBeenCalledTimes(3));
+    const fourth = await POST(request()); expect(fourth.status).toBe(429); expect(await fourth.json()).toMatchObject({ cuenta: false, error: "periodico-judge-busy" });
+    for (const reject of rejects) reject(new Error("offline"));
+    await Promise.all(pending);
+    expect((await POST(request())).status).toBe(200); expect(judge).toHaveBeenCalledTimes(4);
   });
-  it("enforces the IP quota before more paid calls", async () => {
-    for (let i = 0; i < 6; i++) expect((await POST(request())).status).toBe(200);
-    const response = await POST(request()); expect(response.status).toBe(429); expect(await response.json()).toMatchObject({ cuenta: false, error: "periodico-rate-limit" }); expect(judge).toHaveBeenCalledTimes(6);
-  });
-  it("spoofing IP hints cannot bypass the private-code quota", async () => {
-    for (let i = 0; i < 12; i++) expect((await POST(request(input, { "X-Forwarded-For": `192.0.2.${i}` }))).status).toBe(200);
-    expect((await POST(request(input, { "X-Forwarded-For": "192.0.2.100" }))).status).toBe(429); expect(judge).toHaveBeenCalledTimes(12);
+  it("enforces the per-IP quota (40 per 10 min) before more paid calls", async () => {
+    for (let i = 0; i < 40; i++) expect((await POST(request())).status).toBe(200);
+    const response = await POST(request()); expect(response.status).toBe(429); expect(await response.json()).toMatchObject({ cuenta: false, error: "periodico-rate-limit" }); expect(judge).toHaveBeenCalledTimes(40);
+    expect((await POST(request(input, { "X-Forwarded-For": "198.51.100.77" }))).status).toBe(200);
   });
 });

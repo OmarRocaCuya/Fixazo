@@ -16,6 +16,7 @@ describe("newspaper voice question admission", () => {
       expect(html).toContain("Continuar sin evaluación");
       expect(html).toContain("La evaluación por IA es una demo");
       expect(html).not.toContain("solo para adultos");
+      expect(html.toLowerCase()).not.toContain("código privado");
       expect(html).toContain("micrófono es opcional");
       expect(html).not.toContain("Pedir evaluación de mi respuesta");
       expect(html).not.toContain("Para practicar");
