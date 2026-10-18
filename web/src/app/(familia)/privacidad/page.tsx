@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import type { Permissions } from "@/lib/types";
 import { notifyStore, useStore } from "@/lib/useStore";
 import { getStore } from "@/lib/storage";
+import { deletePeriodicoData, exportPeriodicoData } from "@/lib/periodico/privacidad";
 import { PermissionRows } from "@/components/PermissionRows";
 import { NOT_MEASURED } from "@/lib/guardrails";
 
@@ -36,7 +37,10 @@ function Privacy({ initial, alias }: { initial: Permissions; alias: string }) {
   }
 
   function download() {
-    const blob = new Blob([getStore().exportAll()], { type: "application/json" });
+    const periodico = exportPeriodicoData();
+    const exported = JSON.stringify({ ...JSON.parse(getStore().exportAll()), periodico }, null, 2);
+    const blob = new Blob([exported], { type: "application/json" });
+    if (!periodico.complete) setMsg("La exportación incluye los datos accesibles. No se pudo leer todo el almacenamiento del periódico; el archivo lo indica.");
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -47,7 +51,12 @@ function Privacy({ initial, alias }: { initial: Permissions; alias: string }) {
 
   function deleteAll() {
     getStore().deleteAllData();
+    const periodico = deletePeriodicoData();
     notifyStore();
+    if (!periodico.complete) {
+      setMsg("Se intentaron borrar los datos de lectura y del periódico, pero el navegador bloqueó parte del almacenamiento del periódico. No podemos confirmar el borrado completo. Puedes reintentar o borrar los datos de este sitio desde tu navegador.");
+      return;
+    }
     router.push("/consentimiento");
   }
 
@@ -56,7 +65,7 @@ function Privacy({ initial, alias }: { initial: Permissions; alias: string }) {
       <div className="stack-sm">
         <span className="eyebrow">Privacidad</span>
         <h1>Tus datos y los de {alias}</h1>
-        <p className="muted">El perfil y los informes se guardan en este dispositivo, sin cuentas. La transcripción por voz y la IA opcional pueden usar servicios externos.</p>
+        <p className="muted">El perfil, los informes y el avance del periódico se guardan en este dispositivo, sin cuentas. La transcripción por voz y la IA opcional pueden usar servicios externos.</p>
       </div>
 
       <section className="card stack">
@@ -89,6 +98,7 @@ function Privacy({ initial, alias }: { initial: Permissions; alias: string }) {
 
       <section className="card stack">
         <h2>Tus datos</h2>
+        <p className="small">La descarga y el borrado incluyen los resultados, el avance y el identificador local antiguo del periódico, además de los datos de lectura.</p>
         <div className="row">
           <button type="button" className="btn ghost" onClick={download}>
             Descargar datos
@@ -102,7 +112,7 @@ function Privacy({ initial, alias }: { initial: Permissions; alias: string }) {
         {confirming && (
           <div className="card no tight stack-sm" role="alertdialog" aria-labelledby="del-title">
             <strong id="del-title">¿Seguro?</strong>
-            <p className="small">Se borran el perfil, el consentimiento, las misiones, los informes y el chat de este dispositivo. No se puede deshacer.</p>
+            <p className="small">Se borran el perfil, el consentimiento, las misiones, los informes, el chat y los datos del periódico (resultados, avance e identificador local antiguo) de este dispositivo. No se borran datos de otras aplicaciones. No se puede deshacer.</p>
             <div className="row">
               <button type="button" className="btn danger" onClick={deleteAll}>
                 Sí, borrar todo
