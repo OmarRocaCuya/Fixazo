@@ -1,0 +1,16 @@
+**/node_modules
+**/.next
+**/dist
+**/.env*
+!**/.env.example
+**/__pycache__
+**/.venv
+**/.test-deps
+**/.pytest_cache
+.codegraph
+.atl
+.claude
+.playwright-*
+outputs
+research_notes
+web/services/indigenous
