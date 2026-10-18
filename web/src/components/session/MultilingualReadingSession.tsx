@@ -29,6 +29,19 @@ export function ObservedPassageText({ passage, language, observed }: { passage: 
   })}</p>;
 }
 
+/** A scripted opening is not evidence that the subsequent model is disabled. */
+export function readingDialoguePresentation(dialogue: ReadingCapabilities["dialogue"], reply: Pick<ReadingReply, "dialogueMode" | "model"> | null) {
+  const localDialogue = reply ? reply.dialogueMode === "local-llm-reading" : dialogue?.enabled === true;
+  const model = reply?.model ?? dialogue?.model ?? "modelo local configurado";
+  return {
+    heading: localDialogue ? "Conversación con modelo local" : "Conversación guiada por un guion",
+    description: localDialogue
+      ? `Modelo: ${model}. ${reply ? "Esta respuesta proviene del modelo local." : "La apertura es un guion predefinido; los siguientes turnos usarán el modelo local configurado, cuya respuesta aún no se ha generado."} Conversa sobre el texto en castellano y traducimos sus respuestas; puede equivocarse.`
+      : "Este modo sigue preguntas programadas, no es un agente de conversación libre.",
+    questionLabel: reply ? "Respuesta del agente" : "Pregunta de apertura predefinida",
+  };
+}
+
 /** Isolated adult research lane. Never receives a profile/controller/report. */
 export function MultilingualReadingSession({ passage, title, onClose }: { passage: string; title: string; onClose: () => void }) {
   const [status, setStatus] = useState<ReadingCapabilities | null>(null);
@@ -134,7 +147,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
   const canAuthorize = available && code.trim().length >= 16 && consent && adult;
   const supportsCapture = typeof window !== "undefined" && window.isSecureContext && !!navigator.mediaDevices?.getUserMedia && typeof AudioContext !== "undefined";
   const question = reply?.replyText ?? prepared?.opening ?? "";
-  const localDialogue = (reply?.dialogueMode ?? prepared?.dialogueMode) === "local-llm-reading";
+  const dialogue = readingDialoguePresentation(status?.dialogue, reply);
   const totalWords = prepared ? referenceWords(prepared.passage).length : 0;
 
   async function authorize() {
@@ -303,9 +316,9 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
       </section>}
 
       {prepared && readingDone.current && <section className={styles.dialogue} aria-labelledby="guided-dialogue-title">
-        <h2 id="guided-dialogue-title">{localDialogue ? "Conversación con modelo local" : "Conversación guiada por un guion"}</h2>
-        <p className="small muted">{localDialogue ? `Modelo: ${reply?.model ?? status?.dialogue?.model ?? "modelo local configurado"}. Conversa sobre el texto en castellano y traducimos sus respuestas; puede equivocarse.` : "Este modo sigue preguntas programadas, no es un agente de conversación libre."} Una respuesta por turno, hasta 9 respuestas de 15 segundos. No se escucha mientras habla la voz sintética. Las traducciones no sustituyen lo que dijiste.</p>
-        <div className={styles.question}><strong>Pregunta guía</strong><p lang={language === "quy_Latn" ? "quy" : "ayr"}>{question}</p>{reply?.replySpanish && <p className="small muted">Versión en castellano, por revisar: {reply.replySpanish}</p>}</div>
+        <h2 id="guided-dialogue-title">{dialogue.heading}</h2>
+        <p className="small muted">{dialogue.description} Una respuesta por turno, hasta 9 respuestas de 15 segundos. No se escucha mientras habla la voz sintética. Las traducciones no sustituyen lo que dijiste.</p>
+        <div className={styles.question}><strong>{dialogue.questionLabel}</strong><p lang={language === "quy_Latn" ? "quy" : "ayr"}>{question}</p>{reply?.replySpanish && <p className="small muted">Versión en castellano, por revisar: {reply.replySpanish}</p>}</div>
         {heard && <div className={styles.answer}><strong>Lo reconocido en tu lengua</strong><p>{heard}</p>{reply?.heardSpanish && <p className="small muted">Traducción propuesta: {reply.heardSpanish}</p>}</div>}
         <div className="row">
           <button type="button" className="btn ghost" disabled={!authorized || phase !== "conversation"} onClick={() => void speakQuestion()}>Escuchar pregunta en esta lengua</button>

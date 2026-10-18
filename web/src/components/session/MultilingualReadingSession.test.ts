@@ -1,11 +1,41 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { MultilingualReadingSession, ObservedPassageText } from "./MultilingualReadingSession";
+import { MultilingualReadingSession, ObservedPassageText, readingDialoguePresentation } from "./MultilingualReadingSession";
 
 afterEach(() => { vi.unstubAllGlobals(); });
 
 describe("adult-only multilingual reading surface", () => {
+  it("labels the scripted opening separately from configured local-model turns", () => {
+    const view = readingDialoguePresentation({ enabled: true, ready: false, model: "Qwen local" }, null);
+    expect(view.heading).toBe("Conversación con modelo local");
+    expect(view.questionLabel).toBe("Pregunta de apertura predefinida");
+    expect(view.description).toContain("apertura es un guion predefinido");
+    expect(view.description).toContain("siguientes turnos usarán el modelo local configurado");
+    expect(view.description).toContain("aún no se ha generado");
+    expect(view.description).not.toContain("no es un agente de conversación libre");
+  });
+  it("lets an actual guided reply override configured local-model metadata", () => {
+    const view = readingDialoguePresentation({ enabled: true, ready: true, model: "Qwen local" }, { dialogueMode: "guided-reading", model: null });
+    expect(view.heading).toBe("Conversación guiada por un guion");
+    expect(view.questionLabel).toBe("Respuesta del agente");
+    expect(view.description).toContain("no es un agente de conversación libre");
+    expect(view.description).not.toContain("Qwen");
+  });
+  it("uses the actual returned model and mode after a local-model reply", () => {
+    const view = readingDialoguePresentation({ enabled: false, ready: false, model: null }, { dialogueMode: "local-llm-reading", model: "Qwen respuesta real" });
+    expect(view.heading).toBe("Conversación con modelo local");
+    expect(view.questionLabel).toBe("Respuesta del agente");
+    expect(view.description).toContain("Qwen respuesta real");
+    expect(view.description).toContain("Esta respuesta proviene del modelo local");
+    expect(view.description).not.toContain("aún no se ha generado");
+  });
+  it("does not claim a local model before a reply when one is not configured", () => {
+    const view = readingDialoguePresentation(undefined, null);
+    expect(view.heading).toBe("Conversación guiada por un guion");
+    expect(view.questionLabel).toBe("Pregunta de apertura predefinida");
+    expect(view.description).toContain("preguntas programadas");
+  });
   it("renders an opt-in form without sending a passage or opening the microphone", () => {
     const request = vi.fn(); const getUserMedia = vi.fn();
     vi.stubGlobal("fetch", request);
