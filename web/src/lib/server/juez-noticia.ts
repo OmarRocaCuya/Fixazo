@@ -62,7 +62,10 @@ async function unaCorrida(entrada: object, criterios: Criterio[]): Promise<Corri
     method: "POST", redirect: "error", signal: AbortSignal.timeout(12_000),
     headers: { Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: MODELO, reasoning: { enabled: false }, max_tokens: 500, provider: { require_parameters: true },
+      model: MODELO, reasoning: { enabled: false }, max_tokens: 500,
+      // Route only to providers declaring no collection and zero retention.
+      // No eligible endpoint is availability failure, never a weaker fallback.
+      provider: { require_parameters: true, data_collection: "deny", zdr: true },
       response_format: { type: "json_schema", json_schema: { name: "evaluacion", strict: true, schema: ESQUEMA } },
       messages: [{ role: "system", content: SISTEMA }, { role: "user", content: JSON.stringify(entrada) }],
     }),

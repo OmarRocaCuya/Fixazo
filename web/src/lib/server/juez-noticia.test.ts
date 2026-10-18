@@ -24,7 +24,9 @@ describe("bounded periodico judge contract", () => {
     expect(await juzgarVoz(params)).toEqual([run, run, run]); expect(fetcher).toHaveBeenCalledTimes(3);
     for (const [url, init] of fetcher.mock.calls) {
       expect(url).toBe("https://openrouter.ai/api/v1/chat/completions"); expect(init.redirect).toBe("error"); expect(init.signal).toBeInstanceOf(AbortSignal);
-      const body = JSON.parse(init.body); expect(body.max_tokens).toBe(500); expect(body.messages.map((m: { role: string }) => m.role)).toEqual(["system", "user"]);
+      const body = JSON.parse(init.body); expect(body.model).toBe("anthropic/claude-haiku-5.5"); expect(body.reasoning).toEqual({ enabled: false });
+      expect(body.provider).toEqual({ require_parameters: true, data_collection: "deny", zdr: true });
+      expect(body.max_tokens).toBe(500); expect(body.messages.map((m: { role: string }) => m.role)).toEqual(["system", "user"]);
       expect(body.messages[1].content).toContain(params.texto); expect(body.messages[1].content).not.toContain("alumno");
     }
   });
