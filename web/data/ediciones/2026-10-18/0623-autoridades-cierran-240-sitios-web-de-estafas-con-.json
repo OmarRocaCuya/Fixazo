@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿cómo funcionaban las estafas?",
         "opciones": [
           "Los estafadores pedían grandes sumas desde el primer contacto",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién cuenta la experiencia de estafa en el texto?",
         "opciones": [
           "Un funcionario del FBI",
@@ -87,12 +87,12 @@
         "correcta": 1,
         "bien": "Mark es una víctima. Su interés es contar lo que le pasó, así que su mirada es de quien sufrió el daño.",
         "otra": "Fíjate en quién aparece en el segundo fragmento y qué le pasó a esa persona.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "Si quieres verificar que los 240 sitios fueron cerrados, ¿qué buscarías?",
         "opciones": [
           "La opinión de un solo vecino",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que las redes sociales deberían controlar mejor los anuncios de inversión?",
         "opciones": [
           "Sí, deberían revisar más los anuncios",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con--contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

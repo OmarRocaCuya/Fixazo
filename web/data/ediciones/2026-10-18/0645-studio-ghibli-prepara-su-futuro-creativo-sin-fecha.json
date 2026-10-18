@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿qué dice el presidente de Ghibli sobre sus proyectos?",
         "opciones": [
           "Que ya tienen una película anunciada para el próximo año",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en estos fragmentos y qué interés puede tener?",
         "opciones": [
           "El presidente de la productora Studio Ghibli",
@@ -87,12 +87,12 @@
         "correcta": 0,
         "bien": "Es el presidente de la compañía, así que quiere mostrar cómo trabaja su estudio y cuidar su imagen.",
         "otra": "Recuerda que quien habla de su propio trabajo suele destacar lo que le conviene que se sepa.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué palabra o frase intenta convencerte de que el estudio no tiene problemas?",
         "opciones": [
           "Ghibli no es solo una empresa que debe generar beneficios",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué opinas sobre que la animación se haga sin fechas límite?",
         "opciones": [
           "Me parece bien que se tome el tiempo que necesite",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

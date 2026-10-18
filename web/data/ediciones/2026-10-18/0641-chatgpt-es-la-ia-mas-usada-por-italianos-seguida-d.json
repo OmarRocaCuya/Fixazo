@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento A, ¿qué app tenía más usuarios en julio de 2026?",
         "opciones": [
           "Gemini, con 9,374 millones",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién aporta los datos de esta nota?",
         "opciones": [
           "Un observatorio de IA dirigido por Vincenzo Cosenza, que usa datos de Audicom",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Los datos vienen de un observatorio de IA que trabaja con Audicom; conviene saber quién mide y con qué herramienta.",
         "otra": "Revisa qué dice el texto sobre el Observatorio de Inteligencia Artificial y de dónde salen las cifras.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué buscarías para comprobar que ChatGPT tiene 9,625 millones de usuarios en Italia?",
         "opciones": [
           "El informe original del observatorio y la metodología de Audicom",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué opinas sobre que los datos de uso de IA los mida un observatorio privado?",
         "opciones": [
           "Está bien, siempre que se explique cómo se midió",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

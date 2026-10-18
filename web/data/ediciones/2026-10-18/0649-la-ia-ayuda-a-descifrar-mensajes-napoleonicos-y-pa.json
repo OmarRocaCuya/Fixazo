@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto de El Comercio, ¿qué tardó seis horas?",
         "opciones": [
           "Descifrar el mensaje de la carta de Napoleón con IA",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que la IA aporta sobre todo perseverancia?",
         "opciones": [
           "Carter Church, ingeniero en IA",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Es el ingeniero en IA que hizo el descifrado, así que conoce el proceso desde adentro y tiene interés en destacar la tecnología.",
         "otra": "Pierrot aparece en la nota, pero la frase de perseverancia es de quien logró descifrar la carta.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué dato de la nota podrías comprobar antes de creerlo?",
         "opciones": [
           "Que la IA hizo el descifrado en solo seis horas",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que la IA debería usarse para estudiar la historia?",
         "opciones": [
           "Sí, porque permite analizar más documentos",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

@@ -39,7 +39,7 @@ export function MissionSheet({ mission, onClose }: { mission: Mission; onClose: 
             </div>
           ))}
         </div>
-        <p className="small muted">No mostramos las respuestas para no adelantar la sesión. El dato de la contraprueba aparece durante la sesión.</p>
+        <p className="small muted">No mostramos las respuestas para no adelantar la sesión. El dato nuevo aparece durante la sesión.</p>
       </div>
     </div>
   );

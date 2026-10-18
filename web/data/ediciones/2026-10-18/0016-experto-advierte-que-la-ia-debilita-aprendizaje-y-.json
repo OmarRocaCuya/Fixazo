@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿qué dice Holmes sobre la personalización del aprendizaje con IA?",
         "opciones": [
           "Que la IA personaliza el aprendizaje de verdad para cada alumno",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en esta nota y qué rol tiene?",
         "opciones": [
           "Un investigador de educación y IA de University College London",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Holmes es profesor de Estudios Críticos de IA y Educación en UCL y asesor de la Unesco. Su interés es advertir sobre el uso de la IA en escuelas.",
         "otra": "Este rol no coincide con lo que dice la nota sobre quién habla. Revisa la presentación que hace el texto del entrevistado.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué afirmación del texto necesita una fuente para comprobarse?",
         "opciones": [
           "Que la IA está en las aulas y la usan estudiantes y docentes",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué postura te parece más razonable frente a la IA en las escuelas?",
         "opciones": [
           "Usarla sin límites porque ayuda a aprender más rápido",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

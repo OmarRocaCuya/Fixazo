@@ -187,8 +187,8 @@ const HABILIDAD_VARIABLE = {
 
 /**
  * Estructura fija (siempre igual; solo el paso 5 varía según la noticia):
- * 1 predicción · 2 fragmento A · 3 comprensión · 4 quién habla · 5 variable ·
- * 6 postura y seguridad · 7 contraprueba (fragmento B) y mantengo/cambio · 8 por qué con voz.
+ * Se numeran solo las preguntas (los fragmentos no son pasos): 1 predicción · fragmento A · 2 comprensión ·
+ * 3 quién habla · 4 variable · 5 postura · 6 seguridad · fragmento B · 7 otro medio: mantengo/cambio · 8 por qué con voz.
  */
 export function armarNoticia(id, g, fuenteA, fuenteB) {
   const p = (n) => `Paso ${n} de 8`;
@@ -205,13 +205,13 @@ export function armarNoticia(id, g, fuenteA, fuenteB) {
     pasos: [
       { ...opciones(`${id}-prediccion`, `${p(1)} · antes de leer`, { ...g.prediccion, correcta: null, bien: 'Veamos si aciertas…', otra: 'Veamos si aciertas…' }, null) },
       fragmento('a', fuenteA, g.fragmento_a),
-      opciones(`${id}-comprension`, `${p(3)} · toca una opción`, g.comprension, 'Entender qué dice'),
-      opciones(`${id}-procedencia`, `${p(4)} · toca una opción`, g.procedencia, 'Ver quién habla y qué gana'),
-      opciones(`${id}-variable`, `${p(5)} · toca una opción`, g.variable, HABILIDAD_VARIABLE[g.variable.tipo]),
-      opciones(`${id}-postura`, `${p(6)} · tu opinión`, { ...g.postura, correcta: null, bien: 'Anotado.', otra: 'Anotado.' }, null),
+      opciones(`${id}-comprension`, `${p(2)} · toca una opción`, g.comprension, 'Entender qué dice'),
+      opciones(`${id}-procedencia`, `${p(3)} · toca una opción`, g.procedencia, 'Ver quién habla y por qué'),
+      opciones(`${id}-variable`, `${p(4)} · toca una opción`, g.variable, HABILIDAD_VARIABLE[g.variable.tipo]),
+      opciones(`${id}-postura`, `${p(5)} · tu opinión`, { ...g.postura, correcta: null, bien: 'Anotado.', otra: 'Anotado.' }, null),
       opciones(`${id}-seguridad`, `${p(6)} · qué tan seguro estás`, { titulo: '¿Qué tan seguro estás de tu opinión?', opciones: SEGURIDAD, correcta: null, bien: 'Ahora mira esto…', otra: 'Ahora mira esto…' }, null),
       fragmento('b', fuenteB ?? fuenteA, g.fragmento_b),
-      opciones(`${id}-contraprueba`, `${p(7)} · contraprueba`, { titulo: 'Con esto nuevo, ¿mantienes o cambias tu idea?', opciones: ['Mantengo mi idea', 'Cambio mi idea'], correcta: null, bien: 'Las dos valen si hay una buena razón.', otra: 'Las dos valen si hay una buena razón.' }, null),
+      opciones(`${id}-contraprueba`, `${p(7)} · otro medio`, { titulo: 'Con esto nuevo, ¿mantienes o cambias tu idea?', opciones: ['Mantengo mi idea', 'Cambio mi idea'], correcta: null, bien: 'Las dos valen si hay una buena razón.', otra: 'Las dos valen si hay una buena razón.' }, null),
       {
         tipo: 'voz',
         id: `${id}-voz`,

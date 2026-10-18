@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿a quiénes se muestran los anuncios en ChatGPT?",
         "opciones": [
           "A todas las cuentas, sin excepción",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién explica que la publicidad puede influir en las respuestas de la IA?",
         "opciones": [
           "Un economista y profesor universitario",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Es Rafael del Río, economista y profesor de la Universidad Complutense. Su interés es analizar el impacto social y regulatorio de la IA.",
         "otra": "Fíjate en el cargo que aparece junto al nombre de quien habla. Así sabrás qué perspectiva aporta.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Cuál de estas frases es un hecho y cuál una opinión?",
         "opciones": [
           "OpenAI abrió en Europa el servicio Ads Manager el último día de agosto",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que la publicidad dentro de ChatGPT debería estar regulada?",
         "opciones": [
           "Sí, para proteger la privacidad y la neutralidad de las respuestas",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

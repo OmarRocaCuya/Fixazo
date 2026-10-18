@@ -68,7 +68,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el primer fragmento, ¿qué problema señala la nota A?",
         "opciones": [
           "Que la inversión en centros de datos es mucho mayor que los ingresos que generan",
@@ -83,7 +83,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién hace la advertencia sobre el riesgo de decepción en la nota B?",
         "opciones": [
           "Un periodista deportivo",
@@ -93,12 +93,12 @@
         "correcta": 1,
         "bien": "La nota B es de un análisis del Fondo Monetario Internacional, que tiene interés en que los países gestionen bien la transición.",
         "otra": "Revisa de qué organismo viene el texto y qué papel cumple en la economía mundial.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "La cifra de 35 veces más, ¿cómo comprobarías que es correcta?",
         "opciones": [
           "Buscando de dónde sale el cálculo y quién lo hizo",
@@ -113,7 +113,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que la inversión en IA es una burbuja o una oportunidad?",
         "opciones": [
           "Es sobre todo una oportunidad a largo plazo",
@@ -152,7 +152,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

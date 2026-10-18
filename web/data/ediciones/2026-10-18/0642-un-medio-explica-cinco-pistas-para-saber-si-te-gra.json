@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿cuál es la señal más fiable de que se está grabando?",
         "opciones": [
           "Las patillas muy gruesas",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que la señal más reveladora está a plena vista?",
         "opciones": [
           "Will Greenwald, redactor especializado en electrónica de consumo",
@@ -87,12 +87,12 @@
         "correcta": 0,
         "bien": "Greenwald es redactor especializado en electrónica de consumo, así que sabe del tema, aunque su trabajo es escribir sobre tecnología.",
         "otra": "El texto identifica a Greenwald como redactor de PCMag, no como vecino ni como portavoz de Meta.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "Si quisieras comprobar si alguien te graba con unas gafas, ¿qué buscarías primero?",
         "opciones": [
           "El pequeño LED y la lente en la montura",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Te parece justo que alguien pueda grabarte con gafas sin que lo sepas?",
         "opciones": [
           "Sí, siempre que no se publique el vídeo",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0642-un-medio-explica-cinco-pistas-para-saber-si-te-gra-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

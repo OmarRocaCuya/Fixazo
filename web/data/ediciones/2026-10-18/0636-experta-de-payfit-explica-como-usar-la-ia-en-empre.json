@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿en qué tareas ofrece resultados sólidos la IA?",
         "opciones": [
           "En tareas frecuentes, acotadas y verificables, como resumir o clasificar información",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién da esta explicación sobre la IA en las empresas?",
         "opciones": [
           "Carolina Trinidad Morera, de Product Management en PayFit",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Es una profesional de una empresa que vende software de nóminas, así que tiene interés en mostrar la IA como útil.",
         "otra": "Un inspector o un profesor tendrían otra mirada, pero en esta nota la voz es de una empresa que ofrece estas herramientas.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "La nota da cifras de InfoJobs. ¿Qué buscarías para comprobar que son ciertas?",
         "opciones": [
           "El estudio original de InfoJobs y su metodología",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que las empresas deberían usar la IA para decidir sobre personas?",
         "opciones": [
           "Sí, siempre que haya una persona que revise la decisión",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

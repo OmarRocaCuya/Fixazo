@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿qué pasó con las ofertas para perfiles junior en informática y telecomunicaciones?",
         "opciones": [
           "Subieron un 5 %",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en el fragmento B y qué rol tiene?",
         "opciones": [
           "Un trabajador junior que busca su primer empleo",
@@ -87,12 +87,12 @@
         "correcta": 1,
         "bien": "Es el CEO de Hirint, una empresa que participa en el informe. Su rol le da una mirada desde el sector que contrata.",
         "otra": "Fíjate en cómo se presenta a la persona que habla antes de la cita: el cargo aparece en la nota.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "El fragmento A da cifras de caídas de empleo. ¿Qué buscarías para comprobar si son fiables?",
         "opciones": [
           "La fuente del informe y quién lo elaboró",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué crees que deberían hacer las empresas para que los jóvenes sin experiencia tengan oportunidades?",
         "opciones": [
           "Contratar más por potencial y capacidad de aprender",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

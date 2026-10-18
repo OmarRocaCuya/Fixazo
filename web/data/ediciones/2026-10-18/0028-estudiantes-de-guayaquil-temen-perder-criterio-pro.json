@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿qué problema identificaron los jóvenes en la jornada?",
         "opciones": [
           "La falta de criterio propio en jóvenes y adultos al tomar decisiones",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién atribuye el problema a la influencia de redes sociales e inteligencia artificial?",
         "opciones": [
           "Los propios alumnos participantes, según lo que expresaron en la jornada",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "El texto dice que lo atribuyeron los estudiantes en las jornadas. Ellos tienen interés en que su voz se escuche y se tome en serio.",
         "otra": "Fíjate en quién aparece como sujeto en la frase “Esto lo atribuyeron a…”.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué buscarías para comprobar que la influencia de las redes es la causa principal del problema?",
         "opciones": [
           "Estudios o encuestas con datos sobre cómo las redes y la IA afectan la toma de decisiones de los jóvenes",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "Tú, ¿qué opinas sobre el uso de redes sociales por parte de los jóvenes?",
         "opciones": [
           "Las redes influyen mucho y conviene enseñar a usarlas con criterio",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

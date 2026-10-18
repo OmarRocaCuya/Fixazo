@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿qué hacen las universidades de Europa y Estados Unidos?",
         "opciones": [
           "Integran la IA en la evaluación como parte del examen.",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en el fragmento de Asia que describe herramientas educativas?",
         "opciones": [
           "Un profesor de Derecho que simula juicios en su clase.",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Quien habla es el texto de la nota, que describe a profesores y universidades que diseñan bots; el interés es explicar la tendencia, no vender nada.",
         "otra": "Fíjate en quién describe el uso de bots para recrear juicios y qué busca mostrar con ese ejemplo.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "Si quisieras comprobar que las universidades asiáticas usan IA educativa, ¿qué buscarías?",
         "opciones": [
           "Un comunicado oficial de una universidad o un estudio que describa esas herramientas.",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué opinas: deberían las universidades prohibir la IA en los exámenes o usarla como aliada?",
         "opciones": [
           "Prohibirla, porque evita el fraude.",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0525-universidades-buscan-evaluar-alumnos-pese-a-la-int-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

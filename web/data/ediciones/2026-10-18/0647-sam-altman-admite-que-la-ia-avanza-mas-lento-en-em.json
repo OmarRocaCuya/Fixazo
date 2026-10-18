@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0647-sam-altman-admite-que-la-ia-avanza-mas-lento-en-em-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿por qué Altman dice que se equivocó?",
         "opciones": [
           "Porque los usuarios no quieren usar la IA",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0647-sam-altman-admite-que-la-ia-avanza-mas-lento-en-em-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en esta noticia y qué interés puede tener?",
         "opciones": [
           "Un profesor de historia sin relación con la tecnología",
@@ -85,12 +85,12 @@
         "correcta": 1,
         "bien": "Es el CEO de OpenAI, así que tiene interés en mostrar la IA como algo útil y en explicar sus previsiones.",
         "otra": "Piensa en quién tiene más que ganar si la IA se usa rápido o lento.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0647-sam-altman-admite-que-la-ia-avanza-mas-lento-en-em-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué parte de la noticia es una afirmación que no trae una fuente comprobable?",
         "opciones": [
           "«Creía que iba a haber muchos más cambios en el sector del software»",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0647-sam-altman-admite-que-la-ia-avanza-mas-lento-en-em-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que la gente cambiará rápido sus hábitos con la IA?",
         "opciones": [
           "Sí, muy rápido, porque la tecnología es muy útil",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0647-sam-altman-admite-que-la-ia-avanza-mas-lento-en-em-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

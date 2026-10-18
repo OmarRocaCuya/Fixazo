@@ -68,7 +68,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento de El Tiempo, ¿qué hace el gobierno con las hojas de vida?",
         "opciones": [
           "Las está revisando para ver si son idóneas",
@@ -83,7 +83,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que la estrategia 'deja a más de 140 personas contratadas'?",
         "opciones": [
           "El medio El Tiempo, con su propio cálculo",
@@ -93,12 +93,12 @@
         "correcta": 1,
         "bien": "Es información que el gobierno comunica y que el medio recoge; el gobierno tiene interés en mostrar resultados.",
         "otra": "Piensa en quién tiene más interés en mostrar cifras positivas sobre el programa.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué dato de la nota necesitarías comprobar primero?",
         "opciones": [
           "Las más de 270.000 postulaciones",
@@ -113,7 +113,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que contratar por méritos en vez de por amistades es la forma correcta de llenar cargos públicos?",
         "opciones": [
           "Sí, porque da oportunidades a más personas",
@@ -152,7 +152,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

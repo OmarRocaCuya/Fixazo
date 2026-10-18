@@ -66,7 +66,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el productor Roy Conli, ¿quién crea lo que se ve en pantalla?",
         "opciones": [
           "Solo programas de inteligencia artificial",
@@ -81,7 +81,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que las películas de Disney se hacen con personas?",
         "opciones": [
           "Un productor de la película, Roy Conli",
@@ -91,12 +91,12 @@
         "correcta": 0,
         "bien": "Conli es productor de la película, así que conoce el proceso. Como trabaja para el estudio, podría querer dar una imagen positiva de Disney.",
         "otra": "Piensa quién conoce de cerca cómo se hace la película y quién tiene un interés en explicarlo.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "Si quisieras comprobar que cada fotograma lo hace una persona, ¿qué buscarías?",
         "opciones": [
           "Los créditos de la película y los equipos de animación",
@@ -111,7 +111,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que las empresas deberían avisar cuando usan IA para crear contenidos?",
         "opciones": [
           "Sí, siempre",
@@ -150,7 +150,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

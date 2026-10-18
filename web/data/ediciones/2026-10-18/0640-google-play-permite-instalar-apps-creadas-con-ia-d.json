@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿quién puede usar una app creada con esta función?",
         "opciones": [
           "Cualquier usuario de Google Play.",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién explica las condiciones de estas aplicaciones personales?",
         "opciones": [
           "Un usuario independiente que probó la función.",
@@ -85,12 +85,12 @@
         "correcta": 1,
         "bien": "La información viene de Google, que tiene interés en mostrar su herramienta como útil y segura.",
         "otra": "Piensa en quién lanzó la función y qué le conviene destacar.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué palabra de la noticia busca hacer sonar más sencillo el proceso?",
         "opciones": [
           "Privadas",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que las personas sin conocimientos de programación deberían crear sus propias apps con IA?",
         "opciones": [
           "Sí, es una buena forma de aprender.",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",
