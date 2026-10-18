@@ -13,6 +13,17 @@ Tareas acordadas que todavía no están hechas. Se tachan al terminarlas.
 - [ ] Hacer el repo público o confirmar con la organización cómo lo revisan los jurados.
 - [ ] Entregar con `andes project submit` antes del domingo 18 a las 9:00 (URL pública, demo en vivo, repo y descripción).
 
+## Rachas (para después)
+
+- [ ] **Racha suave de lectura.** Diseño e investigación en `RACHAS-diseno-simple.md` (carpeta de la hack). Reglas:
+  - el día cuenta si se termina al menos una noticia;
+  - hay un día de gracia por semana, en el que la racha queda en gris;
+  - nunca se muestra "perdiste tu racha", sino "Empieza otra racha hoy" y la mejor racha;
+  - se recupera terminando 2 noticias al día siguiente;
+  - hay marcas a los 3, 7, 14 y 30 días.
+
+  No lleva puntos, premios, rankings ni rachas con amigos. Se calcula con las fechas que ya guarda `fixazo:resultados` (una función pura `racha(fechas, hoy)` con prueba, una pastilla en la portada y los días de la semana en Mis insights). Base: un experimento del BID con 60.000 escolares de Perú (Cristia y otros, 2024).
+
 ## Voz
 
 - [ ] Conectar el backend de voz que está preparando Daniel en su servidor (transcripción mejor que la del navegador y soporte en iPhone). Hoy se usa `createTranscriber("es")` con la transcripción del navegador.
