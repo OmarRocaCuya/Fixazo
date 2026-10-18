@@ -4,6 +4,9 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { voiceHistoryLabel } from "@/components/periodico/voz-state";
+import { ResumenVozQuiz } from "@/components/periodico/EmocionRespuesta";
+import { ExplorarVozYLenguas, NavPeriodico } from "@/components/periodico/NavPeriodico";
+import { acumularMetricas, type MetricasVoz } from "@/lib/periodico/voz-quiz";
 import { MetricCard } from "@/components/ui";
 import { leerResultados, suscribirProgreso, type ResultadoNoticia } from "@/lib/periodico/progreso";
 
@@ -43,12 +46,14 @@ export default function Insights() {
   const cambios = lista.filter((r) => r.decision?.startsWith("Cambio")).length;
   const seguros = lista.filter((r) => r.seguridad === "Muy seguro" && r.voz);
   const dudosos = lista.filter((r) => r.seguridad === "Poco" && r.voz);
+  const emociones = todas.flatMap((r) => r.emociones ?? []);
+  const metricasVoz = todas.reduce<MetricasVoz | null>((m, r) => (r.audioQuiz ? acumularMetricas(m, r.audioQuiz) : m), null);
 
   return (
     <div className="pd-wrap pd-angosto">
       <div className="pd-top">
         <Link className="pd-marca" href="/">Fixazo</Link>
-        <Link className="pd-insights" href="/">Volver al periódico</Link>
+        <NavPeriodico actual="/insights" />
       </div>
       <header className="pd-noticia-cabeza">
         <div className="eyebrow">Mis insights</div>
@@ -90,7 +95,7 @@ export default function Insights() {
 
           {conVoz.length > 0 && <section className="pd-card">
             <h2>Cómo explicas cuando hablas</h2>
-            <p className="muted small">Palabras y pausas de tus respuestas. No medimos emociones.</p>
+            <p className="muted small">Palabras y pausas de tus respuestas. Las emociones solo se estiman de forma experimental desde el audio (abajo).</p>
             <ul className="pd-senales">
               <li><span>Palabras de duda que usas</span><span>{dudas.length ? dudas.map(([w, n]) => `«${w}» ×${n}`).join(", ") : "Ninguna"}</span></li>
               <li><span>Muletillas</span><span>{muletillas.length ? muletillas.map(([w, n]) => `«${w}» ×${n}`).join(", ") : "Ninguna"}</span></li>
@@ -104,6 +109,8 @@ export default function Insights() {
             )}
           </section>}
 
+          <ResumenVozQuiz emociones={emociones} metricas={metricasVoz} />
+
           {lista.length > 0 && <section className="pd-card">
             <h2>Noticias que leíste</h2>
             <ul className="pd-historial">
@@ -116,9 +123,10 @@ export default function Insights() {
             </ul>
           </section>}
 
-          <p className="pd-pie">Lo que no medimos: tus emociones, tu inteligencia ni cómo te comparas con otros.</p>
+          <p className="pd-pie">Lo que no medimos: tu inteligencia ni cómo te comparas con otros. La emoción es una estimación experimental de la voz, nunca una nota.</p>
         </div>
       )}
+      <ExplorarVozYLenguas />
     </div>
   );
 }

@@ -29,7 +29,7 @@ export function FamilyShell({ children }: { children: React.ReactNode }) {
     <div className="shell">
       <header className="topbar">
         <Link href="/chat" className="brand">
-          <span className="brand-mark" aria-hidden="true">Ñ</span>
+          <span className="brand-mark" aria-hidden="true">F</span>
           <span>Fixazo</span>
         </Link>
         <button type="button" className="icon-btn" aria-label="Abrir menú" aria-expanded={open} onClick={() => setOpen(true)}>
@@ -39,7 +39,7 @@ export function FamilyShell({ children }: { children: React.ReactNode }) {
       {open && <button type="button" className="scrim" aria-label="Cerrar menú" onClick={() => setOpen(false)} />}
       <aside className={`sidebar${open ? " open" : ""}`} aria-label="Navegación de la familia">
         <Link href="/chat" className="brand" onClick={() => setOpen(false)}>
-          <span className="brand-mark" aria-hidden="true">Ñ</span>
+          <span className="brand-mark" aria-hidden="true">F</span>
           <span>Fixazo</span>
         </Link>
         <div className="child-pill">

@@ -531,3 +531,13 @@ a.pd-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px;
   .pd-luz, .pd-luz > i { animation: none !important; transition: none; }
   .pd-escuchando .pd-luz { opacity: 0.8; } .pd-pensando .pd-luz { opacity: 0.35; }
 }
+
+/* Periódico: navegación y accesos a voz y lenguas */
+.pd-nav { display: flex; flex-wrap: wrap; gap: 6px; }
+.pd-nav-link { font-weight: 600; font-size: 0.88rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; text-decoration: none; white-space: nowrap; }
+.pd-nav-link.activo { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.pd-explorar { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 18px 0; }
+.pd-explorar-item { display: grid; gap: 6px; text-decoration: none; color: inherit; }
+.pd-explorar-item h3 { margin: 0; }
+.pd-emocion { margin-top: 8px; }
+.pd-explorar-item .pd-leer { justify-self: start; margin-top: 8px; }

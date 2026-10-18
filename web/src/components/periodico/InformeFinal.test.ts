@@ -14,6 +14,16 @@ describe("visible end-of-quiz report", () => {
     expect(html).toContain("Compartir con un familiar");
     expect(html).not.toContain("No exportar postura"); expect(html).not.toContain("No exportar seguridad");
     expect(html).not.toContain("Para seguir practicando");
+    expect(html).not.toContain("Cómo sonabas al responder"); // nothing invented without voice data
+  });
+  it("summarizes experimental emotion estimates and voice metrics from quiz voice answers", () => {
+    const result: ResultadoNoticia = { noticiaId: "n1", titular: "Lectura", fecha: "2026-10-18", habilidades: {}, postura: null, seguridad: null, decision: null, voz: null,
+      emociones: [{ pasoId: "p1", etiqueta: "neutral", confianza: "baja", fuente: "voz-emotion2vec", score: 0.5 }, { pasoId: "p2", etiqueta: "sin datos suficientes", confianza: "baja", fuente: "sin-modelo", score: null }],
+      audioQuiz: { respuestas: 2, palabras: 14, pausasLargas: 1, segundosHablando: 16 } };
+    const html = renderToStaticMarkup(createElement(InformeFinal, { resultado: result }));
+    expect(html).toContain("Cómo sonabas al responder"); expect(html).toContain("Experimental");
+    expect(html).toContain("neutral"); expect(html).toContain("Pausas largas");
+    expect(html).not.toContain("sin datos suficientes");
   });
 });
 

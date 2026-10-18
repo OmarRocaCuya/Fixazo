@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { MetaReadingClient } from "@/lib/browser/meta-reading-client";
-import { QuizMicrophone, type QuizAudioTranscript, type QuizMicrophoneState } from "@/lib/browser/quiz-microphone";
+import { QuizMicrophone, type QuizAnswerAudio, type QuizAudioTranscript, type QuizMicrophoneState } from "@/lib/browser/quiz-microphone";
 import type { CloudVoiceAccess, VoiceAudience } from "@/lib/voice/types";
 
 export interface QuizAudioHandle { stop(): void }
@@ -11,17 +11,19 @@ export interface QuizAudioPanelProps {
   paused?: boolean;
   onTranscript(event: QuizAudioTranscript): void;
   onAccessChange?(access: CloudVoiceAccess | null): void;
+  onAnswerAudio?(event: QuizAnswerAudio): void;
 }
 const INITIAL: QuizMicrophoneState = { status: "idle", remainingSeconds: 0, message: "Micrófono apagado. Puedes completar el quiz escribiendo o tocando las opciones." };
 const minutes = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
 /** Admission is inline, not a navigation gate. Mounting never asks for microphone permission. */
-export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(function QuizAudioPanel({ stepId, paused = false, onTranscript, onAccessChange }, ref) {
+export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(function QuizAudioPanel({ stepId, paused = false, onTranscript, onAccessChange, onAnswerAudio }, ref) {
   const [state, setState] = useState(INITIAL);
   const [capability, setCapability] = useState<{ ready: boolean; mode: VoiceAudience; message: string }>({ ready: false, mode: "adult-demo", message: "Comprobando transcripción de audio…" });
   const controller = useRef<QuizMicrophone | null>(null);
   const transcriptCallback = useRef(onTranscript); transcriptCallback.current = onTranscript;
   const accessCallback = useRef(onAccessChange); accessCallback.current = onAccessChange;
+  const answerAudioCallback = useRef(onAnswerAudio); answerAudioCallback.current = onAnswerAudio;
   const active = state.status === "starting" || state.status === "listening";
   // Text judging remains available independently of ASR readiness.
   // The self-hosted Meta backend needs no access code; the server limits per IP.
@@ -60,7 +62,7 @@ export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(f
 
   function start() {
     if (!authorized || !capability.ready || paused) return;
-    if (!controller.current) controller.current = new QuizMicrophone({ onState: setState, onTranscript: (event) => transcriptCallback.current(event) });
+    if (!controller.current) controller.current = new QuizMicrophone({ onState: setState, onTranscript: (event) => transcriptCallback.current(event), onAnswerAudio: (event) => answerAudioCallback.current?.(event) });
     void controller.current.start({ accessCode: "", audience: capability.mode }, stepId);
   }
 
@@ -68,7 +70,7 @@ export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(f
     <section className="pd-bloque pd-pregunta" aria-label="Audio durante el quiz">
       <h2>Micrófono durante el quiz</h2>
       <p>Actívalo una vez para responder por voz mientras esta pantalla está visible. Las opciones dictadas se preseleccionan: tú las confirmas. También puedes escribir o tocar las opciones.</p>
-      <p className="muted small">El navegador pide el micrófono solo al pulsar Iniciar. El audio se envía al backend Meta del proyecto para transcribirlo, sin guardar la grabación. No se infieren emociones, identidad, acento ni salud.</p>
+      <p className="muted small">El navegador pide el micrófono solo al pulsar Iniciar. El audio se envía al backend Meta del proyecto para transcribirlo, sin guardar la grabación. Con cada respuesta hablada se muestra una estimación experimental de emociones (emotion2vec+, desde el audio; si no hay modelo, no se estima). No se infieren identidad, acento ni salud.</p>
       <p className="pd-aviso">{capability.message}</p>
       <p role="status" aria-live="polite">{state.message}{active ? ` Tiempo restante: ${minutes(state.remainingSeconds)}.` : ""}</p>
       <div className="pd-acciones">

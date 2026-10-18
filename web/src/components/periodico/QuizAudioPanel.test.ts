@@ -15,7 +15,7 @@ describe("quiz audio admission", () => {
       expect(html).not.toContain("Código privado de la demo"); expect(html).not.toContain("Soy adulto");
       expect(html).toContain("solo al pulsar Iniciar");
       expect(html).toContain("tú las confirmas"); expect(html).toContain("10 minutos");
-      expect(html).toContain("No se infieren emociones"); expect(html).toContain("no se reactiva solo");
+      expect(html).toContain("estimación experimental de emociones"); expect(html).toContain("No se infieren identidad"); expect(html).toContain("no se reactiva solo");
       expect(html).not.toContain('checked=""');
     } finally { vi.unstubAllGlobals(); }
   });

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { buildPeriodicoReport } from "@/lib/periodico/informe";
 import type { ResultadoNoticia } from "@/lib/periodico/progreso";
 import { FamilyShare } from "@/components/report/FamilyShare";
+import { ResumenVozQuiz } from "./EmocionRespuesta";
 
 export function InformeFinal({ resultado }: { resultado: ResultadoNoticia }) {
   const report = buildPeriodicoReport(resultado);
@@ -29,12 +30,13 @@ export function InformeFinal({ resultado }: { resultado: ResultadoNoticia }) {
       </>}
       <h3>Qué puedes probar ahora</h3>
       <p>{report.nextStep}</p>
-      <p className="small muted">No inferimos emociones, identidad, salud ni calidad del acento. No observamos lo que el micrófono no capturó.</p>
+      <p className="small muted">No inferimos identidad, salud ni calidad del acento. La emoción, si hubo respuestas por voz, es solo una estimación experimental desde el audio. No observamos lo que el micrófono no capturó.</p>
       <div className="row">
         <Link className="btn primary" href="/insights">Ver mis insights</Link>
         <Link className="btn ghost" href="/">Volver a la portada</Link>
       </div>
     </div>
+    <ResumenVozQuiz emociones={resultado.emociones} metricas={resultado.audioQuiz} />
     <FamilyShare summary={report.share} />
   </section>;
 }

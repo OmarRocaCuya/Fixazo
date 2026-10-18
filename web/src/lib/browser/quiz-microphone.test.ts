@@ -46,6 +46,22 @@ describe("foreground quiz microphone", () => {
     expect(s.onTranscript).toHaveBeenCalledWith({ stepId: "one", text: "opción dos" });
     s.controller.dispose();
   });
+  it("hands the answer's audio and timed-word metrics to an optional listener, only for chunks with words", async () => {
+    let visible = true; const segments: ReadingPcmCaptureOptions[] = [];
+    const client = { transcribe: vi.fn().mockResolvedValueOnce({ text: "creo que sí", durationSeconds: 8, words: [{ word: "creo", start: 0, end: 0.3 }, { word: "que", start: 0.4, end: 0.5 }, { word: "sí", start: 3, end: 3.2 }] }).mockResolvedValueOnce({ text: "  " }), cancel: vi.fn(), close: vi.fn() };
+    const onAnswerAudio = vi.fn();
+    const controller = new QuizMicrophone({ onTranscript: vi.fn(), onState: vi.fn(), onAnswerAudio }, {
+      client: () => client, visible: () => visible, now: () => Date.now(),
+      capture: (options) => { segments.push(options); return { start: vi.fn(() => Promise.resolve(true)), abort: vi.fn() }; },
+    });
+    await controller.start(ACCESS, "one");
+    const audio = new Blob([new Uint8Array(100)]);
+    segments[0].onChunk(audio, { startSeconds: 0, durationSeconds: 8 }); await tick();
+    expect(onAnswerAudio).toHaveBeenCalledWith({ stepId: "one", audio, metrics: { respuestas: 1, palabras: 3, pausasLargas: 1, segundosHablando: 8 } });
+    segments[0].onChunk(new Blob([new Uint8Array(100)]), { startSeconds: 8, durationSeconds: 8 }); await tick();
+    expect(onAnswerAudio).toHaveBeenCalledOnce();
+    visible = false; controller.dispose();
+  });
   it("discards the boundary chunk and stale ASR when a question changes without opening another microphone", async () => {
     const s = setup(); let resolve!: (value: { text: string }) => void;
     s.client.transcribe.mockImplementationOnce(() => new Promise((r) => { resolve = r; }));

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import LecturaNoticia from "@/components/periodico/LecturaNoticia";
+import { ExplorarVozYLenguas, NavPeriodico } from "@/components/periodico/NavPeriodico";
 import { getLecturaEnriquecida } from "@/lib/periodico/lectura";
 import { buscarNoticia, noticiaPublica } from "@/lib/periodico/ediciones";
 
@@ -24,9 +25,10 @@ async function Contenido({ params }: { params: Promise<{ id: string }> }) {
     <div className="pd-wrap">
       <div className="pd-top">
         <Link className="pd-marca" href="/">Fixazo</Link>
-        <Link className="pd-insights" href="/insights" target="_blank">Mis insights ↗</Link>
+        <NavPeriodico />
       </div>
       <LecturaNoticia noticia={noticiaPublica(noticia)} documento={documento} />
+      <ExplorarVozYLenguas />
     </div>
   );
 }

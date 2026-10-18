@@ -3,6 +3,7 @@
 // ponytail: localStorage; pasar a servidor si se agregan cuentas.
 
 import type { ProtocoloNoticia } from "./tipos";
+import { acumularMetricas, type EmocionRespuesta, type MetricasVoz } from "./voz-quiz";
 
 export interface ResultadoNoticia {
   protocolo?: ProtocoloNoticia;
@@ -27,6 +28,10 @@ export interface ResultadoNoticia {
     segundosHablando: number | null;
     porVoz: boolean;
   } | null;
+  /** EXPERIMENTAL: emotion2vec+ estimates per voice answer (audio only, never graded). */
+  emociones?: EmocionRespuesta[];
+  /** Words, long pauses and seconds observed by timed ASR across quiz voice answers. */
+  audioQuiz?: MetricasVoz;
 }
 
 const CLAVE = "fixazo:resultados";
@@ -41,10 +46,27 @@ export function leerResultados(): Record<string, ResultadoNoticia> {
 
 export function guardarResultado(r: ResultadoNoticia) {
   try {
-    localStorage.setItem(CLAVE, JSON.stringify({ ...leerResultados(), [r.noticiaId]: r }));
+    const previo = leerResultados()[r.noticiaId];
+    // Voice data arrives asynchronously; a later save without it must not erase it.
+    const merged: ResultadoNoticia = { ...r, emociones: r.emociones ?? previo?.emociones, audioQuiz: r.audioQuiz ?? previo?.audioQuiz };
+    if (!merged.emociones) delete merged.emociones;
+    if (!merged.audioQuiz) delete merged.audioQuiz;
+    localStorage.setItem(CLAVE, JSON.stringify({ ...leerResultados(), [r.noticiaId]: merged }));
   } catch {
     /* sin almacenamiento la noticia funciona igual; solo no queda en Mis insights */
   }
+}
+
+/** Adds one quiz voice observation to this browser's record (export/delete-all cover it). */
+export function registrarVozQuiz(noticiaId: string, titular: string, dato: { emocion?: EmocionRespuesta; metricas?: MetricasVoz }) {
+  const previo: ResultadoNoticia = leerResultados()[noticiaId] ?? {
+    noticiaId, titular, enCurso: true, fecha: new Date().toISOString(), habilidades: {}, postura: null, seguridad: null, decision: null, voz: null,
+  };
+  guardarResultado({
+    ...previo,
+    emociones: dato.emocion ? [...(previo.emociones ?? []), dato.emocion].slice(-24) : previo.emociones,
+    audioQuiz: dato.metricas ? acumularMetricas(previo.audioQuiz, dato.metricas) : previo.audioQuiz,
+  });
 }
 
 export function idAlumno(): string {

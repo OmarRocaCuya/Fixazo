@@ -1,15 +1,19 @@
 import type { CloudVoiceAccess } from "@/lib/voice/types";
 import { MetaReadingClient, ReadingChunkQueue, ReadingClientError } from "./meta-reading-client";
 import { ReadingPcmCapture, type ReadingPcmCaptureOptions } from "./reading-pcm-capture";
+import { metricasDeVoz, type MetricasVoz } from "@/lib/periodico/voz-quiz";
 
 export interface QuizAudioTranscript { stepId: string; text: string }
+/** In-memory WAV of one answered chunk (for the experimental emotion estimate) plus timed-word metrics. */
+export interface QuizAnswerAudio { stepId: string; audio: Blob; metrics: MetricasVoz | null }
 export interface QuizMicrophoneState {
   status: "idle" | "starting" | "listening" | "stopped" | "error";
   remainingSeconds: number;
   message: string;
 }
 interface Capture { start(): Promise<boolean>; abort(): void }
-interface Client { transcribe(audio: Blob, language: "spa_Latn"): Promise<{ text: string }>; cancel(): void; close(): void }
+interface AsrResult { text: string; durationSeconds?: number; words?: Array<{ start: number; end: number }> }
+interface Client { transcribe(audio: Blob, language: "spa_Latn"): Promise<AsrResult>; cancel(): void; close(): void }
 interface Dependencies {
   capture(options: ReadingPcmCaptureOptions): Capture;
   client(access: CloudVoiceAccess): Client;
@@ -28,7 +32,7 @@ const defaults: Dependencies = {
   visible: () => typeof document !== "undefined" && document.visibilityState !== "hidden", now: () => Date.now(),
 };
 
-/** One foreground-only microphone; no persistence, emotion inference or automatic submission. */
+/** One foreground-only microphone; no persistence or automatic submission. Answer audio is only handed to an explicit listener. */
 export class QuizMicrophone {
   private session: Session | null = null;
   private epoch = 0;
@@ -38,6 +42,7 @@ export class QuizMicrophone {
   constructor(private readonly handlers: {
     onTranscript(event: QuizAudioTranscript): void;
     onState(state: QuizMicrophoneState): void;
+    onAnswerAudio?(event: QuizAnswerAudio): void;
   }, private readonly deps: Dependencies = defaults) {}
 
   /** Changing questions never assigns a boundary-spanning chunk to either answer. */
@@ -78,7 +83,7 @@ export class QuizMicrophone {
     const queueVersion = this.stepVersion;
     return new ReadingChunkQueue(async (chunk) => {
       if (!this.current(session) || chunk.version !== this.stepVersion || chunk.stepId !== this.stepId) return;
-      let result: { text: string };
+      let result: AsrResult;
       try { result = await session.client.transcribe(chunk.audio, "spa_Latn"); }
       catch (error) {
         // Silence/no observable words are absence of evidence, not an answer or a service failure.
@@ -87,7 +92,9 @@ export class QuizMicrophone {
       }
       if (!this.current(session) || chunk.version !== this.stepVersion || chunk.stepId !== this.stepId) return;
       const text = result.text.trim();
-      if (text) this.handlers.onTranscript({ stepId: chunk.stepId, text: text.slice(0, 800) });
+      if (!text) return;
+      this.handlers.onTranscript({ stepId: chunk.stepId, text: text.slice(0, 800) });
+      this.handlers.onAnswerAudio?.({ stepId: chunk.stepId, audio: chunk.audio, metrics: metricasDeVoz(result.words, result.durationSeconds ?? 0) });
     }, (error) => {
       if (!this.current(session) || queueVersion !== this.stepVersion) return;
       const code = error instanceof ReadingClientError ? error.code : "";

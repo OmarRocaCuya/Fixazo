@@ -1,11 +1,14 @@
 "use client";
 // Authored passages/options remain fixed. The protocol adapts support, not truth or learner traits.
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { guardarAvance, guardarResultado, leerAvance, leerResultados, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
+import { guardarAvance, guardarResultado, leerAvance, leerResultados, registrarVozQuiz, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
+import { acumularMetricas, emocionDesdeEstimacion, type MetricasVoz } from "@/lib/periodico/voz-quiz";
+import { estimarEmocionRespuesta } from "@/lib/browser/quiz-emotion";
 import type { Fragmento, NoticiaPublica, PreguntaOpciones, PreguntaVozPublica, RespuestaVoz } from "@/lib/periodico/tipos";
 import { apoyoAdaptativo, capacidadEvaluador, eleccionesParaJuez, MAX_INTENTOS_OPCIONES, opcionDesdeVoz, puedeContinuar, registrarIntento, restaurarIntentos, resumenProtocolo, type IntentosOpciones } from "@/lib/periodico/adaptacion";
 import { countFillers } from "@/lib/signals/prosody";
-import type { QuizAudioTranscript } from "@/lib/browser/quiz-microphone";
+import type { QuizAnswerAudio, QuizAudioTranscript } from "@/lib/browser/quiz-microphone";
+import { EmocionRespuestaCard, type EstadoEmocion } from "./EmocionRespuesta";
 import { applyVoiceEvaluation } from "./voz-state";
 import { QuizAudioPanel, type QuizAudioHandle } from "./QuizAudioPanel";
 import { InformeFinal } from "./InformeFinal";
@@ -218,6 +221,12 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   const [capturePaused, setCapturePaused] = useState(false);
   const audio = useRef<QuizAudioHandle | null>(null);
   const ultimo = useRef<HTMLDivElement | null>(null);
+  // Experimental emotion estimate: one per voice answer, held in state and in this browser only.
+  const [emociones, setEmociones] = useState<Record<string, EstadoEmocion>>({});
+  const emocionPedida = useRef(new Set<string>());
+  const metricasPorPaso = useRef<Record<string, MetricasVoz>>({});
+  const emotionAbort = useRef<AbortController | null>(null);
+  useEffect(() => { const c = new AbortController(); emotionAbort.current = c; return () => c.abort(); }, []);
 
   let visibles = hasta;
   while (visibles < pasos.length - 1 && pasos[visibles].tipo === "fragmento") visibles++;
@@ -258,6 +267,25 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
     }
   }
 
+  function recibirAudio(event: QuizAnswerAudio) {
+    if (fin || event.stepId !== activeId) return;
+    const stepId = event.stepId;
+    if (event.metrics) {
+      metricasPorPaso.current[stepId] = acumularMetricas(metricasPorPaso.current[stepId], event.metrics);
+      registrarVozQuiz(noticia.id, noticia.titular, { metricas: event.metrics });
+    }
+    if (emocionPedida.current.has(stepId)) return;
+    emocionPedida.current.add(stepId);
+    const signal = emotionAbort.current?.signal;
+    setEmociones((m) => ({ ...m, [stepId]: "analizando" }));
+    void estimarEmocionRespuesta(event.audio, undefined, signal).then((estimate) => {
+      if (signal?.aborted) return;
+      setEmociones((m) => ({ ...m, [stepId]: estimate }));
+      registrarVozQuiz(noticia.id, noticia.titular, { emocion: emocionDesdeEstimacion(stepId, estimate) });
+      setFin((f) => (f ? leerResultados()[noticia.id] ?? f : f));
+    });
+  }
+
   function terminar(v: FinVoz) {
     audio.current?.stop(); // Synchronous: stop hardware before persisting/showing the report.
     setCapturePaused(true);
@@ -273,16 +301,17 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
     const voz = pasos.find((p) => p.tipo === "voz");
     if (voz && v.evaluada) habilidades[voz.habilidad] = v.listo;
     const senales = countFillers(v.texto);
+    const metricasExplicacion = voz && v.porVoz ? metricasPorPaso.current[voz.id] : undefined;
     const r: ResultadoNoticia = {
       noticiaId: noticia.id, titular: noticia.titular, fecha: new Date().toISOString(), habilidades, postura, seguridad, decision,
       protocolo: resumenProtocolo(pasos, intentosOpciones, inicialesDesconocidas),
       voz: v.evaluada ? {
         listo: v.listo, intentos: v.intentos, criterios: v.criterios.map(({ nombre, cumple }) => ({ nombre, cumple })),
         dudas: senales.hedges, muletillas: senales.fillers,
-        pausasLargas: null, segundosHablando: null, porVoz: v.porVoz,
+        pausasLargas: metricasExplicacion?.pausasLargas ?? null, segundosHablando: metricasExplicacion?.segundosHablando ?? null, porVoz: v.porVoz,
       } : null,
     };
-    guardarResultado(r); setFin(r); setRespuestaVoz(""); setBorradorOpcion(null);
+    guardarResultado(r); setFin(leerResultados()[noticia.id] ?? r); setRespuestaVoz(""); setBorradorOpcion(null);
     setTimeout(() => bajar(ultimo.current), 300);
   }
 
@@ -294,7 +323,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         <p className="pd-bajada">{noticia.bajada}</p>
         <p className="muted small">{noticia.minutos} min</p>
       </header>
-      {!fin && <QuizAudioPanel ref={audio} stepId={activeId} paused={judgeBusy || capturePaused} onTranscript={recibirTranscripcion} />}
+      {!fin && <QuizAudioPanel ref={audio} stepId={activeId} paused={judgeBusy || capturePaused} onTranscript={recibirTranscripcion} onAnswerAudio={recibirAudio} />}
       {avisoAudio && !fin && <p role="status" className="pd-aviso">{avisoAudio}</p>}
       {pasos.slice(0, visibles + 1).map((p, k) => (
         <div key={"id" in p ? p.id : `frag-${k}`} ref={k === visibles ? ultimo : undefined}>
@@ -314,6 +343,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
             onContinuar={() => { if (!fin && k === visibles && puedeContinuar(p, intentosOpciones)) { setBorradorOpcion(null); setHasta(k + 1); } }} />}
           {p.tipo === "voz" && !fin && <BloqueVoz p={p} noticiaId={noticia.id} onFin={terminar}
             elecciones={eleccionesParaJuez(pasos, elegidas)} texto={respuestaVoz} onTextoChange={setRespuestaVoz} porVoz={porVoz} onBusyChange={(busy) => { if (busy) audio.current?.stop(); setJudgeBusy(busy); }} />}
+          {"id" in p && emociones[p.id] && <EmocionRespuestaCard estado={emociones[p.id]} />}
         </div>
       ))}
       {visibles < pasos.length - 1 && !fin && <p className="pd-candado">Confirma tu elección y pulsa Continuar para abrir el siguiente paso.</p>}

@@ -33,7 +33,7 @@ export interface AffectPanelActions {
   refreshEmotionStatus(): Promise<void>;
 }
 
-function EstimateLine({ e }: { e: AffectEstimate }) {
+export function EstimateLine({ e }: { e: AffectEstimate }) {
   return (
     <div className="row" style={{ gap: 6 }}>
       <strong>{e.label}</strong>
