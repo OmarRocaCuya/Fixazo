@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s",
+  "creada": "2026-10-18T05:45:27.847Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El Plural",
+      "fecha": "17 de octubre de 2026",
+      "titular": "IA y empleo junior: las 3 claves de Javier Cañizares, CEO de Hirint",
+      "url": "https://www.elplural.com/el-telescopio/tech/javier-canizares-ceo-hirint-3-claves-ia-no-perjudique-juniors_801580102"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 22,
+    "usd": 0.00461,
+    "segundos": 54
+  },
+  "noticia": {
+    "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s",
+    "seccion": "Trabajo",
+    "titular": "Ofertas para jóvenes sin experiencia bajan en el sector tecnológico",
+    "bajada": "Compara cómo describe este medio la IA y el empleo junior. ¿Qué habilidades propone y qué cambiarían las empresas?",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El Plural",
+        "texto": "la incursión de la inteligencia artificial en el mercado laboral no solo amenaza"
+      },
+      {
+        "medio": "El Plural",
+        "texto": "Podemos encontrarnos con alguien que acaba de terminar sus estudios"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio la relación entre IA y empleo para jóvenes?",
+        "opciones": [
+          "Como una buena noticia: la IA creará empleos nuevos para los jóvenes",
+          "Como un problema que pone en riesgo el primer empleo de los jóvenes",
+          "Como algo neutral, sin efectos claros sobre los jóvenes"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El Plural",
+        "fecha": "17 de octubre de 2026",
+        "titular": "IA y empleo junior: las 3 claves de Javier Cañizares, CEO de Hirint",
+        "texto": "Según el informe Emergentes 2026, las ofertas de empleo para perfiles junior en el sector de informática y telecomunicaciones descendieron un 5% entre abril de 2025 y marzo de 2026 (…) las oportunidades para profesionales sénior aumentaron un 13 % durante el mismo periodo. En programación, la caída de las vacantes para trabajadores con menor experiencia alcanzó el 33 %.",
+        "url": "https://www.elplural.com/el-telescopio/tech/javier-canizares-ceo-hirint-3-claves-ia-no-perjudique-juniors_801580102"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿qué pasó con las ofertas para perfiles junior en informática y telecomunicaciones?",
+        "opciones": [
+          "Subieron un 5 %",
+          "Bajaron un 5 %",
+          "Se mantuvieron igual"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que descendieron un 5 % entre abril de 2025 y marzo de 2026.",
+        "otra": "Revisa la cifra del primer fragmento. Busca el verbo que describe la variación de las ofertas.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla en el fragmento B y qué rol tiene?",
+        "opciones": [
+          "Un trabajador junior que busca su primer empleo",
+          "Javier Cañizares, CEO y fundador de Hirint",
+          "Un periodista independiente sin vínculo con empresas"
+        ],
+        "correcta": 1,
+        "bien": "Es el CEO de Hirint, una empresa que participa en el informe. Su rol le da una mirada desde el sector que contrata.",
+        "otra": "Fíjate en cómo se presenta a la persona que habla antes de la cita: el cargo aparece en la nota.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "El fragmento A da cifras de caídas de empleo. ¿Qué buscarías para comprobar si son fiables?",
+        "opciones": [
+          "La fuente del informe y quién lo elaboró",
+          "Cuántos likes tiene la noticia en redes",
+          "Si el titular usa una imagen llamativa"
+        ],
+        "correcta": 0,
+        "bien": "Buscar el informe original y quién lo hizo te permite comprobar la cifra con datos directos.",
+        "otra": "Piensa en qué te daría confianza para creer un número: saber de dónde sale ayuda mucho.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué crees que deberían hacer las empresas para que los jóvenes sin experiencia tengan oportunidades?",
+        "opciones": [
+          "Contratar más por potencial y capacidad de aprender",
+          "Seguir contratando solo a quien ya tiene experiencia",
+          "No hace falta cambiar nada, el mercado se ajusta solo"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El Plural",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "\"Creo que va a ser una herramienta habitual en prácticamente cualquier profesión, así que cuanto antes aprendan a incorporarla a su trabajo, mejor. (…) \"Podemos encontrarnos con alguien que acaba de terminar sus estudios y que tiene una gran capacidad para aprender, resolver problemas, comunicarse o adaptarse a situaciones nuevas. Y quizá estamos descartando a esa persona simplemente porque no tiene experiencia\"",
+        "url": "https://www.elplural.com/el-telescopio/tech/javier-canizares-ceo-hirint-3-claves-ia-no-perjudique-juniors_801580102"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0045-ofertas-para-jovenes-sin-experiencia-bajan-en-el-s-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que el CEO de Hirint y la nota ven la IA como un riesgo para los jóvenes, pero también como una oportunidad? Compara lo que dice cada uno y justifica con algo concreto del texto.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca la cifra de caída de las ofertas junior en el primer fragmento.",
+          "Fíjate en lo que el CEO propone que hagan las empresas en el segundo fragmento."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa un dato o una cita concreta",
+              "descripcion": "La respuesta menciona algo específico de la noticia: una cifra, quién lo dice o una idea en sus propias palabras.",
+              "ejemploCumple": "La nota dice que las ofertas junior bajaron un 5 %, y el CEO cree que habrá que contratar por potencial.",
+              "ejemploNoCumple": "La IA es un problema para los jóvenes.",
+              "repregunta": "¿Qué dato o qué persona de la noticia te ayuda a explicarlo?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué esa postura tiene sentido, no solo la repite.",
+              "ejemploCumple": "Lo ven como oportunidad porque la experiencia se puede ganar con proyectos reales, así que la IA no lo impide del todo.",
+              "ejemploNoCumple": "Porque sí, la IA es buena y mala.",
+              "repregunta": "¿Qué crees que lleva a esa persona a pensar así? ¿Qué razón da?"
+            }
+          ],
+          "respuestaModelo": "La nota ve un riesgo porque las ofertas junior bajaron un 5 %. El CEO también ve oportunidad: dice que las empresas pueden contratar por potencial y dar responsabilidades reales.",
+          "prohibido": [
+            "bajaron un 5 %",
+            "contratar por potencial",
+            "proyectos reales",
+            "la experiencia se adquiere enfrentándote a problemas",
+            "oportunidad para los jóvenes"
+          ]
+        }
+      }
+    ]
+  }
+}
