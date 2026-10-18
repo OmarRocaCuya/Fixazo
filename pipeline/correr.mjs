@@ -3,6 +3,7 @@
 //       node pipeline/correr.mjs --cada 30  (una noticia cada 30 minutos, para la demo)
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { armarNoticia, dominio, filtrarCandidatas, limpiarTexto, mismoHecho, validarGeneracion } from './pasos.mjs';
 
 try {
@@ -221,7 +222,8 @@ export async function unaNoticia() {
 }
 
 const cada = process.argv.includes('--cada') ? Number(process.argv[process.argv.indexOf('--cada') + 1]) : 0;
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL: la ruta puede tener espacios ("Hack the Andes 2026").
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   do {
     console.log(`[${new Date().toLocaleTimeString('es-PE', { timeZone: 'America/Lima' })}] Nueva vuelta del pipeline`);
     await unaNoticia().catch((e) => console.error('  Error:', e.message));
