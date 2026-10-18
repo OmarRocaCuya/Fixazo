@@ -43,7 +43,17 @@ export async function POST(request: Request) {
       headers: { Authorization: `Token ${process.env.DEEPGRAM_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({ ttl_seconds: 30 }),
     });
-    if (!response.ok) return Response.json({ error: "asr-unavailable" }, { status: 502, headers: HEADERS });
+    if (!response.ok) {
+      // Distinguish deployment credentials/Member permissions from the caller's
+      // private access code. Never forward provider bodies or retry with a key.
+      if (response.status === 401 || response.status === 403) {
+        return Response.json({ error: "asr-credentials-rejected" }, { status: 502, headers: HEADERS });
+      }
+      if (response.status === 429) {
+        return Response.json({ error: "asr-provider-rate-limit" }, { status: 429, headers: HEADERS });
+      }
+      return Response.json({ error: "asr-unavailable" }, { status: 502, headers: HEADERS });
+    }
     const token = await response.json() as { access_token?: unknown; expires_in?: unknown };
     if (typeof token.access_token !== "string" || !token.access_token || token.access_token.length > 8192 || typeof token.expires_in !== "number" || !Number.isFinite(token.expires_in) || token.expires_in <= 0 || token.expires_in > 60) {
       return Response.json({ error: "invalid-provider-session" }, { status: 502, headers: HEADERS });
