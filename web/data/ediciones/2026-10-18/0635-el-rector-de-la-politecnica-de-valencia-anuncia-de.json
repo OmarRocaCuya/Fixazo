@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0635-el-rector-de-la-politecnica-de-valencia-anuncia-de",
+  "creada": "2026-10-18T11:35:36.812Z",
+  "estado": "rechazada",
+  "motivo": [
+    "El titular debe tener entre 3 y 12 palabras"
+  ],
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "17 de octubre de 2026",
+      "titular": "José Capilla, rector de la Politécnica de Valencia: “Pondremos detectores de metales a la entrada de los exámenes” | Educación | EL PAÍS",
+      "url": "https://elpais.com/educacion/2026-10-18/jose-capilla-rector-de-la-politecnica-de-valencia-pondremos-detectores-de-metales-a-la-entrada-de-los-examenes.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05226,
+    "segundos": 21
+  },
+  "noticia": null
+}

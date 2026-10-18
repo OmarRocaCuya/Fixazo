@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d",
+  "creada": "2026-10-18T11:40:59.673Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "20minutos",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Google Play ya permite instalar tus propias aplicaciones creadas con IA sin publicarlas ni pagar una cuenta de desarrollador",
+      "url": "https://computerhoy.20minutos.es/tecnologia/google-play-ya-permite-instalar-tus-propias-aplicaciones-creadas-con-ia-sin-publicarlas-ni-pagar-una-cuenta-desarrollador_7050049_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 6,
+    "usd": 0.0855,
+    "segundos": 57
+  },
+  "noticia": {
+    "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d",
+    "seccion": "Tecnología",
+    "titular": "Google Play permite instalar apps creadas con IA de forma privada",
+    "bajada": "Compara esta noticia con otra fuente y fíjate en qué destaca cada una.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "20minutos",
+        "texto": "Google quiere que crear aplicaciones sea tan sencillo como escribir una idea."
+      },
+      {
+        "medio": "20minutos",
+        "texto": "Según explica la compañía"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio la noticia?",
+        "opciones": [
+          "Como un avance que hace más fácil crear apps, sin entrar en riesgos.",
+          "Como una alerta sobre los peligros de programar con inteligencia artificial.",
+          "Como una novedad técnica que todavía tiene límites y condiciones."
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "20minutos",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Google Play ya permite instalar tus propias aplicaciones creadas con IA sin publicarlas ni pagar una cuenta de desarrollador",
+        "texto": "Google quiere que crear aplicaciones sea tan sencillo como escribir una idea. (…) Las apps permanecen completamente privadas y solo pueden ser utilizadas por su creador.",
+        "url": "https://computerhoy.20minutos.es/tecnologia/google-play-ya-permite-instalar-tus-propias-aplicaciones-creadas-con-ia-sin-publicarlas-ni-pagar-una-cuenta-desarrollador_7050049_0.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿quién puede usar una app creada con esta función?",
+        "opciones": [
+          "Cualquier usuario de Google Play.",
+          "Solo la persona que la ha creado.",
+          "Solo los programadores con cuenta profesional."
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que las apps permanecen privadas y solo puede usarlas su creador.",
+        "otra": "Revisa la frase sobre la privacidad: fíjate en quién puede acceder a la app.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién explica las condiciones de estas aplicaciones personales?",
+        "opciones": [
+          "Un usuario independiente que probó la función.",
+          "La compañía Google, que anunció la novedad.",
+          "Un profesor de programación externo."
+        ],
+        "correcta": 1,
+        "bien": "La información viene de Google, que tiene interés en mostrar su herramienta como útil y segura.",
+        "otra": "Piensa en quién lanzó la función y qué le conviene destacar.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué palabra de la noticia busca hacer sonar más sencillo el proceso?",
+        "opciones": [
+          "Privadas",
+          "Sencillo",
+          "Revisión"
+        ],
+        "correcta": 1,
+        "bien": "\"Sencillo\" transmite que crear apps es fácil, lo que puede hacer que el lector no note los pasos técnicos o las condiciones.",
+        "otra": "Fíjate en las palabras que describen lo fácil que es crear la app.",
+        "habilidad": "Ver qué palabras buscan convencer"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que las personas sin conocimientos de programación deberían crear sus propias apps con IA?",
+        "opciones": [
+          "Sí, es una buena forma de aprender.",
+          "No, es mejor aprender programación antes.",
+          "Depende de para qué se usen."
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "20minutos",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Según explica la compañía, estas aplicaciones personales seguirán teniendo que cumplir las políticas de Google Play, aunque no estarán disponibles para el resto de usuarios de la plataforma. (…) Para quienes quieran dar el salto y convertir una aplicación personal en un producto disponible para todo el mundo, Google también prepara un camino de transición.",
+        "url": "https://computerhoy.20minutos.es/tecnologia/google-play-ya-permite-instalar-tus-propias-aplicaciones-creadas-con-ia-sin-publicarlas-ni-pagar-una-cuenta-desarrollador_7050049_0.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0640-google-play-permite-instalar-apps-creadas-con-ia-d-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué la noticia destaca que las apps son privadas, y qué condición menciona Google para publicarlas?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca la frase que dice quién puede acceder a la aplicación.",
+          "Fíjate en lo que Google pide si quieres que todo el mundo la use."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_de_la_noticia",
+              "nombre": "Usa un dato concreto de la noticia",
+              "descripcion": "La respuesta menciona algo concreto del texto, como la privacidad o el requisito de cuenta profesional.",
+              "ejemploCumple": "Dice que la app solo la puede usar su creador, y que para publicarla hace falta una cuenta profesional.",
+              "ejemploNoCumple": "Dice que la app es buena porque sí.",
+              "repregunta": "¿Qué parte del texto te hace pensar eso? Busca un dato concreto."
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué ese dato importa, por ejemplo para la seguridad o para el público.",
+              "ejemploCumple": "Importa porque así nadie más ve la app, pero para venderla al público sí hay que pasar revisiones.",
+              "ejemploNoCumple": "Solo repite lo que dice la noticia sin explicarlo.",
+              "repregunta": "¿Por qué crees que eso es importante para quien crea la app?"
+            }
+          ],
+          "respuestaModelo": "La noticia destaca que las apps son privadas porque solo las usa su creador, y para publicarlas al público hace falta una cuenta profesional y pasar revisiones de seguridad.",
+          "prohibido": [
+            "solo la usa su creador",
+            "cuenta profesional de desarrollador",
+            "revisiones de seguridad y calidad"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 4
+}

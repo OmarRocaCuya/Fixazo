@@ -1,8 +1,10 @@
 {
   "id": "2026-10-18-0623-autoridades-cierran-240-sitios-web-de-estafas-con-",
   "creada": "2026-10-18T11:23:58.968Z",
-  "estado": "publicada",
-  "motivo": null,
+  "estado": "retirada",
+  "motivo": [
+    "No trata de IA"
+  ],
   "fuentes": [
     {
       "medio": "El Espectador",

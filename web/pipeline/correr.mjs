@@ -2,10 +2,10 @@
 // Uso (desde web/):  node pipeline/correr.mjs            (una noticia)
 //                    node pipeline/correr.mjs --cada 30  (una noticia cada 30 minutos)
 // También lo usa la app en /generar (botón de demo) vía /api/periodico/generar.
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { armarNoticia, dominio, esNota, filtrarCandidatas, limpiarTexto, MEDIOS, medioDe, mismoHecho, validarGeneracion } from './pasos.mjs';
+import { armarNoticia, dominio, esNota, filtrarCandidatas, limpiarTexto, MEDIOS, medioDe, mismoHecho, trataDeIA, validarGeneracion } from './pasos.mjs';
 
 try {
   process.loadEnvFile(/* turbopackIgnore: true */ '.env.local');
@@ -15,7 +15,9 @@ try {
 
 const MODELO = 'anthropic/claude-haiku-5.5'; // ponytail: único modelo permitido por el equipo
 const DIR = process.env.EDICIONES_DIR ?? join(process.cwd(), 'data', 'ediciones'); // se corre desde web/, como la app
-const CONSULTAS = ['inteligencia artificial', 'ChatGPT OpenAI anuncio', 'inteligencia artificial jóvenes estudiantes', 'inteligencia artificial empleo', 'deepfake inteligencia artificial'];
+const CONSULTAS = ['inteligencia artificial', 'ChatGPT OpenAI anuncio', 'inteligencia artificial jóvenes estudiantes', 'inteligencia artificial empleo', 'deepfake inteligencia artificial', 'inteligencia artificial salud ciencia', 'inteligencia artificial redes sociales menores', 'inteligencia artificial música arte cine'];
+// Ventana de búsqueda en días (por defecto 1: noticias del día). --dias 3 amplía si ya se usaron todas.
+const DIAS = process.argv.includes('--dias') ? Number(process.argv[process.argv.indexOf('--dias') + 1]) || 1 : 1;
 let creditos = 0;
 let usd = 0;
 
@@ -168,6 +170,23 @@ async function leerUsadas() {
   }
 }
 
+/** Titulares de lo ya publicado o reservado, para no repetir el mismo tema. */
+async function titularesActuales() {
+  const t = [];
+  try {
+    for (const dia of await readdir(/* turbopackIgnore: true */ DIR)) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dia)) continue;
+      for (const f of await readdir(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, dia))) {
+        try {
+          const r = JSON.parse(await readFile(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, dia, f), 'utf8'));
+          if (['publicada', 'reservada'].includes(r.estado)) t.push(r.noticia?.titular ?? '', ...(r.fuentes ?? []).map((x) => x.titular));
+        } catch { /* archivo a medio escribir */ }
+      }
+    }
+  } catch { /* sin carpeta todavía */ }
+  return t.filter(Boolean);
+}
+
 // En Vercel no se puede escribir en disco: las notas ya usadas se recuerdan en memoria para no repetir en cada clic.
 const usadasEnMemoria = new Set();
 
@@ -175,6 +194,7 @@ const usadasEnMemoria = new Set();
 export async function unaNoticia({ alPaso } = {}) {
   const usadas = await leerUsadas();
   for (const u of usadasEnMemoria) usadas.add(u);
+  const yaHay = await titularesActuales();
   const t0 = Date.now();
   creditos = 0;
   usd = 0;
@@ -185,9 +205,9 @@ export async function unaNoticia({ alPaso } = {}) {
   alPaso?.({ paso: 'buscar', texto: 'Buscando noticias de IA de las últimas 24 horas en 19 medios confiables…' });
 
   // 1 · Recolectar y 2 · filtrar
-  const resultados = (await Promise.all(CONSULTAS.map((q) => buscar(q, 1)))).flat();
+  const resultados = (await Promise.all(CONSULTAS.map((q) => buscar(q, DIAS)))).flat();
   const candidatas = filtrarCandidatas(resultados, usadas)
-    .filter((r) => enEspanol(r.title) && esNota(r.url) && medioDe(r.url).lista === 'A')
+    .filter((r) => enEspanol(r.title) && esNota(r.url) && medioDe(r.url).lista === 'A' && !yaHay.some((t) => mismoHecho(t, r.title, 3)))
     .sort((a, b) => new Date(b.published_date ?? 0) - new Date(a.published_date ?? 0));
   log(`1-2 · ${resultados.length} resultados, ${candidatas.length} candidatas aptas en español`, 'filtrar', `${resultados.length} notas encontradas · ${candidatas.length} aptas para jóvenes, en español y que no son opinión`);
 
@@ -211,6 +231,12 @@ export async function unaNoticia({ alPaso } = {}) {
       log('4 · la nota principal no se pudo leer bien; siguiente', 'extraer', 'No se pudo leer bien el texto; se prueba con otra noticia');
       usadasEnMemoria.add(principal.url);
       usadas.add(principal.url);
+      continue;
+    }
+    if (!trataDeIA(principal.title, notaA.texto)) {
+      log('4 · la nota no trata de IA; siguiente', 'extraer', 'La nota no trata de inteligencia artificial; se prueba con otra');
+      usadas.add(principal.url);
+      usadasEnMemoria.add(principal.url);
       continue;
     }
     log(`4 · extraídas: A ${notaA.texto.split(' ').length} palabras${notaB ? `, B ${notaB.texto.split(' ').length}` : ''}`, 'extraer', `Texto extraído: ${notaA.texto.split(' ').length} palabras${notaB ? ` y ${notaB.texto.split(' ').length} del segundo medio` : ''}`);

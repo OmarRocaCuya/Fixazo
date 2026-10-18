@@ -1,0 +1,206 @@
+{
+  "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento",
+  "creada": "2026-10-18T11:38:26.157Z",
+  "estado": "retirada",
+  "motivo": [
+    "No trata de IA"
+  ],
+  "fuentes": [
+    {
+      "medio": "El Tiempo",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Banco de Talento avanza y tendría pico de contratados para 2027",
+      "url": "https://www.eltiempo.com/politica/gobierno/asi-avanza-el-banco-de-talentos-del-gobierno-de-la-espriella-tendria-pico-de-contratados-para-3594256"
+    },
+    {
+      "medio": "Infobae",
+      "fecha": "18 de octubre de 2026",
+      "titular": "Banco de Talentos del Gobierno: 145 colombianos ya fueron contratados y más de 70 hojas de vida siguen en revisión - Infobae",
+      "url": "https://www.infobae.com/colombia/2026/10/18/banco-de-talentos-del-gobierno-145-colombianos-ya-fueron-contratados-y-mas-de-70-hojas-de-vida-siguen-en-revision/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05358,
+    "segundos": 29
+  },
+  "noticia": {
+    "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento",
+    "seccion": "Trabajo",
+    "titular": "Gobierno revisa hojas de vida del Banco de Talentos",
+    "bajada": "Compara cómo cuenta cada medio las contrataciones y lo que falta por revisar.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El Tiempo",
+        "texto": "deja a más de 140 personas contratadas"
+      },
+      {
+        "medio": "Infobae",
+        "texto": "busca incorporar perfiles técnicos y profesionales"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la noticia?",
+        "opciones": [
+          "Destacando lo positivo de la meritocracia",
+          "Mostrando solo las críticas al programa",
+          "Explicando el proceso sin tomar partido"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El Tiempo",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Banco de Talento avanza y tendría pico de contratados para 2027",
+        "texto": "El gobierno del presidente Abelardo De La Espriella está adelantando una nueva revisión de los miles de hojas de vida que colombianos presentaron en el Banco de Talentos (…) que deja a más de 140 personas contratadas en el Estado (…) Actualmente, hay más de 70 hojas de vida en revisión por varios funcionarios para determinar si son idóneas para las vacantes",
+        "url": "https://www.eltiempo.com/politica/gobierno/asi-avanza-el-banco-de-talentos-del-gobierno-de-la-espriella-tendria-pico-de-contratados-para-3594256"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento de El Tiempo, ¿qué hace el gobierno con las hojas de vida?",
+        "opciones": [
+          "Las está revisando para ver si son idóneas",
+          "Las está eliminando todas",
+          "Las está enviando al Congreso"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que hay una nueva revisión para determinar si son idóneas para las vacantes.",
+        "otra": "Fíjate en la frase que habla de revisar las hojas de vida para ver si son idóneas.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que la estrategia 'deja a más de 140 personas contratadas'?",
+        "opciones": [
+          "El medio El Tiempo, con su propio cálculo",
+          "El presidente o el gobierno, según la nota",
+          "Una empresa que cobra por el proceso"
+        ],
+        "correcta": 1,
+        "bien": "Es información que el gobierno comunica y que el medio recoge; el gobierno tiene interés en mostrar resultados.",
+        "otra": "Piensa en quién tiene más interés en mostrar cifras positivas sobre el programa.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué dato de la nota necesitarías comprobar primero?",
+        "opciones": [
+          "Las más de 270.000 postulaciones",
+          "Que hay más de 140 personas contratadas",
+          "El color de la oficina"
+        ],
+        "correcta": 1,
+        "bien": "Las cifras de contratados vienen del gobierno; buscarías un registro oficial o de Función Pública para confirmarlas.",
+        "otra": "Piensa en qué número te cambiaría la idea de si el programa funciona, y cómo lo verificarías.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que contratar por méritos en vez de por amistades es la forma correcta de llenar cargos públicos?",
+        "opciones": [
+          "Sí, porque da oportunidades a más personas",
+          "No, porque lo importante es la confianza política",
+          "Depende de cómo se verifiquen los méritos"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "Infobae",
+        "fecha": "18 de octubre de 2026",
+        "titular": "Banco de Talentos del Gobierno: 145 colombianos ya fueron contratados y más de 70 hojas de vida siguen en revisión - Infobae",
+        "texto": "El Banco de Talentos del Gobierno nacional registra 145 personas contratadas en distintas entidades estatales, mientras más de 70 hojas de vida continúan en revisión (…) La estrategia, que recibió más de 270.000 postulaciones",
+        "url": "https://www.infobae.com/colombia/2026/10/18/banco-de-talentos-del-gobierno-145-colombianos-ya-fueron-contratados-y-mas-de-70-hojas-de-vida-siguen-en-revision/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0638-gobierno-revisa-hojas-de-vida-del-banco-de-talento-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que el programa es un avance o que todavía le falta algo? Justifícalo con la nota.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en las cifras de contratados que aparecen en las dos notas.",
+          "Piensa en cuántos funcionarios públicos hay en total y compáralo con los contratados."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "dato_concreto",
+              "nombre": "Usa un dato concreto",
+              "descripcion": "La respuesta menciona una cifra o hecho de la noticia.",
+              "ejemploCumple": "Hay 145 personas contratadas y más de 70 hojas de vida en revisión.",
+              "ejemploNoCumple": "Creo que el programa está bien.",
+              "repregunta": "¿Qué número de la nota te ayuda a decir eso?"
+            },
+            {
+              "id": "razon_clara",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué piensa eso, no solo lo afirma.",
+              "ejemploCumple": "Es un avance porque incorpora perfiles técnicos, aunque el número de contratados es pequeño frente al total de funcionarios.",
+              "ejemploNoCumple": "Es bueno y ya.",
+              "repregunta": "¿Por qué ese dato hace que el programa sea un avance o que le falte algo?"
+            }
+          ],
+          "respuestaModelo": "Es un avance porque ya hay 145 personas contratadas por méritos, pero falta porque son pocas frente al millón de funcionarios públicos.",
+          "prohibido": [
+            "145 personas contratadas",
+            "más de un millón de funcionarios",
+            "perfiles técnicos y profesionales",
+            "es un avance pero falta"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0642-el-beso-de-sanchez-y-begona-gomez-acaba-en-un-cruc",
+  "creada": "2026-10-18T11:42:24.216Z",
+  "estado": "rechazada",
+  "motivo": [
+    "No apta: Tema político de coyuntura electoral con acusaciones de montajes y referencias a causas judiciales en curso y a un condenado por el caso mascarillas; para menores de 12 a 16 años resulta un tema adulto y polarizado, y las notas incluyen contenido ajeno al hecho (publicidad, portadas, otras noticias) que no permite una comparación limpia."
+  ],
+  "fuentes": [
+    {
+      "medio": "20minutos",
+      "fecha": "16 de octubre de 2026",
+      "titular": "El beso de Sánchez y Begoña Gómez acaba en un cruce de mensajes entre PSOE y PP: del \"tú eliges\" de Bolaños a un montaje con Ábalos",
+      "url": "https://www.20minutos.es/nacional/beso-sanchez-begona-gomez-acaba-un-cruce-mensajes-entre-psoe-pp-tu-eliges-bolanos-un-montaje-con-abalos_7050042_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 6,
+    "usd": 0.08367,
+    "segundos": 52
+  },
+  "noticia": null
+}

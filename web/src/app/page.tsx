@@ -5,7 +5,8 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import EstadoNoticia from "@/components/periodico/EstadoNoticia";
 import { RachaChip } from "@/components/periodico/Racha";
-import { noticiasPublicadas, type NoticiaGuardada } from "@/lib/periodico/ediciones";
+import Reveladas, { type Reservada } from "@/components/periodico/Reveladas";
+import { noticiasPublicadas, noticiasReservadas, type NoticiaGuardada } from "@/lib/periodico/ediciones";
 
 const LIMA = { timeZone: "America/Lima" } as const;
 const fechaEdicion = (iso: string) => new Date(iso).toLocaleDateString("es-PE", { ...LIMA, day: "numeric", month: "long", year: "numeric" });
@@ -47,6 +48,11 @@ async function Edicion() {
   await connection();
   const noticias = await noticiasPublicadas();
   const [principal, ...resto] = noticias;
+  // Para la demo: solo datos públicos de las reservadas; se muestran cuando /generar las revela.
+  const reservadas: Reservada[] = (await noticiasReservadas()).map((n) => ({
+    id: n.id, seccion: n.seccion, titular: n.titular, bajada: n.bajada, creada: n.creada, minutos: n.minutos,
+    medios: n.fuentes.map((f) => f.medio), miradas: n.miradas ?? [],
+  }));
   const ultima = principal?.creada;
 
   return (
@@ -63,6 +69,7 @@ async function Edicion() {
         <div className="pd-lema">Periódico para leer con criterio</div>
       </header>
 
+      <Reveladas reservadas={reservadas} />
       {!principal ? (
         <p className="pd-vacio">Todavía no hay noticias publicadas.</p>
       ) : (

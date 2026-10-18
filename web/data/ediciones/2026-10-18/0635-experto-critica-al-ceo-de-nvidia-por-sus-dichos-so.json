@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0635-experto-critica-al-ceo-de-nvidia-por-sus-dichos-so",
+  "creada": "2026-10-18T11:35:54.875Z",
+  "estado": "rechazada",
+  "motivo": [
+    "No apta: El texto contiene insultos fuertes dirigidos a una persona real (\"idiota rico\") y no existe una NOTA B que permita contrastar el hecho; además el tema, aunque es educativo, se centra en una polémica de opinión sin contraste disponible."
+  ],
+  "fuentes": [
+    {
+      "medio": "La Nación",
+      "fecha": "17 de octubre de 2026",
+      "titular": "“Creo que es un idiota rico”: la dura crítica de un académico británico al CEO de Nvidia por sus dichos sobre educación - LA NACION",
+      "url": "https://www.lanacion.com.ar/tecnologia/creo-que-es-un-idiota-rico-la-dura-critica-de-un-academico-britanico-al-ceo-de-nvidia-por-sus-dichos-nid18102026/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.06797,
+    "segundos": 39
+  },
+  "noticia": null
+}

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { armarNoticia, citaLiteral, esNota, filtrarCandidatas, limpiarTexto, medioDe, mismoHecho, validarGeneracion } from './pasos.mjs';
+import { armarNoticia, citaLiteral, esNota, filtrarCandidatas, limpiarTexto, medioDe, mismoHecho, trataDeIA, validarGeneracion } from './pasos.mjs';
 
 const textoA = 'Más del 50% de las empresas prevé reducir sus ofertas para perfiles junior, aunque sin recurrir a despidos directos. «La inteligencia artificial no está echando a nadie, pero sí está estrechando la puerta de entrada», explica Gloria Martínez.';
 const textoB = 'El estudio del Observatorio del Talento Digital reunió 207 respuestas válidas de 19 sectores entre el 13 de julio y el 21 de septiembre.';
@@ -98,4 +98,10 @@ test('arma siempre la misma estructura de 8 pasos con una sola pregunta de voz',
   assert.equal(n.pasos.filter((p) => p.tipo === 'voz').length, 1);
   assert.equal(n.pasos[7].medio, 'El Ecosistema Startup');
   assert.equal(n.pasos.at(-1).privado.criterios.length, 2);
+});
+
+test('solo entran noticias que tratan de IA', () => {
+  assert.ok(trataDeIA('OpenAI abre la publicidad dentro de ChatGPT', 'La empresa de inteligencia artificial anunció...'));
+  assert.ok(!trataDeIA('Autoridades cierran 240 sitios web de estafas con criptomonedas', 'La policía desarticuló una red que usaba páginas falsas.'));
+  assert.ok(!trataDeIA('Gobierno revisa hojas de vida del Banco de Talentos', 'Más de 140 personas contratadas. Vía libre para la revisión.'));
 });

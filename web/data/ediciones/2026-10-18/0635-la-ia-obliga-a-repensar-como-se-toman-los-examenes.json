@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes",
+  "creada": "2026-10-18T11:35:15.969Z",
+  "estado": "retirada",
+  "motivo": [
+    "Repite el tema de 0525 (exámenes universitarios)"
+  ],
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "17 de octubre de 2026",
+      "titular": "La IA obliga a reinventar los exámenes universitarios (y devuelve el protagonismo a la prueba oral) | El PAÍS Exprés | EL PAÍS",
+      "url": "https://elpais.com/expres/2026-10-18/la-ia-obliga-a-reinventar-los-examenes-universitarios-y-devuelve-el-protagonismo-a-la-prueba-oral.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05043,
+    "segundos": 27
+  },
+  "noticia": {
+    "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes",
+    "seccion": "Educación",
+    "titular": "La IA obliga a repensar cómo se toman los exámenes universitarios",
+    "bajada": "Compara cómo la nota describe el problema y qué soluciones propone. ¿Qué te parece más justo?",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El País",
+        "texto": "muchos de sus alumnos"
+      },
+      {
+        "medio": "El País",
+        "texto": "Estas pruebas exigen mucho tiempo"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio el problema de la IA en los exámenes?",
+        "opciones": [
+          "Como una amenaza que hay que frenar con prohibiciones",
+          "Como un reto que obliga a cambiar la forma de evaluar",
+          "Como una moda pasajera que no cambiará nada"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "La IA obliga a reinventar los exámenes universitarios (y devuelve el protagonismo a la prueba oral) | El PAÍS Exprés | EL PAÍS",
+        "texto": "El catedrático español Roberto Serrano denunció en EL PAÍS que muchos de sus alumnos de la Universidad de Brown utilizaron la inteligencia artificial para responder a las preguntas de un examen que hicieron desde casa. (…) Los expertos advierten de que el uso generalizado de la IA pone en peligro la capacidad de escribir y el pensamiento crítico. (…) Los profesores que ya han cambiado su forma de evaluar apuestan por los exámenes orales y por trabajos que el alumno tiene que defender, no solo entregar.",
+        "url": "https://elpais.com/expres/2026-10-18/la-ia-obliga-a-reinventar-los-examenes-universitarios-y-devuelve-el-protagonismo-a-la-prueba-oral.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿qué hizo Roberto Serrano?",
+        "opciones": [
+          "Prohibió el uso de internet en sus clases",
+          "Denunció que sus alumnos usaron IA para responder un examen desde casa",
+          "Creó una nueva app para detectar copias"
+        ],
+        "correcta": 1,
+        "bien": "Lo dice el primer fragmento: denunció que sus alumnos usaron la IA en un examen hecho desde casa.",
+        "otra": "Revisa el primer fragmento; ahí aparece quién denunció y qué pasó con el examen.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién hace la denuncia sobre el uso de la IA en los exámenes?",
+        "opciones": [
+          "Un catedrático español que da clases en Brown",
+          "Un estudiante anónimo de primer año",
+          "Un vocero del Ministerio de Educación"
+        ],
+        "correcta": 0,
+        "bien": "Es un catedrático que vivió el caso en su propia universidad, por lo que conoce de cerca el problema.",
+        "otra": "Fíjate en el primer fragmento: ahí se nombra a la persona que denuncia y el lugar donde ocurrió.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "Si quisieras comprobar si un alumno usó IA en un examen, ¿qué buscarías?",
+        "opciones": [
+          "Que las respuestas sean muy largas",
+          "Que el alumno pueda explicar y defender lo que escribió en una prueba oral",
+          "Que el examen esté escrito a mano"
+        ],
+        "correcta": 1,
+        "bien": "La prueba oral permite ver si el alumno realmente entiende lo que entregó.",
+        "otra": "Piensa en qué ocurre cuando alguien tiene que explicar en voz alta lo que escribió.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué forma de evaluar te parece mejor en la universidad?",
+        "opciones": [
+          "Exámenes orales y trabajos que el alumno defiende",
+          "Exámenes escritos presenciales como siempre",
+          "Trabajos en casa sin ninguna restricción"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Estas pruebas exigen mucho tiempo y dependen del número de alumnos por clase. (…) Por eso, cuando las aulas están llenas, muchos docentes han optado por recuperar el examen presencial de toda la vida.",
+        "url": "https://elpais.com/expres/2026-10-18/la-ia-obliga-a-reinventar-los-examenes-universitarios-y-devuelve-el-protagonismo-a-la-prueba-oral.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que muchas universidades vuelven a la prueba oral? Usa algo concreto de la nota para justificar tu respuesta.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Piensa en el caso que se menciona al principio de la nota.",
+          "Fíjate en qué diferencia hay entre entregar un trabajo y defenderlo en voz alta."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_de_la_nota",
+              "nombre": "Usa algo concreto de la nota",
+              "descripcion": "Menciona un dato, una persona o una situación que aparece en la nota.",
+              "ejemploCumple": "Como en el caso de Roberto Serrano, los alumnos pudieron usar IA en un examen desde casa.",
+              "ejemploNoCumple": "Las universidades quieren que los alumnos aprendan de verdad.",
+              "repregunta": "¿Qué caso o qué persona de la nota podrías mencionar para apoyar tu idea?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "Explica por qué esa solución funciona, no solo qué pasa.",
+              "ejemploCumple": "La prueba oral funciona porque el alumno tiene que explicar lo que sabe en el momento.",
+              "ejemploNoCumple": "La prueba oral es buena.",
+              "repregunta": "¿Qué crees que cambia cuando el alumno tiene que explicar algo en voz alta?"
+            }
+          ],
+          "respuestaModelo": "Muchas universidades vuelven a la prueba oral porque, como en el caso de Roberto Serrano, la IA permite responder exámenes escritos desde casa. En una prueba oral el alumno tiene que explicar lo que sabe en el momento, así es más difícil que otro responda por él.",
+          "prohibido": [
+            "la IA permite responder desde casa",
+            "tiene que explicar en el momento",
+            "no puede responder otro por él"
+          ]
+        }
+      }
+    ]
+  }
+}

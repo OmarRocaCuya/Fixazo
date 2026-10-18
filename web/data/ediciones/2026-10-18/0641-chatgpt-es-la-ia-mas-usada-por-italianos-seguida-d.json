@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d",
+  "creada": "2026-10-18T11:41:31.855Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "La Nación",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Tecno: ChatGPT, la aplicación de IA más utilizada entre los italianos - LA NACION",
+      "url": "https://www.lanacion.com.ar/agencias/tecno-chatgpt-la-aplicacion-de-ia-mas-utilizada-entre-los-italianos-nid17102026/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05215,
+    "segundos": 32
+  },
+  "noticia": {
+    "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d",
+    "seccion": "Tecnología",
+    "titular": "ChatGPT es la IA más usada por italianos, seguida de Gemini",
+    "bajada": "Compara los datos de ChatGPT y Gemini en Italia y fíjate en quién mide y cómo lo cuenta.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "La Nación",
+        "texto": "ChatGPT alcanzó los 9,625 millones de usuarios"
+      },
+      {
+        "medio": "La Nación",
+        "texto": "hasta la madurez competitiva"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la noticia sobre las apps de IA en Italia?",
+        "opciones": [
+          "Como una competencia cerrada, con un solo ganador claro",
+          "Como una comparación de cifras de uso entre varias apps",
+          "Como una advertencia de que la IA es peligrosa para los jóvenes"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "La Nación",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Tecno: ChatGPT, la aplicación de IA más utilizada entre los italianos - LA NACION",
+        "texto": "En julio de 2026, ChatGPT alcanzó los 9,625 millones de usuarios, frente a los 9,374 millones de Gemini. (…) Además, en dispositivos móviles, Gemini superó a ChatGPT a partir de junio, y aquí, Cosenza subraya, \"la fortaleza del ecosistema de Google sin duda influyó\".",
+        "url": "https://www.lanacion.com.ar/agencias/tecno-chatgpt-la-aplicacion-de-ia-mas-utilizada-entre-los-italianos-nid17102026/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento A, ¿qué app tenía más usuarios en julio de 2026?",
+        "opciones": [
+          "Gemini, con 9,374 millones",
+          "ChatGPT, con 9,625 millones",
+          "Claude, con 1,802 millones"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que ChatGPT alcanzó 9,625 millones de usuarios, por encima de los 9,374 de Gemini.",
+        "otra": "Fíjate en la frase que compara las dos cifras de julio de 2026 y busca cuál es mayor.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién aporta los datos de esta nota?",
+        "opciones": [
+          "Un observatorio de IA dirigido por Vincenzo Cosenza, que usa datos de Audicom",
+          "La empresa OpenAI, creadora de ChatGPT",
+          "Un diario italiano que realizó una encuesta propia"
+        ],
+        "correcta": 0,
+        "bien": "Los datos vienen de un observatorio de IA que trabaja con Audicom; conviene saber quién mide y con qué herramienta.",
+        "otra": "Revisa qué dice el texto sobre el Observatorio de Inteligencia Artificial y de dónde salen las cifras.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué buscarías para comprobar que ChatGPT tiene 9,625 millones de usuarios en Italia?",
+        "opciones": [
+          "El informe original del observatorio y la metodología de Audicom",
+          "Solo la opinión de un usuario que use ChatGPT a diario",
+          "Un titular de otro diario sin leer el texto"
+        ],
+        "correcta": 0,
+        "bien": "Para verificar una cifra conviene ir a la fuente original y ver cómo se midió.",
+        "otra": "Piensa en qué documento permitiría ver cómo se calcularon esos números.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué opinas sobre que los datos de uso de IA los mida un observatorio privado?",
+        "opciones": [
+          "Está bien, siempre que se explique cómo se midió",
+          "No es confiable, porque el observatorio puede tener intereses",
+          "No tengo una opinión clara todavía"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "La Nación",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "\"Los datos marcan la transición de la IA italiana desde el entusiasmo inicial hasta la madurez competitiva. (…) Las cosas podrían cambiar en los próximos meses con la expansión de los agentes de IA personales\", explica el experto.",
+        "url": "https://www.lanacion.com.ar/agencias/tecno-chatgpt-la-aplicacion-de-ia-mas-utilizada-entre-los-italianos-nid17102026/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0641-chatgpt-es-la-ia-mas-usada-por-italianos-seguida-d-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la nota muestra tanto las cifras de ChatGPT como las de Gemini?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Mira qué dispositivos aparecen en la comparación.",
+          "Piensa qué pasa cuando dos apps están cerca en usuarios."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa un dato concreto",
+              "descripcion": "La respuesta menciona una cifra o comparación que aparece en la noticia.",
+              "ejemploCumple": "Porque Gemini superó a ChatGPT en dispositivos móviles desde junio.",
+              "ejemploNoCumple": "Porque es una noticia de tecnología.",
+              "repregunta": "¿Qué número o comparación de la noticia te llama la atención?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué esa comparación es útil para el lector.",
+              "ejemploCumple": "Sirve para ver quién lidera y cómo cambió la competencia entre las dos apps.",
+              "ejemploNoCumple": "Porque sí.",
+              "repregunta": "¿Qué te permite entender esa comparación que solo con una cifra no verías?"
+            }
+          ],
+          "respuestaModelo": "La nota compara ChatGPT y Gemini porque muestra que la competencia es pareja y que Gemini superó a ChatGPT en móviles, lo que ayuda a ver cómo cambia el liderazgo.",
+          "prohibido": [
+            "competencia pareja",
+            "Gemini superó a ChatGPT en móviles",
+            "cambia el liderazgo",
+            "comparación de cifras"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 3
+}

@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre",
+  "creada": "2026-10-18T11:36:11.586Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "ABC",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Carolina Trinidad Morera, experta en IA de PayFit: «La clave no es preguntarse si la IA puede hacer una tarea, sino qué ocurre si se equivoca»",
+      "url": "https://www.abc.es/sevilla/economia/carolina-trinidad-morera-experta-ia-payfit-clave-20261018071404-nts.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 6,
+    "usd": 0.08386,
+    "segundos": 56
+  },
+  "noticia": {
+    "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre",
+    "seccion": "Tecnología",
+    "titular": "Experta de PayFit explica cómo usar la IA en empresas",
+    "bajada": "Compara qué tareas puede hacer la IA y dónde hace falta una persona que revise.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "ABC",
+        "texto": "La IA ya ofrece resultados sólidos"
+      },
+      {
+        "medio": "ABC",
+        "texto": "La capacidad de formular bien el problema"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que lo contará este medio?",
+        "opciones": [
+          "Como una herramienta que ya funciona bien en muchas tareas",
+          "Como una amenaza que va a quitar empleos",
+          "Como algo que solo sirve para grandes empresas"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "ABC",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Carolina Trinidad Morera, experta en IA de PayFit: «La clave no es preguntarse si la IA puede hacer una tarea, sino qué ocurre si se equivoca»",
+        "texto": "La IA ya ofrece resultados sólidos en tareas frecuentes, acotadas y verificables: clasificar información, extraer datos de documentos, resumir, preparar un primer borrador, generar informes o detectar anomalías. (…) La supervisión humana sigue siendo imprescindible cuando existe ambigüedad, una excepción normativa o una decisión con impacto económico, legal o personal.",
+        "url": "https://www.abc.es/sevilla/economia/carolina-trinidad-morera-experta-ia-payfit-clave-20261018071404-nts.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿en qué tareas ofrece resultados sólidos la IA?",
+        "opciones": [
+          "En tareas frecuentes, acotadas y verificables, como resumir o clasificar información",
+          "En decisiones de contratación y despidos",
+          "En cualquier tarea sin necesidad de revisión"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que la IA da buenos resultados en tareas frecuentes, acotadas y verificables, como resumir o clasificar.",
+        "otra": "Las decisiones de contratación y despido son justo lo que el texto dice que necesita supervisión humana.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién da esta explicación sobre la IA en las empresas?",
+        "opciones": [
+          "Carolina Trinidad Morera, de Product Management en PayFit",
+          "Un inspector de trabajo del Ministerio",
+          "Un profesor de informática de un instituto"
+        ],
+        "correcta": 0,
+        "bien": "Es una profesional de una empresa que vende software de nóminas, así que tiene interés en mostrar la IA como útil.",
+        "otra": "Un inspector o un profesor tendrían otra mirada, pero en esta nota la voz es de una empresa que ofrece estas herramientas.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "La nota da cifras de InfoJobs. ¿Qué buscarías para comprobar que son ciertas?",
+        "opciones": [
+          "El estudio original de InfoJobs y su metodología",
+          "Solo la opinión de otro periodista",
+          "Nada, porque un medio conocido siempre tiene razón"
+        ],
+        "correcta": 0,
+        "bien": "Buscar el estudio original te permite ver cómo se hizo la encuesta y a quién se preguntó.",
+        "otra": "Una opinión de otro periodista no comprueba el dato. Mirar el estudio original sí.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que las empresas deberían usar la IA para decidir sobre personas?",
+        "opciones": [
+          "Sí, siempre que haya una persona que revise la decisión",
+          "No, las decisiones sobre personas deben ser solo humanas",
+          "Depende del tipo de decisión"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "ABC",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "La capacidad de formular bien el problema. (…) Un buen profesional no se limita a pedir una respuesta; sabe dividir el trabajo, aportar el contexto adecuado, definir qué significa un resultado correcto y comprobarlo.",
+        "url": "https://www.abc.es/sevilla/economia/carolina-trinidad-morera-experta-ia-payfit-clave-20261018071404-nts.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0636-experta-de-payfit-explica-como-usar-la-ia-en-empre-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la experta dice que lo importante es qué pasa si la IA se equivoca?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en qué tipo de decisiones menciona la experta.",
+          "Piensa qué le pasa a una persona si un sistema falla en esas decisiones."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_del_texto",
+              "nombre": "Usa algo concreto de la nota",
+              "descripcion": "La respuesta menciona una tarea, un ejemplo o una frase real de la entrevista.",
+              "ejemploCumple": "Porque dice que en decisiones de impacto legal o personal hace falta una persona.",
+              "ejemploNoCumple": "Porque es importante tener cuidado.",
+              "repregunta": "¿Qué tipo de decisión menciona la experta como la que necesita revisión humana?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué un error puede ser grave, no solo que lo es.",
+              "ejemploCumple": "Un error en una nómina o en un despido afecta a una persona y puede costar mucho.",
+              "ejemploNoCumple": "Porque la IA se equivoca.",
+              "repregunta": "¿Qué pasaría a una persona si la IA se equivoca en algo como un pago o un despido?"
+            }
+          ],
+          "respuestaModelo": "La experta dice que lo importante es el daño de un error, porque en decisiones de impacto legal, económico o personal un fallo puede afectar mucho a una persona.",
+          "prohibido": [
+            "impacto económico, legal o personal",
+            "decisión con consecuencias para una persona",
+            "la IA puede equivocarse y eso afecta"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 6
+}

@@ -1,0 +1,26 @@
+{
+  "id": "2026-10-18-0644-hombre-viaja-2-100-kilometros-para-conocer-a-una-m",
+  "creada": "2026-10-18T11:44:10.385Z",
+  "estado": "rechazada",
+  "motivo": [
+    "El titular debe tener entre 3 y 12 palabras",
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "mirada_a no es textual",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "El Tiempo",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Viajó 2.100 kilómetros buscando el amor y terminó solo y sin dinero: la historia del hombre que se enamoró de una mujer creada por IA",
+      "url": "https://www.eltiempo.com/cultura/gente/viajo-2-100-kilometros-buscando-el-amor-y-termino-solo-y-sin-dinero-la-historia-del-hombre-que-se-enamoro-de-una-mujer-creada-por-ia-3594247"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.07097,
+    "segundos": 49
+  },
+  "noticia": null
+}
