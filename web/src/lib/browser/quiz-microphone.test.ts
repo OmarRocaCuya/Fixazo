@@ -36,10 +36,9 @@ describe("foreground quiz microphone", () => {
     expect(form.get("adultConfirmed")).toBeNull(); expect(form.get("consent")).toBeNull();
     expect(READING_LANGUAGES.map(({ value }) => value)).toEqual(["quy_Latn", "ayr_Latn"]); client.close();
   });
-  it("is inert before explicit start and sends real PCM transport only with an access code", async () => {
+  it("is inert before explicit start and sends real PCM transport without an access code", async () => {
     const s = setup(); expect(s.segments).toHaveLength(0); expect(s.createClient).not.toHaveBeenCalled();
-    expect(await s.controller.start({ ...ACCESS, accessCode: " " }, "one")).toBe(false);
-    expect(await s.controller.start(ACCESS, "one")).toBe(true);
+    expect(await s.controller.start({ ...ACCESS, accessCode: "" }, "one")).toBe(true);
     expect(s.segments).toHaveLength(1); expect(s.segments[0].options).toMatchObject({ chunkSeconds: 8, maxSeconds: 60 });
     expect(await s.controller.start(ACCESS, "one")).toBe(false);
     s.chunk(); await tick();

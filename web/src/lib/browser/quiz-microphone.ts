@@ -53,7 +53,6 @@ export class QuizMicrophone {
 
   async start(access: CloudVoiceAccess, stepId: string | null): Promise<boolean> {
     if (this.disposed || this.session || !this.deps.visible()) return false;
-    if (!access.accessCode.trim()) return false;
     this.setStep(stepId);
     const client = this.deps.client({ ...access });
     const session: Session = { epoch: ++this.epoch, client, capture: null, queue: null!, timer: null,

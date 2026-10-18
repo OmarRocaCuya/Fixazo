@@ -18,14 +18,14 @@ const minutes = (seconds: number) => `${Math.floor(seconds / 60)}:${String(secon
 /** Admission is inline, not a navigation gate. Mounting never asks for microphone permission. */
 export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(function QuizAudioPanel({ stepId, paused = false, onTranscript, onAccessChange }, ref) {
   const [state, setState] = useState(INITIAL);
-  const [code, setCode] = useState("");
   const [capability, setCapability] = useState<{ ready: boolean; mode: VoiceAudience; message: string }>({ ready: false, mode: "adult-demo", message: "Comprobando transcripción de audio…" });
   const controller = useRef<QuizMicrophone | null>(null);
   const transcriptCallback = useRef(onTranscript); transcriptCallback.current = onTranscript;
   const accessCallback = useRef(onAccessChange); accessCallback.current = onAccessChange;
   const active = state.status === "starting" || state.status === "listening";
   // Text judging remains available independently of ASR readiness.
-  const authorized = code.trim().length >= 16;
+  // The self-hosted Meta backend needs no access code; the server limits per IP.
+  const authorized = true;
 
   useImperativeHandle(ref, () => ({ stop: () => controller.current?.pause("Micrófono detenido al finalizar la lectura.") }), []);
 
@@ -55,14 +55,14 @@ export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(f
     if (paused) controller.current?.pause("Micrófono pausado durante la evaluación o al terminar. Pulsa Iniciar para retomarlo.");
   }, [paused]);
   useEffect(() => {
-    accessCallback.current?.(authorized ? { accessCode: code.trim(), audience: capability.mode } : null);
+    accessCallback.current?.(authorized ? { accessCode: "", audience: capability.mode } : null);
     if (!authorized) controller.current?.pause("Micrófono apagado. Para usar voz, escribe el código privado.");
-  }, [authorized, code, capability.mode]);
+  }, [authorized, capability.mode]);
 
   function start() {
     if (!authorized || !capability.ready || paused) return;
     if (!controller.current) controller.current = new QuizMicrophone({ onState: setState, onTranscript: (event) => transcriptCallback.current(event) });
-    void controller.current.start({ accessCode: code.trim(), audience: capability.mode }, stepId);
+    void controller.current.start({ accessCode: "", audience: capability.mode }, stepId);
   }
 
   return (
@@ -71,9 +71,6 @@ export const QuizAudioPanel = forwardRef<QuizAudioHandle, QuizAudioPanelProps>(f
       <p>Actívalo una vez para responder por voz mientras esta pantalla está visible. Las opciones dictadas se preseleccionan: tú las confirmas. También puedes escribir o tocar las opciones.</p>
       <p className="muted small">El navegador pide el micrófono solo al pulsar Iniciar. El audio se envía al backend Meta del proyecto para transcribirlo, sin guardar la grabación. No se infieren emociones, identidad, acento ni salud.</p>
       <p className="pd-aviso">{capability.message}</p>
-      <label>Código privado de la demo
-        <input type="password" autoComplete="off" value={code} disabled={active} onChange={(event) => setCode(event.target.value)} />
-      </label>
       <p role="status" aria-live="polite">{state.message}{active ? ` Tiempo restante: ${minutes(state.remainingSeconds)}.` : ""}</p>
       <div className="pd-acciones">
         <button type="button" className="btn primary" disabled={active || !authorized || !capability.ready || paused} onClick={start}>Iniciar micrófono del quiz</button>

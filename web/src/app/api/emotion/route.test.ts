@@ -76,8 +76,7 @@ describe("/api/emotion (experimental proxy, no consent gate)", () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
-  it("keeps the operator voice policy: access code and same origin", async () => {
-    expect((await POST(request({}, { headers: { "X-Voice-Access-Code": "wrong" } }))).status).toBe(401);
+  it("keeps same origin for the open self-hosted backend; no access code is required", async () => {
     expect((await POST(request({}, { headers: { Origin: "https://evil.example" } }))).status).toBe(403);
     expect(fetcher).not.toHaveBeenCalled();
   });

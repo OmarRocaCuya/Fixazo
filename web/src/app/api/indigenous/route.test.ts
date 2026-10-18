@@ -31,9 +31,8 @@ describe("indigenous demo route", () => {
     const status = await response.json(); expect(status).toMatchObject({ configured: true, backendReachable: true, asr: { ready: false } });
     expect(JSON.stringify(status)).not.toContain(TOKEN);
   });
-  it("requires private access and same origin, but no adult attestation or consent, before an inference request", async () => {
+  it("requires same origin, but no access code, adult attestation or consent, before an inference request", async () => {
     expect((await POST(request(undefined, { Origin: "https://evil.example" }))).status).toBe(403);
-    expect((await POST(request(undefined, { "X-Voice-Access-Code": "wrong" }))).status).toBe(401);
     expect(fetcher).not.toHaveBeenCalled();
     fetcher.mockResolvedValue(Response.json({ text: "rimay", sourceLanguage: "spa_Latn", targetLanguage: "quy_Latn", model: "facebook/nllb-200-distilled-600M", researchOnly: true }));
     const response = await POST(request({ action: "translate", text: "hola", sourceLanguage: "spa_Latn", targetLanguage: "quy_Latn" }));

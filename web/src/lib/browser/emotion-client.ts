@@ -58,7 +58,7 @@ async function readJson(response: Response, signal: AbortSignal): Promise<unknow
 
 export async function requestEmotionModel(wav: Uint8Array, access: CloudVoiceAccess, fetcher: typeof fetch = fetch, signal?: AbortSignal): Promise<EmotionModelResult> {
   if (signal?.aborted) throw new EmotionClientError("cancelled");
-  if (!access.accessCode.trim() || !["adult-demo", "approved-pilot"].includes(access.audience)) throw new EmotionClientError("not-authorized");
+  if (!["adult-demo", "approved-pilot"].includes(access.audience)) throw new EmotionClientError("not-authorized");
   if (wav.byteLength < 44 + 32_000 || wav.byteLength > 44 + 480_000) throw new EmotionClientError("invalid-audio");
   const controller = new AbortController();
   let timedOut = false;
@@ -68,7 +68,7 @@ export async function requestEmotionModel(wav: Uint8Array, access: CloudVoiceAcc
   const form = new FormData();
   form.set("file", new Blob([wav as BlobPart], { type: "audio/wav" }), "turn.wav");
   try {
-    const response = await fetcher("/api/emotion", { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "X-Voice-Access-Code": access.accessCode }, body: form, signal: controller.signal });
+    const response = await fetcher("/api/emotion", { method: "POST", credentials: "same-origin", cache: "no-store", body: form, signal: controller.signal });
     if (controller.signal.aborted) throw new EmotionClientError("cancelled");
     const body = await readJson(response, controller.signal);
     if (!response.ok) {

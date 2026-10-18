@@ -911,17 +911,16 @@ export class SessionController {
   // turn. Never spoken, never shown in the child zone, never changes the state
   // machine, help offers or pace check, and never reads the transcript.
 
-  /** Enables sending answer audio to emotion2vec+ with the deployment access code. */
-  authorizeEmotionBackend(accessCode: string) {
+  /** Turns sending answer audio to emotion2vec+ on or off (self-hosted backend, no access code). */
+  authorizeEmotionBackend(enabled: boolean) {
     if (!this.experimentalEmotion) return;
     const status = this.snap.emotionStatus;
     const audience = status?.mode;
-    const code = accessCode.trim();
     this.cancelEmotionRequests();
-    this.emotionAccess = code && status?.enabled && (audience === "approved-pilot" || audience === "adult-demo")
-      ? { accessCode: code, audience } : null;
+    this.emotionAccess = enabled && status?.enabled && (audience === "approved-pilot" || audience === "adult-demo")
+      ? { accessCode: "", audience } : null;
     if (!this.emotionAccess) this.analyzer.discardCapture();
-    this.patch({ emotionBackendAuthorized: !!this.emotionAccess, emotionBackendFallback: false, emotionBackendError: this.emotionAccess ? null : "Falta el código de acceso para usar emotion2vec+.", affectTestBusy: false,
+    this.patch({ emotionBackendAuthorized: !!this.emotionAccess, emotionBackendFallback: false, emotionBackendError: this.emotionAccess ? null : "Activa el envío de voz para usar emotion2vec+.", affectTestBusy: false,
       affect: this.snap.affect.map((entry) => entry.estimate.note === "Analizando la voz con emotion2vec+…" ? { ...entry, estimate: unavailableAffect("Análisis cancelado al cambiar la autorización.") } : entry) });
   }
 
@@ -942,7 +941,7 @@ export class SessionController {
 
   private emotionError(error: unknown): string {
     const code = error instanceof EmotionClientError ? error.code : "invalid-audio";
-    if (code === "not-authorized") return "Falta el código de acceso para usar emotion2vec+.";
+    if (code === "not-authorized") return "Activa el envío de voz para usar emotion2vec+.";
     if (code === "invalid-audio") return "Se necesita al menos un segundo de audio de voz (máximo 15 segundos).";
     if (code === "cancelled") return "Análisis de voz cancelado; no se estimó una emoción.";
     if (code === "timeout") return "emotion2vec+ tardó demasiado. Reintenta con un audio de prueba; no se inventó una emoción.";

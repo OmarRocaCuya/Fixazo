@@ -14,14 +14,14 @@ const OK = {
 
 describe("emotion client (browser → /api/emotion)", () => {
   afterEach(() => vi.useRealTimers());
-  it("posts only the WAV, without consent fields; the access code travels only in a header", async () => {
+  it("posts only the WAV, without consent fields or an access code", async () => {
     const fetcher = vi.fn().mockResolvedValue(Response.json(OK));
     const result = await requestEmotionModel(WAV, ACCESS, fetcher);
     expect(result?.top).toEqual({ label: "happy", score: 0.7 });
     const [url, init] = fetcher.mock.calls[0];
     expect(url).toBe("/api/emotion");
     expect(init.method).toBe("POST");
-    expect(init.headers).toEqual({ "X-Voice-Access-Code": ACCESS.accessCode });
+    expect(init.headers).toBeUndefined();
     const form = init.body as FormData;
     expect((form.get("file") as Blob).type).toBe("audio/wav");
     expect([...form.keys()]).toEqual(["file"]);
@@ -40,10 +40,10 @@ describe("emotion client (browser → /api/emotion)", () => {
     await expect(requestEmotionModel(WAV, ACCESS, vi.fn().mockRejectedValue(new Error("offline")))).rejects.toMatchObject({ code: "network" });
   });
 
-  it("does not send short audio, a missing access code or a cancelled request", async () => {
+  it("does not send short audio, an unknown audience or a cancelled request", async () => {
     const fetcher = vi.fn();
     await expect(requestEmotionModel(WAV.subarray(0, 44), ACCESS, fetcher)).rejects.toMatchObject({ code: "invalid-audio" });
-    await expect(requestEmotionModel(WAV, { ...ACCESS, accessCode: "  " }, fetcher)).rejects.toMatchObject({ code: "not-authorized" });
+    await expect(requestEmotionModel(WAV, { ...ACCESS, audience: "disabled" as never }, fetcher)).rejects.toMatchObject({ code: "not-authorized" });
     const controller = new AbortController(); controller.abort();
     await expect(requestEmotionModel(WAV, ACCESS, fetcher, controller.signal)).rejects.toMatchObject({ code: "cancelled" });
     expect(fetcher).not.toHaveBeenCalled();

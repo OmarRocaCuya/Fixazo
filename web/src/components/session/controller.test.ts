@@ -558,7 +558,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
     vi.stubGlobal("fetch", vi.fn(async (url: string, init?: RequestInit) => (url === "/api/emotion" ? Response.json(init?.method === "POST" ? MODEL : mock.emotionStatus) : { json: async () => ({ mode: "reglas" }) })));
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("demo-access-code-long-enough");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     await Promise.resolve();
     await answer("fue al río");
@@ -572,7 +572,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
   it("freezes and wipes captured audio even when disposal interrupts the ASR final flush", async () => {
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("adult-audio-code");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     await answerTurn();
     hear("al río", true);
@@ -594,7 +594,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
       ? Response.json(init?.method === "POST" ? MODEL : mock.emotionStatus) : Response.json({ mode: "reglas" })));
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("adult-audio-code");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     await answerTurn();
     ctl.doneSpeaking(); // Captured voice exists, but no onText callback arrived.
@@ -615,7 +615,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
     }));
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("adult-audio-code");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     await answer("estoy triste y muy mal");
     hear("estoy feliz", true);
@@ -643,7 +643,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
     }));
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("adult-audio-code");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     await answer("fue al río");
     expect(signal?.aborted).toBe(false);
@@ -660,7 +660,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
       ? Response.json(init?.method === "POST" ? { error: "emotion-model-loading", fallback: true } : mock.emotionStatus, { status: init?.method === "POST" ? 503 : 200 }) : Response.json({ mode: "reglas" })));
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("adult-audio-code");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     await answer("fue al río");
     expect(ctl.getSnapshot().affect[0].estimate).toMatchObject({ source: "sin-modelo", label: "sin datos suficientes", score: null, activation: null });
@@ -671,7 +671,7 @@ describe("experimental emotion from the voice (no consent gate)", () => {
     mock.speechSupported = false;
     ctl.init();
     await ctl.refreshEmotionStatus();
-    ctl.authorizeEmotionBackend("adult-audio-code");
+    ctl.authorizeEmotionBackend(true);
     await ctl.begin();
     ctl.submitSimulated(SAMPLE_ES.text, null, 30);
     ctl.submitSimulated("estoy muy feliz", null, null);

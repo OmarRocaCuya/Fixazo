@@ -43,7 +43,8 @@ export function getVoicePolicyStatus(provider: VoiceProvider): VoicePolicyStatus
   const mode = configuredMode();
   let reason: string | null = null;
   if (mode === "disabled") reason = "cloud-disabled";
-  else if (!process.env.VOICE_ACCESS_CODE || process.env.VOICE_ACCESS_CODE.trim().length < 16) reason = "access-not-configured";
+  // The self-hosted Meta backend is open for the MVP; paid providers keep the code.
+  else if (provider !== "meta" && (!process.env.VOICE_ACCESS_CODE || process.env.VOICE_ACCESS_CODE.trim().length < 16)) reason = "access-not-configured";
   else if (provider === "meta" ? !getIndigenousBackendConfig() : !(provider === "deepgram" ? process.env.DEEPGRAM_API_KEY : process.env.OPENAI_API_KEY)?.trim()) reason = "provider-not-configured";
   else if (mode === "approved-pilot" && process.env.CHILD_VOICE_PRIVACY_APPROVED !== "true") reason = "privacy-approval-required";
   else if (mode === "approved-pilot" && provider === "openai" && process.env.OPENAI_ZDR_CONFIRMED !== "true") reason = "provider-privacy-approval-required";
@@ -65,7 +66,8 @@ export function authorizeVoiceRequest(request: Request, provider: VoiceProvider)
   const expected = process.env.VOICE_ACCESS_CODE ?? "";
   // Hash before the constant-time comparison to avoid comparing unequal buffers.
   const digest = (value: string) => createHash("sha256").update(value).digest();
-  if (supplied.length > 256 || !timingSafeEqual(digest(supplied), digest(expected))) {
+  const open = provider === "meta";
+  if (!open && (supplied.length > 256 || !timingSafeEqual(digest(supplied), digest(expected)))) {
     return { ok: false, status: 401, error: "voice-access-required" };
   }
 
@@ -74,7 +76,10 @@ export function authorizeVoiceRequest(request: Request, provider: VoiceProvider)
   // Never store the raw IP or access code. Proxy headers are only a hint; the
   // global credential bucket below still applies if a caller spoofs the hint.
   const ip = (request.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim().slice(0, 128);
-  const keys = [digest(`${provider}:credential:${supplied}`).toString("hex"), digest(`${provider}:${ip}:${supplied}`).toString("hex")];
+  // Without a code there is no shared credential to bucket, so open access is limited per IP.
+  const keys = open
+    ? [digest(`${provider}:${ip}`).toString("hex")]
+    : [digest(`${provider}:credential:${supplied}`).toString("hex"), digest(`${provider}:${ip}:${supplied}`).toString("hex")];
   // Meta's guided reading uses short ASR chunks plus separate speech turns.
   // This remains a bounded per-process guard, not a distributed spending quota.
   const limit = provider === "meta" ? 90 : provider === "openai" ? 30 : 12;

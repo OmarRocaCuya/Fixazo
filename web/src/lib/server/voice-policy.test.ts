@@ -38,6 +38,19 @@ describe("cloud voice policy", () => {
   it("rejects an incorrect secret without reflecting it", () => {
     expect(authorizeVoiceRequest(request({ "X-Voice-Access-Code": "wrong" }), "deepgram")).toEqual({ ok: false, status: 401, error: "voice-access-required" });
   });
+  it("lets the self-hosted Meta backend run without any access code, still per-IP rate limited", () => {
+    vi.stubEnv("INDIGENOUS_BACKEND_URL", "https://meta.example");
+    vi.stubEnv("INDIGENOUS_BACKEND_TOKEN", "backend-token-with-at-least-32-characters");
+    vi.stubEnv("VOICE_ACCESS_CODE", "");
+    expect(getVoicePolicyStatus("meta").enabled).toBe(true);
+    expect(getVoicePolicyStatus("openai").reason).toBe("access-not-configured");
+    const anon = (ip: string) => request({ "X-Voice-Access-Code": "", "X-Forwarded-For": ip });
+    expect(authorizeVoiceRequest(anon("203.0.113.9"), "meta").ok).toBe(true);
+    for (let i = 1; i < 90; i++) authorizeVoiceRequest(anon("203.0.113.9"), "meta");
+    expect(authorizeVoiceRequest(anon("203.0.113.9"), "meta")).toMatchObject({ ok: false, status: 429 });
+    // Another visitor is not starved by the first one.
+    expect(authorizeVoiceRequest(anon("198.51.100.4"), "meta").ok).toBe(true);
+  });
   it("gates child pilots and separately requires OpenAI ZDR confirmation", () => {
     vi.stubEnv("VOICE_CLOUD_MODE", "approved-pilot");
     expect(getVoicePolicyStatus("deepgram").reason).toBe("privacy-approval-required");

@@ -1,7 +1,6 @@
 "use client";
 // ADULT VIEW ONLY. Experimental emotion estimate from the VOICE (no consent gate).
 // Never rendered in the child zone and never spoken by the agent.
-import { useState } from "react";
 import type { Mood, TurnState } from "@/lib/types";
 import { SOURCE_LABEL, type AffectEstimate } from "@/lib/signals/affect";
 import { moodLabel } from "@/components/ui";
@@ -29,7 +28,7 @@ export interface AffectPanelState {
 }
 
 export interface AffectPanelActions {
-  authorizeEmotionBackend(accessCode: string): void;
+  authorizeEmotionBackend(enabled: boolean): void;
   analyzeTestAudio(file: Blob): Promise<void>;
   refreshEmotionStatus(): Promise<void>;
 }
@@ -49,7 +48,6 @@ function EstimateLine({ e }: { e: AffectEstimate }) {
 }
 
 export function ExperimentalAffectCards({ state, actions, moodStart }: { state: AffectPanelState; actions: AffectPanelActions; moodStart: Mood | null }) {
-  const [code, setCode] = useState("");
   return (
     <section className="card tight stack-sm" aria-label="Estimación experimental de emociones" style={{ borderStyle: "dashed" }}>
       <div className="row" style={{ gap: 8 }}>
@@ -80,23 +78,20 @@ export function ExperimentalAffectCards({ state, actions, moodStart }: { state: 
       {state.emotionBackendAuthorized ? (
         <div className="stack-sm">
           <p className="small muted">Envío de voz a emotion2vec+ activo para esta sesión. Esto no confirma que el modelo esté listo.</p>
-          <button type="button" className="btn subtle" onClick={() => actions.authorizeEmotionBackend("")}>Dejar de enviar voz</button>
+          <button type="button" className="btn subtle" onClick={() => actions.authorizeEmotionBackend(false)}>Dejar de enviar voz</button>
         </div>
       ) : (
         <form
           className="stack-sm"
           onSubmit={(e) => {
             e.preventDefault();
-            actions.authorizeEmotionBackend(code);
-            setCode("");
+            actions.authorizeEmotionBackend(true);
           }}
         >
           <span className="small">
-            Solo emotion2vec+ analiza emociones desde el audio, nunca desde el texto. Sin código de acceso o sin modelo no se estima una emoción. Con el código, hasta 15 segundos de voz de cada respuesta se envían al servidor privado, sin guardarlos.
+            Solo emotion2vec+ analiza emociones desde el audio, nunca desde el texto. Sin modelo no se estima una emoción. Al activarlo, hasta 15 segundos de voz de cada respuesta se envían al servidor privado, sin guardarlos.
           </span>
-          <label className="small" htmlFor="emo-code">Código de acceso de voz</label>
-          <input id="emo-code" className="input" type="password" autoComplete="off" value={code} onChange={(e) => setCode(e.target.value)} />
-          <button type="submit" className="btn subtle" disabled={!code.trim() || !state.emotionStatus?.enabled || state.emotionStatusLoading}>
+          <button type="submit" className="btn subtle" disabled={!state.emotionStatus?.enabled || state.emotionStatusLoading}>
             Usar emotion2vec+
           </button>
         </form>
