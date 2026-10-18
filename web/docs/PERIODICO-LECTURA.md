@@ -2,21 +2,60 @@
 
 ## Uso
 
-`/noticia/[id]` abre una lectura completa, no un generador de ejercicios.
-El formato se adapta al género detectado: crónica/línea de tiempo,
-opinión/pancarta, informativa/pirámide, datos/cifras, entrevista/diálogo
-y comparada/dos fuentes. Los párrafos originales siguen disponibles;
-los extractos y ayudas no los reemplazan.
+`/noticia/[id]` abre el texto original en una columna, con sus titulares y
+fuentes. El artículo permanece visible y la metodología pedagógica aparece
+debajo, sin cambiar entre vistas excluyentes. No muestra glosario, ficha 5W
+ni insights antes de solicitarlos, aunque ya exista avance de comprensión.
 
-- **Lectura**: presentación enriquecida, entidades, ficha 5W y visuales
-  cuando hay evidencia en el texto. El glosario puede estar vacío.
-- **Texto original**: conserva los fragmentos y su atribución.
-- **Comprensión**: reutiliza `NoticiaFlow`, sus preguntas y su avance local.
-  Cambiar de vista no crea respuestas ni modifica resultados.
-- **Escuchar**: usa síntesis de voz del navegador, solo al activarla.
-  El resaltado sigue eventos de palabras reales; no simula tiempos.
-  La disponibilidad de voz y sincronización depende del navegador.
-  No utiliza el micrófono.
+- **Lectura**: texto fiel, siempre presente, sin anotaciones ni reorganización.
+- **Metodología de lectura**: debajo del artículo, reutiliza `NoticiaFlow`,
+  sus preguntas y su avance local. No duplica la cabecera de la noticia.
+- **Volver al texto**: enfoca y desplaza al titular del artículo original,
+  pausando la metodología hasta pulsar **Retomar metodología**. No abre ayudas.
+  También se ofrece tras una elección incorrecta o una explicación evaluada
+  aún no lograda; no ante una predicción ni un fallo del evaluador.
+- **Insights de esta lectura**: pestaña elevada en una franja con espacio
+  propio tras el artículo. No se fija encima del texto, tampoco en móvil.
+  Abre una sección no modal entre el original y la metodología, sin fondo
+  oscuro, bloqueo de scroll, columna lateral ni superposición. Sólo contiene
+  ayudas: momentos clave para crónica, tesis y argumentos para opinión,
+  pistas de jerarquía para informativa, cifras para datos, citas de voces
+  para entrevista y puntos para contrastar en una comparada. No vuelve a
+  imprimir los bloques ni los titulares de la noticia.
+- **Ayudas breves y verificables**: cada cita muestra un extracto literal de
+  como máximo 220 caracteres, incluido el signo de recorte; los insights por
+  género limitan sus entradas (tres momentos, argumentos, voces o puntos;
+  cuatro cifras destacadas). Las 5W, el glosario, las entidades y los visuales
+  son complementos; la ausencia de datos se indica, no se inventa. En una
+  comparada, una entidad compartida se amplía a un pasaje contextual literal
+  de cada fuente, no se presenta el nombre repetido como contraste. Si faltan
+  dos pasajes informativos o el texto es idéntico, aparece el fallback.
+- **Ver en el texto**: las referencias llevan a anclas únicas de la cabecera
+  o del fragmento en el artículo original. Cierran los apoyos y pausan la
+  metodología para releer; no guardan una segunda copia del artículo.
+- **Cerrar insights** o Escape dentro de las ayudas cierran la sección y
+  devuelven el foco a la pestaña, sin encerrar el foco ni bloquear la lectura.
+  Si no hay apoyos, el mensaje aparece sólo después de pedirlos.
+- **Escuchar**: control opcional junto al artículo original; usa síntesis de
+  voz del navegador sólo al activarlo, no el micrófono. Pausa la metodología
+  para evitar que la narración coincida con la captura de voz. En español,
+  el resaltado sigue límites reales de palabras; no simula tiempos. Las citas
+  y la voz de esta función conservan el original en español. La disponibilidad
+  de voz y sincronización depende del navegador.
+
+Abrir insights o volver al artículo desmonta la metodología: no deja un
+micrófono ni una petición de evaluación activos en contenido oculto.
+Abrir insights también detiene una narración anterior; cerrarlos nunca la
+reinicia. Al cerrar se retoma la metodología si no estaba pausada por una
+relectura o por la escucha original.
+
+Las elecciones conservan su
+avance local; el borrador y los intentos evaluados de la explicación se
+conservan sólo en memoria mientras esa noticia siga abierta. No se guardan
+nuevos textos sensibles en localStorage. Cambiar de noticia o recargar
+restablece la primera lectura simple y descarta ese borrador en memoria.
+La sección «Cómo se preparó esta lectura» describe la procedencia de las
+ayudas; no sustituye la metodología pedagógica que acompaña las preguntas.
 
 ## Servicio opcional
 
@@ -59,7 +98,8 @@ Turbopack y de los traces a la raíz de este repositorio.
 
 ## Límite de rollback
 
-La integración no modifica `NoticiaFlow`. Para retirarla, restaurar la
+`NoticiaFlow` acepta callbacks opcionales de relectura y un snapshot de
+explicación en memoria; sin ellos mantiene el flujo independiente. Para retirar la integración, restaurar la
 página de noticia y la configuración Next/alias anteriores, y retirar
 los nuevos componentes `Lectura*`, helpers de lectura y esta documentación.
 El microservicio puede seguir usándose de forma independiente.
@@ -71,7 +111,7 @@ reescribe esas extensiones a `.js` al compilar el servicio para Node ESM
 (`rewriteRelativeImportExtensions`). El web usa `allowImportingTsExtensions`
 con `noEmit`. Así el mismo código funciona con Turbopack y como microservicio.
 
-## Estado de verificación — 18 de octubre de 2026
+## Verificación de la integración previa — 18 de octubre de 2026
 
 - Web: **679/679 pruebas**, 43 suites (baseline 637; 30 nuevas de integración
   y 12 de UI), TypeScript, ESLint y `git diff --check` correctos.

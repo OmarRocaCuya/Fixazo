@@ -11,6 +11,8 @@ export interface ReadingPcmCaptureOptions {
   onChunk: (audio: Blob, timing: ReadingPcmChunk) => void;
   onLimit: () => void;
   onError: (code: string) => void;
+  /** Normalized RMS from this capture, never a second microphone stream. */
+  onLevel?: (level: number) => void;
 }
 
 interface CaptureSession {
@@ -69,12 +71,19 @@ export class ReadingPcmCapture {
       session.maxSamples = Math.floor(session.rate * this.maxSeconds);
       session.buffer = new Float32Array(Math.max(1, Math.round(session.rate * Math.min(this.chunkSeconds, this.maxSeconds))));
       session.source = context.createMediaStreamSource(stream);
-      session.processor = context.createScriptProcessor(4096, 1, 1);
+      // 64 ms at 16 kHz: live companion reacts while speaking, not after an ASR chunk.
+      session.processor = context.createScriptProcessor(1024, 1, 1);
       session.processor.onaudioprocess = (event) => {
         if (this.session !== session) return;
         try {
           event.outputBuffer.getChannelData(0).fill(0);
-          this.accept(session, event.inputBuffer.getChannelData(0));
+          const input = event.inputBuffer.getChannelData(0);
+          if (this.options.onLevel) {
+            let sum = 0;
+            for (const value of input) sum += value * value;
+            this.options.onLevel(Math.min(1, Math.sqrt(sum / Math.max(1, input.length)) * 8));
+          }
+          this.accept(session, input);
         } catch { this.fail(session, "audio-capture"); }
       };
       session.source.connect(session.processor);

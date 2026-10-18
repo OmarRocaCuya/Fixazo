@@ -1,4 +1,6 @@
 "use client";
+import { TranslatedText } from "@/components/i18n/LanguageProvider";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +10,10 @@ import { getStore, type ChatMessage } from "@/lib/storage";
 import { SAMPLE_ES, SAMPLE_QU } from "@/lib/mission/samples";
 import { Icon } from "@/components/ui";
 import { MissionSheet } from "@/components/MissionSheet";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
+import { QuizMicrophone } from "@/lib/browser/quiz-microphone";
+import { estimarEmocionRespuesta } from "@/lib/browser/quiz-emotion";
+import { publishCompanionEmotion } from "@/lib/browser/voice-companion";
 
 const CHIP_SAMPLE_ES = "Misión de ejemplo en castellano";
 const CHIP_SAMPLE_QU = "Misión de ejemplo en quechua";
@@ -50,6 +56,7 @@ export default function ChatPage() {
 }
 
 function Chat() {
+  const { language, t } = useLanguage();
   const router = useRouter();
   const store = useStore();
   const profile = store?.loadProfile() ?? null;
@@ -64,12 +71,21 @@ function Chat() {
   const [busy, setBusy] = useState<string | null>(null);
   const [llm, setLlm] = useState(false);
   const [sheet, setSheet] = useState<Mission | null>(null);
-  const [entiendo, setEntiendo] = useState(false);
+  const [transformacionesAbiertas, setTransformacionesAbiertas] = useState(false);
   const [dictating, setDictating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const draftRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const recRef = useRef<{ stop: () => void } | null>(null);
+  const microphone = useRef<QuizMicrophone | null>(null);
+  const emotionRequest = useRef<AbortController | null>(null);
+  useEffect(() => {
+    const stop = () => { microphone.current?.pause(); emotionRequest.current?.abort(); publishCompanionEmotion(null); };
+    const hide = () => { if (document.hidden) stop(); };
+    window.addEventListener("fixazo:language-changing", stop);
+    document.addEventListener("visibilitychange", hide);
+    return () => { stop(); microphone.current?.dispose(); window.removeEventListener("fixazo:language-changing", stop); document.removeEventListener("visibilitychange", hide); };
+  }, []);
 
   useEffect(() => {
     fetch("/api/mission")
@@ -205,25 +221,24 @@ function Chat() {
   }
 
   function toggleDictation() {
-    type Rec = { lang: string; interimResults: boolean; onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void; onend: () => void; start: () => void; stop: () => void };
-    const w = window as unknown as { webkitSpeechRecognition?: new () => Rec; SpeechRecognition?: new () => Rec };
-    const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
-    if (!Ctor) return;
     if (dictating) {
       recRef.current?.stop();
       return;
     }
-    const rec = new Ctor();
-    rec.lang = "es-PE";
-    rec.interimResults = false;
-    rec.onresult = (e) => {
-      const t = Array.from(e.results).map((r) => r[0].transcript).join(" ");
-      setDraft((d) => `${d} ${t}`.trim());
-    };
-    rec.onend = () => setDictating(false);
-    recRef.current = rec;
-    setDictating(true);
-    rec.start();
+    if (!microphone.current) microphone.current = new QuizMicrophone({
+      onState: (state) => setDictating(state.status === "starting" || state.status === "listening"),
+      onTranscript: (event) => setDraft((previous) => `${previous} ${event.text}`.trim()),
+      onAnswerAudio: (event) => {
+        emotionRequest.current?.abort();
+        const request = new AbortController(); emotionRequest.current = request;
+        void estimarEmocionRespuesta(event.audio, undefined, request.signal).then((estimate) => {
+          if (request.signal.aborted || emotionRequest.current !== request) return;
+          publishCompanionEmotion(estimate.source === "voz-emotion2vec" ? estimate.label : null);
+        });
+      },
+    });
+    recRef.current = { stop: () => microphone.current?.pause() };
+    void microphone.current.start({ accessCode: "", audience: "adult-demo" }, "chat-dictation", { es: "spa_Latn", quy: "quy_Latn", ayr: "ayr_Latn" }[language] as "spa_Latn" | "quy_Latn" | "ayr_Latn");
   }
 
   const lastAsstIdx = messages.map((m) => m.who).lastIndexOf("asistente");
@@ -232,23 +247,21 @@ function Chat() {
     <div className="chat-layout">
       <section className="chat-col" aria-label="Conversación">
         <div className="spread">
-          <h1>Chat con Fixazo</h1>
-          <button type="button" className="chip" onClick={() => setEntiendo((v) => !v)} aria-expanded={entiendo}>
-            <Icon name="book" /> Entiendo
-          </button>
+          <h1><TranslatedText text="Chat con Fixazo" /></h1>
+          <button type="button" className="chip" onClick={() => setTransformacionesAbiertas((v) => !v)} aria-expanded={transformacionesAbiertas} aria-controls="transformaciones-cta">
+            <Icon name="book" /> <TranslatedText text="Transformaciones" /></button>
         </div>
 
         <div className="thread" aria-live="polite">
-          <p className="small muted">Puedes empezar sin crear un perfil. El micrófono se activa solo cuando lo eliges dentro de la sesión.</p>
+          <p className="small muted"><TranslatedText text="Puedes empezar sin crear un perfil. El micrófono se activa solo cuando lo eliges dentro de la sesión." /></p>
           {paused && (
             <div className="card warn tight spread">
-              <span>Tienes una misión en pausa. Puedes retomarla dentro de 24 horas.</span>
+              <span><TranslatedText text="Tienes una misión en pausa. Puedes retomarla dentro de 24 horas." /></span>
               <Link className="btn" href="/sesion">
-                Retomar
-              </Link>
+                <TranslatedText text="Retomar" /></Link>
             </div>
           )}
-          {reminder && <p className="small muted">Recordatorio guardado: {new Date(reminder).toLocaleString("es-PE", { hour: "numeric", minute: "2-digit", day: "numeric", month: "short" })}</p>}
+          {reminder && <p className="small muted"><TranslatedText text="Recordatorio guardado:" />{" "}{new Date(reminder).toLocaleString("es-PE", { hour: "numeric", minute: "2-digit", day: "numeric", month: "short" })}</p>}
           {messages.map((m, i) => (
             <div key={m.id} className={`bubble ${m.who === "asistente" ? "asst" : "fam"}`}>
               <span className="who">{m.who === "asistente" ? "Fixazo" : "Tú"}</span>
@@ -289,8 +302,7 @@ function Chat() {
         >
           <div className="composer-box">
             <label htmlFor="composer" className="sr-only">
-              Mensaje
-            </label>
+              <TranslatedText text="Mensaje" /></label>
             <textarea
               id="composer"
               ref={draftRef}
@@ -309,8 +321,7 @@ function Chat() {
               <Icon name="mic" />
             </button>
             <button type="submit" className="btn" disabled={!draft.trim() || !!busy}>
-              Enviar
-            </button>
+              <TranslatedText text="Enviar" /></button>
           </div>
           <div className="chips">
             <button
@@ -320,17 +331,14 @@ function Chat() {
               title={llm ? "Subir una foto de la tarea" : "Para leer fotos se necesita ANTHROPIC_API_KEY"}
               onClick={() => fileRef.current?.click()}
             >
-              <Icon name="photo" /> Foto {llm ? "" : "(requiere clave de IA)"}
+              <Icon name="photo" /> <TranslatedText text="Foto" />{" "}{llm ? "" : "(requiere clave de IA)"}
             </button>
             <button type="button" className="chip" disabled title="Próximamente">
-              PDF (próximamente)
-            </button>
+              <TranslatedText text="PDF (próximamente)" /></button>
             <button type="button" className="chip" disabled={!!busy} onClick={() => onChip(CHIP_SAMPLE_ES, messages[0])}>
-              Ejemplo en castellano
-            </button>
+              <TranslatedText text="Ejemplo en castellano" /></button>
             <button type="button" className="chip" disabled={!!busy} onClick={() => onChip(CHIP_SAMPLE_QU, messages[0])}>
-              Ejemplo en quechua
-            </button>
+              <TranslatedText text="Ejemplo en quechua" /></button>
             <input
               ref={fileRef}
               type="file"
@@ -347,24 +355,11 @@ function Chat() {
         </form>
       </section>
 
-      <aside className={`entiendo-panel card stack${entiendo ? " open" : ""}`} aria-label="Traer de Entiendo">
-        <h2>Traer de Entiendo</h2>
-        <p className="small muted">Usa un material de tu espacio en Entiendo para armar la misión. La integración todavía no está conectada.</p>
-        {[
-          { type: "Super Podcast", title: "El ciclo del agua", use: "Escuchar y explicar" },
-          { type: "Debate", title: "¿Ir solo o acompañado?", use: "Fuente de la contraprueba" },
-          { type: "Examen con retroalimentación", title: "Comprensión: Rosa y el puquio", use: "Preguntas orales" },
-        ].map((c) => (
-          <div key={c.title} className="entiendo-card">
-            <span className="tag blue">{c.type}</span>
-            <strong>{c.title}</strong>
-            <span className="small muted">Uso sugerido: {c.use}</span>
-          </div>
-        ))}
-        <button type="button" className="btn ghost" disabled>
-          Conectar Entiendo
-        </button>
-        <p className="small muted">Mientras tanto, pega el texto o sube el mismo material como foto.</p>
+      <aside id="transformaciones-cta" className={`entiendo-panel card stack${transformacionesAbiertas ? " open" : ""}`} aria-label={t("Transformaciones")}>
+        <h2><TranslatedText text="Transformaciones" /></h2>
+        <p className="small muted"><TranslatedText text="Trabaja con tu propio texto fuera del chat. Crea un mapa de aprendizaje y consulta sus evidencias." /></p>
+        <Link className="btn" href="/transformaciones"><TranslatedText text="Abrir Transformaciones" /></Link>
+        <p className="small muted"><TranslatedText text="No importa materiales ni se conecta con cuentas de otras plataformas." /></p>
       </aside>
 
       {sheet && <MissionSheet mission={sheet} onClose={() => setSheet(null)} />}

@@ -2,6 +2,7 @@
 // Nueva / En curso / Hecha según el progreso guardado en este navegador.
 import { useSyncExternalStore } from "react";
 import { leerResultados, suscribirProgreso } from "@/lib/periodico/progreso";
+import { TranslatedText } from "@/components/i18n/LanguageProvider";
 
 type Estado = "nueva" | "en-curso" | "hecha";
 const TEXTO: Record<Estado, string> = { nueva: "Nueva", "en-curso": "En curso", hecha: "Hecha ✓" };
@@ -15,5 +16,5 @@ export default function EstadoNoticia({ id }: { id: string }) {
     },
     () => "nueva",
   );
-  return <span className={`pd-chip ${estado === "hecha" ? "hecha" : "nueva"}`}>{TEXTO[estado]}</span>;
+  return <span className={`pd-chip ${estado === "hecha" ? "hecha" : "nueva"}`}><TranslatedText text={TEXTO[estado]} /></span>;
 }

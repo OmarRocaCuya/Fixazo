@@ -3,6 +3,7 @@ import { createStore, memoryStorage, PAUSED_TTL_MS, type PausedSession } from ".
 import { SAMPLE_ES } from "./mission/samples";
 import { initialContext } from "./session/machine";
 import type { Report } from "./types";
+import { createStudyDocument, emptyStudyWorkspace } from "./aprendizaje/model";
 
 function fakeReport(over: Record<string, unknown> = {}): Report {
   return {
@@ -87,6 +88,69 @@ describe("local persistence", () => {
     const data = JSON.parse(s.exportAll());
     expect(data.profile.alias).toBe("Yeni");
     expect(data.reports).toEqual([]);
+  });
+});
+
+describe("study workspace privacy integration", () => {
+  const document = createStudyDocument({ title: "Mi lectura", text: "Una lectura completa que se conserva fuera del chat." }, 100);
+  const workspace = { version: 1 as const, documents: [document], activeDocumentId: document.id };
+
+  it("persists sources across store instances and includes them in owner export", () => {
+    const mem = memoryStorage();
+    const store = createStore(mem);
+    expect(store.saveStudyWorkspace(workspace)).toBe(true);
+    expect(createStore(mem).loadStudyWorkspace()).toEqual(workspace);
+    expect(JSON.parse(store.exportAll()).studyWorkspace).toEqual(workspace);
+    expect(mem.getItem("nw.studyWorkspace")).not.toContain('"cards"');
+  });
+
+  it("clear and global delete physically remove the known workspace key without touching other apps", () => {
+    const mem = memoryStorage();
+    const store = createStore(mem);
+    mem.setItem("other.app", "keep");
+    store.saveStudyWorkspace(workspace);
+    store.clearStudyWorkspace();
+    expect(mem.getItem("nw.studyWorkspace")).toBeNull();
+    store.saveStudyWorkspace(workspace);
+    store.deleteAllData();
+    expect(mem.getItem("nw.studyWorkspace")).toBeNull();
+    expect(store.loadStudyWorkspace()).toEqual(emptyStudyWorkspace());
+    expect(mem.getItem("other.app")).toBe("keep");
+  });
+
+  it("fails closed on malformed/corrupted/version-mismatched data", () => {
+    const mem = memoryStorage();
+    const store = createStore(mem);
+    for (const raw of ["{invalid", JSON.stringify({ ...workspace, version: 2 }), JSON.stringify({ ...workspace, activeDocumentId: "missing" }), "x".repeat(6_100_001)]) {
+      mem.setItem("nw.studyWorkspace", raw);
+      expect(store.loadStudyWorkspace()).toEqual(emptyStudyWorkspace());
+    }
+    expect(store.saveStudyWorkspace({ ...workspace, version: 2 } as unknown as typeof workspace)).toBe(false);
+  });
+
+  it("reports non-persistence on quota failure but keeps the current tab usable", () => {
+    const primary = memoryStorage();
+    primary.setItem = () => { throw new Error("quota"); };
+    const store = createStore(primary);
+    expect(store.saveStudyWorkspace(workspace)).toBe(false);
+    expect(store.loadStudyWorkspace()).toEqual(workspace);
+    store.deleteAllData();
+    expect(store.loadStudyWorkspace()).toEqual(emptyStudyWorkspace());
+    const unavailable = createStore(null);
+    expect(unavailable.saveStudyWorkspace(workspace)).toBe(false);
+    expect(unavailable.loadStudyWorkspace()).toEqual(workspace);
+  });
+
+  it("removes an older primary source after a quota failure switched the store to memory", () => {
+    const primary = memoryStorage();
+    const store = createStore(primary);
+    expect(store.saveStudyWorkspace(workspace)).toBe(true);
+    primary.setItem = () => { throw new Error("quota"); };
+    expect(store.saveStudyWorkspace(workspace)).toBe(false);
+    expect(primary.getItem("nw.studyWorkspace")).not.toBeNull();
+    store.deleteAllData();
+    expect(primary.getItem("nw.studyWorkspace")).toBeNull();
+    expect(store.loadStudyWorkspace()).toEqual(emptyStudyWorkspace());
   });
 });
 

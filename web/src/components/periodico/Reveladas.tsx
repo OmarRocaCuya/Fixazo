@@ -1,4 +1,6 @@
 "use client";
+import { TranslatedText } from "@/components/i18n/LanguageProvider";
+
 // Noticias reservadas para la demo: las generó el mismo pipeline de antemano y aparecen en la portada
 // cuando se aprieta "Buscar una noticia nueva" en /generar. Lo revelado se guarda en este navegador.
 import Link from "next/link";
@@ -98,32 +100,32 @@ export default function Reveladas({ reservadas }: { reservadas: Reservada[] }) {
     <section className="pd-reveladas" aria-label="Recién encontradas">
       {pendientes.length > 0 && (
         <div className="pd-buscar">
-          <button type="button" className="btn primary" disabled={paso !== null} onClick={() => void buscar()}>Buscar una noticia nueva</button>
+          <button type="button" className="btn primary" disabled={paso !== null} onClick={() => void buscar()}><TranslatedText text="Buscar una noticia nueva" /></button>
           {paso !== null && (
             <div className="pd-progreso" role="status" aria-live="polite">
               <div className="pd-progreso-pista"><div className="pd-progreso-barra" style={{ width: `${((paso + 1) / PASOS.length) * 100}%` }} /></div>
-              <span>{PASOS[paso]}…</span>
+              <span><TranslatedText text={PASOS[paso]} />…</span>
             </div>
           )}
         </div>
       )}
       {visibles.map((n) => (
         <Link key={n.id} id={`n-${n.id}`} className="pd-card pd-principal pd-nueva" href={`/noticia/${n.id}`}>
-          <div className="eyebrow">{n.seccion} · recién encontrada</div>
-          <h2>{n.titular}</h2>
-          <p className="pd-bajada">{n.bajada}</p>
+          <div className="eyebrow"><TranslatedText text={n.seccion} /> <TranslatedText text="· recién encontrada" /></div>
+          <h2><TranslatedText text={n.titular} /></h2>
+          <p className="pd-bajada"><TranslatedText text={n.bajada} /></p>
           {n.miradas.length > 0 && (
             <div className="pd-miradas" aria-label="Cómo lo cuenta cada medio o voz">
               {n.miradas.map((x, k) => (
                 <div key={k} className={`pd-mirada ${k ? "b" : "a"}`}>
                   <div className="pd-mirada-medio">{x.medio}</div>
-                  {x.texto ? <div className="pd-mirada-cita">«{x.texto}»</div> : <div className="pd-mirada-cita sin-cita">Otra voz en la misma nota</div>}
+                  {x.texto ? <div className="pd-mirada-cita">«<TranslatedText text={x.texto} />»</div> : <div className="pd-mirada-cita sin-cita"><TranslatedText text="Otra voz en la misma nota" /></div>}
                 </div>
               ))}
             </div>
           )}
-          <div className="pd-meta"><span className="pd-chip nueva">Nueva</span><span>{n.minutos} min</span></div>
-          <span className="pd-leer">Leer y responder</span>
+          <div className="pd-meta"><span className="pd-chip nueva"><TranslatedText text="Nueva" /></span><span>{n.minutos} <TranslatedText text="min" /></span></div>
+          <span className="pd-leer"><TranslatedText text="Leer y responder" /></span>
         </Link>
       ))}
     </section>

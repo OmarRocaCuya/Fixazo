@@ -4,6 +4,7 @@ import type { Mission, Profile, Report } from "./types";
 import { assertReportIsClean } from "./guardrails";
 import { z } from "zod";
 import { cleanTranscriptionProvenance } from "./transcription";
+import { emptyStudyWorkspace, parseStudyWorkspace, type StudyWorkspace } from "./aprendizaje/model";
 
 const PREFIX = "nw.";
 const K = {
@@ -14,6 +15,7 @@ const K = {
   chat: `${PREFIX}chat`,
   reminder: `${PREFIX}reminder`,
   paused: `${PREFIX}pausedSession`,
+  studyWorkspace: `${PREFIX}studyWorkspace`,
 };
 
 export function memoryStorage(): Storage {
@@ -117,7 +119,9 @@ export function createStore(primary?: Storage | null) {
   }
   function remove(key: string) {
     try {
-      backend().removeItem(key);
+      // A quota/read failure may switch to memory while an older primary record still exists.
+      // Privacy deletion must attempt both stores, not just the currently selected backend.
+      primary?.removeItem(key);
     } catch {
       /* ignore */
     }
@@ -141,6 +145,14 @@ export function createStore(primary?: Storage | null) {
     if (!paused) remove(K.paused);
     else set(K.paused, paused); // Also scrub older payloads on first access.
     return paused;
+  }
+  function loadStudyWorkspace(): StudyWorkspace {
+    const raw = getRaw(K.studyWorkspace);
+    if (raw === null) return emptyStudyWorkspace();
+    // Reject oversized/corrupt payloads before parsing; no partial or stale analysis survives.
+    if (raw.length > 6_100_000) return emptyStudyWorkspace();
+    try { return parseStudyWorkspace(JSON.parse(raw)) ?? emptyStudyWorkspace(); }
+    catch { return emptyStudyWorkspace(); }
   }
 
   return {
@@ -201,6 +213,15 @@ export function createStore(primary?: Storage | null) {
       else remove(K.paused);
     },
 
+    loadStudyWorkspace,
+    saveStudyWorkspace(workspace: StudyWorkspace): boolean {
+      const clean = parseStudyWorkspace(workspace);
+      if (!clean) return false;
+      set(K.studyWorkspace, clean);
+      return !useFallback; // Existing memory fallback keeps the workspace usable without promising persistence.
+    },
+    clearStudyWorkspace: () => remove(K.studyWorkspace),
+
     exportAll(): string {
       return JSON.stringify(
         {
@@ -211,6 +232,7 @@ export function createStore(primary?: Storage | null) {
           chat: get(K.chat, []),
           reminder: get(K.reminder, null),
           paused: loadPaused(),
+          studyWorkspace: loadStudyWorkspace(),
         },
         null,
         2,

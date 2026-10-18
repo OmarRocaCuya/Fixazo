@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { LanguageProvider } from "@/components/i18n/LanguageProvider";
+import VoiceMascot from "@/components/periodico/VoiceMascot";
 
 const display = localFont({
   src: "./fonts/bricolage-grotesque-latin-variable.woff2",
@@ -40,7 +42,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body><LanguageProvider>{children}<VoiceMascot /></LanguageProvider></body>
     </html>
   );
 }

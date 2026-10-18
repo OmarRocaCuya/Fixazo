@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { QuizMicrophone, type QuizMicrophoneState } from "./quiz-microphone";
 import { MetaReadingClient, READING_LANGUAGES, ReadingClientError } from "./meta-reading-client";
 import type { ReadingPcmCaptureOptions } from "./reading-pcm-capture";
+import { companionExpression, getCompanionSnapshot, resetVoiceCompanion } from "./voice-companion";
 
 const ACCESS = { accessCode: "private-test-code-only", audience: "adult-demo" } as const;
 function setup(startCapture: () => Promise<boolean> = () => Promise.resolve(true)) {
@@ -21,9 +22,37 @@ function setup(startCapture: () => Promise<boolean> = () => Promise.resolve(true
 }
 const tick = async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); };
 beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date("2026-01-01T00:00:00Z")); });
-afterEach(() => { vi.clearAllTimers(); vi.useRealTimers(); });
+afterEach(() => { resetVoiceCompanion(); vi.clearAllTimers(); vi.useRealTimers(); });
 
 describe("foreground quiz microphone", () => {
+  it("reacts to live PCM before the first ASR chunk and ignores late/hidden audio levels", async () => {
+    const s = setup();
+    expect(await s.controller.start(ACCESS, "one")).toBe(true);
+    expect(getCompanionSnapshot().active).toBe(true);
+    s.segments[0].options.onLevel?.(0.7);
+    expect(getCompanionSnapshot().level).toBe(0.7);
+    expect(companionExpression(getCompanionSnapshot())).toBe("listening");
+    expect(s.client.transcribe).not.toHaveBeenCalled();
+    expect(getCompanionSnapshot().emotion).toBeNull();
+    s.hide(); s.segments[0].options.onLevel?.(0.9);
+    expect(getCompanionSnapshot().level).toBe(0.7);
+    s.controller.pause(); s.segments[0].options.onLevel?.(1);
+    expect(getCompanionSnapshot()).toMatchObject({ active: false, level: 0 });
+    s.controller.dispose();
+  });
+  it.each(["quy_Latn", "ayr_Latn"] as const)("transcribes in the selected %s language and drops cancelled-language results", async (language) => {
+    const s = setup();
+    let resolve!: (result: { text: string }) => void;
+    s.client.transcribe.mockImplementationOnce(() => new Promise((done) => { resolve = done; }));
+    await s.controller.start(ACCESS, "one", language);
+    s.chunk();
+    expect(s.client.transcribe).toHaveBeenCalledWith(expect.any(Blob), language);
+    s.controller.pause();
+    resolve({ text: "late old-language answer" }); await tick();
+    expect(s.onTranscript).not.toHaveBeenCalled();
+    expect(s.segments[0].abort).toHaveBeenCalledOnce();
+    s.controller.dispose();
+  });
   it("uses the authenticated real reading endpoint's Spanish ASR contract without adding Spanish native TTS", async () => {
     const request = vi.fn(async () => new Response(JSON.stringify({ text: "opción dos", language: "spa_Latn", model: "omniASR_CTC_300M_v2", durationSeconds: 1,
       words: [{ word: "opción", start: 0, end: 0.3 }, { word: "dos", start: 0.4, end: 0.7 }], wordTimestamps: true, timingMethod: "ctc-greedy-frames", requiresHumanReview: true }), { headers: { "Content-Type": "application/json" } }));

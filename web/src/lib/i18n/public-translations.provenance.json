@@ -1,0 +1,1756 @@
+{
+  "version": 1,
+  "scope": "public static interface only",
+  "humanReviewed": false,
+  "researchOnly": true,
+  "notice": "Machine translations and AI-authored UI drafts; not certified, no claim of linguistic accuracy.",
+  "entries": {
+    "quy": {
+      "Traduciendo…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Falta traducir parte del texto. Se muestra el original.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Traducción experimental; pendiente de revisión por hablantes.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Reintentar traducción": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Idioma del texto y de la transcripción": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Periódico": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lectura por voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mis insights": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lenguas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lenguas (lab)": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Sesiones": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Progreso": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Voz (demo)": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Privacidad": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Abrir menú": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cerrar menú": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Navegación de la familia": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Secciones de Fixazo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Sin perfil": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Niño activo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "grado de primaria": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "· casa:": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "quechua": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "castellano": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Entiendo: integración pendiente": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu avance se guarda en este dispositivo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono durante el quiz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Audio durante el quiz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Comprobando transcripción de audio…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Transcripción no disponible. Puedes seguir con texto y opciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No se pudo comprobar la voz. Puedes seguir con texto y opciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Iniciar micrófono del quiz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Pausar micrófono": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cómo funciona el micrófono": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu transcripción": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Volver al periódico": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Escuchando": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Estimación de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Revisando tu respuesta": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Bien hecho": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Inténtalo de nuevo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La reacción sigue la validación de tu respuesta, no la emoción de tu voz.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu voz mueve al cóndor en tiempo real.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cóndor compañero": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Compañero de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mostrar compañero de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Minimizar compañero de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mostrar compañero": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Minimizar compañero": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El movimiento sigue el nivel del micrófono mientras grabas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Compañero de voz. El micrófono solo se activa cuando tú grabas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Reacción a una estimación experimental del audio, no a tus sentimientos ni a tus respuestas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Nueva": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "En curso": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Hecha ✓": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Leer y responder": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Más noticias": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Periódico para leer con criterio": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Leer la nota en": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Leer la nota completa": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Enlace de la fuente no disponible.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "min de lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "min": {
+        "origin": "preserved-unit-or-brand",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "preguntas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Metodología de lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Retomar metodología": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Insights de esta lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cerrar insights": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Comprensión": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Volver al texto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Texto original": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mostrar apoyos de lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cómo vas leyendo las noticias": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ir a la portada": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tus habilidades": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Noticias leídas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "De principio a fin": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Porqués bien explicados": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Respondiste con tu voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El resto, escribiendo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cambiaste de idea": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cambiar con una buena razón vale igual que mantener": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "de": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ninguna": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "porqué logrado": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "porqué para practicar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "sin evaluación de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Chat con Fixazo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Entiendo": {
+        "origin": "preserved-unit-or-brand",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mensaje": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Enviar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Foto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ejemplo en castellano": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ejemplo en quechua": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Escribe o pega aquí el texto de la lectura…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Dictar por voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Detener dictado": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tú": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Otra voz en la misma nota": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Buscar una noticia nueva": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu racha": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "día": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "días": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Fuente": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Edición": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Detener lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Escuchar lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Voz no disponible en este navegador. Puedes leer todo el texto.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No es una nota: muestra qué ya haces y qué practicar. Se guarda solo en este navegador.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Todavía no terminaste ninguna noticia. Cuando termines una, aquí vas a ver tus habilidades y cómo explicas con tu voz.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lo que no medimos: tu inteligencia ni cómo te comparas con otros. La emoción es una estimación experimental de la voz, nunca una nota.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Los apoyos conservan las citas y palabras de la fuente en español para no alterar sus referencias. Vuelve al texto para leer la traducción.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Practica con las preguntas y vuelve al texto cuando lo necesites. Tu avance se conserva en este navegador.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ayudas adaptadas al tipo de texto, con citas y enlaces a las fuentes.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La metodología está en pausa mientras consultas los insights.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La metodología está en pausa para que puedas releer el artículo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No hay apoyos disponibles para esta noticia. Puedes releer el texto original.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ayudas breves para esta lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ayudas adaptadas al texto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Solo insights y ayudas: el artículo permanece arriba, sin superposiciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Volver al artículo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No hay citas suficientes para este apoyo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Momentos clave": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ideas y argumentos": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lo esencial y su contexto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cifras destacadas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cifras en": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Voces de la entrevista": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Puntos para contrastar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Consulta el pasaje completo en el artículo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El género es una selección editorial; no es una clasificación definitiva.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El género es una propuesta automática; no es una clasificación definitiva.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Quechua chanka, aimara y castellano": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Más formas de practicar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cómo lo cuenta cada medio o voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cambiaste de idioma. Micrófono detenido; pulsa Iniciar para transcribir en la nueva lengua.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al finalizar la lectura.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al ocultar esta pantalla. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al salir de esta pantalla.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al salir de esta pantalla. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono pausado durante la evaluación o al terminar. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Preparando la nueva pregunta; se descarta el fragmento de audio anterior para no mezclar respuestas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Esperando permiso del micrófono…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite de 10 minutos. Pulsa Iniciar para una nueva práctica.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite de 10 minutos. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono activo durante el quiz. Puedes pausarlo cuando quieras.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite temporal del servidor. Micrófono detenido; espera unos minutos o continúa escribiendo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El modelo de voz está ocupado. Micrófono detenido; espera y pulsa Iniciar o continúa escribiendo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No se pudo transcribir. El micrófono se detuvo; puedes escribir o reintentar.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La transcripción está ocupada. Micrófono detenido para no acumular audio; puedes reintentar o escribir.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite de audio o saliste de la pantalla. Pulsa Iniciar para retomar.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No se pudo abrir el micrófono. Revisa el permiso del navegador o responde escribiendo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono no disponible. Puedes escribir o pulsar Iniciar para reintentar.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono pausado. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Actívalo una vez para responder por voz mientras esta pantalla está visible. Las opciones dictadas se preseleccionan: tú las confirmas. También puedes escribir o tocar las opciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El navegador pide el micrófono solo al pulsar Iniciar. El audio se envía al backend Meta del proyecto para transcribirlo, sin guardar la grabación. Con cada respuesta hablada se muestra una estimación experimental de emociones (emotion2vec+, desde el audio; si no hay modelo, no se estima). No se infieren identidad, acento ni salud.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Límite: 10 minutos por inicio. Se detiene al pausar, ocultar o salir de la pantalla, finalizar, perder el permiso o saturarse la transcripción. Para retomar, pulsa Iniciar; no se reactiva solo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Al cambiar de pregunta se descarta el segmento en curso para no mezclar respuestas. Espera a que termine «Preparando la nueva pregunta» antes de dictar otra opción.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Texto y voz, en tu idioma": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "revisionReason": "Replaced mixed-Spanish provider output with an unreviewed native-language UI draft."
+      },
+      "Elige una lengua: cambia el texto de la pantalla y el idioma que transcribe el micrófono.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "quy_Latn",
+        "retrievedAt": "2026-10-18T12:38:48.820003+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Se envía audio para transcribir y estimar emoción. No se guarda la grabación.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "quy_Latn",
+        "retrievedAt": "2026-10-18T12:38:59.585580+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Revisa la transcripción. La traducción asistida y la emoción de la mascota son experimentales; no son una evaluación.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "revisionReason": "Replaced mixed-Spanish provider output with an unreviewed native-language UI draft."
+      },
+      "Micrófono apagado. Puedes completar el quiz escribiendo o tocando las opciones.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "quy_Latn",
+        "retrievedAt": "2026-10-18T12:39:15.590046+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Meta ASR disponible. Envía segmentos de 8 segundos: las respuestas aparecen después de procesarlos, no instantáneamente.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "quy_Latn",
+        "retrievedAt": "2026-10-18T12:39:26.744550+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Idioma": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "revisionReason": "Localized the previously multilingual selector label."
+      },
+      "Transformaciones": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "status": "proposed-ui-label",
+        "draftNote": "Experimental AI-authored interface proposal, not validated by a speaker or credited as an established UI translation. The references support lexical usage only, not exact interface equivalence. The -kuna pluralization is inferred and unreviewed.",
+        "lexicalReferences": [
+          {
+            "url": "https://repositorio.minedu.gob.pe/handle/20.500.12799/7575",
+            "kind": "official-edition-catalogue",
+            "title": "Llaqtanchikpa kawsayninkuna - Chanka",
+            "verification": "Catalogue metadata confirms the edition only. The official PDF required Security Verification and was not inspected or bypassed; no lemma verification is claimed from that PDF."
+          },
+          {
+            "url": "https://mislibrostexto.com/pe/lenguas-originarias/comunicacion-sin-nivel-llaqtanchikpa-kawsayninkuna-chanka-saberes-de-los-pueblos/page/22",
+            "kind": "secondary-lexical-evidence",
+            "excerpt": "Papata chaki kawsaykunaman tikray",
+            "gloss": "tikray: convertir, transformar",
+            "limitation": "Supports the base lexical sense only; does not establish this plural form or a validated interface label."
+          }
+        ]
+      }
+    },
+    "ayr": {
+      "Traduciendo…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Falta traducir parte del texto. Se muestra el original.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Traducción experimental; pendiente de revisión por hablantes.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Reintentar traducción": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Idioma del texto y de la transcripción": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Periódico": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lectura por voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mis insights": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lenguas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lenguas (lab)": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Sesiones": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Progreso": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Voz (demo)": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Privacidad": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Abrir menú": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cerrar menú": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Navegación de la familia": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Secciones de Fixazo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Sin perfil": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Niño activo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "grado de primaria": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "· casa:": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "quechua": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "castellano": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Entiendo: integración pendiente": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu avance se guarda en este dispositivo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono durante el quiz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Audio durante el quiz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Comprobando transcripción de audio…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Transcripción no disponible. Puedes seguir con texto y opciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No se pudo comprobar la voz. Puedes seguir con texto y opciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Iniciar micrófono del quiz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Pausar micrófono": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cómo funciona el micrófono": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu transcripción": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Volver al periódico": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Escuchando": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Estimación de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Revisando tu respuesta": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Bien hecho": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Inténtalo de nuevo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La reacción sigue la validación de tu respuesta, no la emoción de tu voz.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu voz mueve al cóndor en tiempo real.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cóndor compañero": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Compañero de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mostrar compañero de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Minimizar compañero de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mostrar compañero": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Minimizar compañero": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El movimiento sigue el nivel del micrófono mientras grabas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Compañero de voz. El micrófono solo se activa cuando tú grabas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Reacción a una estimación experimental del audio, no a tus sentimientos ni a tus respuestas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Nueva": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "En curso": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Hecha ✓": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Leer y responder": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Más noticias": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Periódico para leer con criterio": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Leer la nota en": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Leer la nota completa": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Enlace de la fuente no disponible.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "min de lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "min": {
+        "origin": "preserved-unit-or-brand",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "preguntas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Metodología de lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Retomar metodología": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Insights de esta lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cerrar insights": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Comprensión": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Volver al texto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Texto original": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mostrar apoyos de lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cómo vas leyendo las noticias": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ir a la portada": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tus habilidades": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Noticias leídas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "De principio a fin": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Porqués bien explicados": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Respondiste con tu voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El resto, escribiendo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cambiaste de idea": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cambiar con una buena razón vale igual que mantener": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "de": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ninguna": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "porqué logrado": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "porqué para practicar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "sin evaluación de voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Chat con Fixazo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Entiendo": {
+        "origin": "preserved-unit-or-brand",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Mensaje": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Enviar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Foto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ejemplo en castellano": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ejemplo en quechua": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Escribe o pega aquí el texto de la lectura…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Dictar por voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Detener dictado": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tú": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Otra voz en la misma nota": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Buscar una noticia nueva": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Tu racha": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "día": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "días": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Fuente": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Edición": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Detener lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Escuchar lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Voz no disponible en este navegador. Puedes leer todo el texto.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No es una nota: muestra qué ya haces y qué practicar. Se guarda solo en este navegador.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Todavía no terminaste ninguna noticia. Cuando termines una, aquí vas a ver tus habilidades y cómo explicas con tu voz.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lo que no medimos: tu inteligencia ni cómo te comparas con otros. La emoción es una estimación experimental de la voz, nunca una nota.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Los apoyos conservan las citas y palabras de la fuente en español para no alterar sus referencias. Vuelve al texto para leer la traducción.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Practica con las preguntas y vuelve al texto cuando lo necesites. Tu avance se conserva en este navegador.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ayudas adaptadas al tipo de texto, con citas y enlaces a las fuentes.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La metodología está en pausa mientras consultas los insights.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La metodología está en pausa para que puedas releer el artículo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No hay apoyos disponibles para esta noticia. Puedes releer el texto original.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ayudas breves para esta lectura": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ayudas adaptadas al texto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Solo insights y ayudas: el artículo permanece arriba, sin superposiciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Volver al artículo": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No hay citas suficientes para este apoyo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Momentos clave": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Ideas y argumentos": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Lo esencial y su contexto": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cifras destacadas": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cifras en": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Voces de la entrevista": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Puntos para contrastar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Consulta el pasaje completo en el artículo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El género es una selección editorial; no es una clasificación definitiva.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El género es una propuesta automática; no es una clasificación definitiva.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Quechua chanka, aimara y castellano": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Más formas de practicar": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cómo lo cuenta cada medio o voz": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Cambiaste de idioma. Micrófono detenido; pulsa Iniciar para transcribir en la nueva lengua.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al finalizar la lectura.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al ocultar esta pantalla. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al salir de esta pantalla.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono detenido al salir de esta pantalla. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono pausado durante la evaluación o al terminar. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Preparando la nueva pregunta; se descarta el fragmento de audio anterior para no mezclar respuestas.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Esperando permiso del micrófono…": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite de 10 minutos. Pulsa Iniciar para una nueva práctica.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite de 10 minutos. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono activo durante el quiz. Puedes pausarlo cuando quieras.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite temporal del servidor. Micrófono detenido; espera unos minutos o continúa escribiendo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El modelo de voz está ocupado. Micrófono detenido; espera y pulsa Iniciar o continúa escribiendo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No se pudo transcribir. El micrófono se detuvo; puedes escribir o reintentar.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "La transcripción está ocupada. Micrófono detenido para no acumular audio; puedes reintentar o escribir.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Se alcanzó el límite de audio o saliste de la pantalla. Pulsa Iniciar para retomar.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "No se pudo abrir el micrófono. Revisa el permiso del navegador o responde escribiendo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono no disponible. Puedes escribir o pulsar Iniciar para reintentar.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Micrófono pausado. Pulsa Iniciar para retomarlo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Actívalo una vez para responder por voz mientras esta pantalla está visible. Las opciones dictadas se preseleccionan: tú las confirmas. También puedes escribir o tocar las opciones.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "El navegador pide el micrófono solo al pulsar Iniciar. El audio se envía al backend Meta del proyecto para transcribirlo, sin guardar la grabación. Con cada respuesta hablada se muestra una estimación experimental de emociones (emotion2vec+, desde el audio; si no hay modelo, no se estima). No se infieren identidad, acento ni salud.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Límite: 10 minutos por inicio. Se detiene al pausar, ocultar o salir de la pantalla, finalizar, perder el permiso o saturarse la transcripción. Para retomar, pulsa Iniciar; no se reactiva solo.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Al cambiar de pregunta se descarta el segmento en curso para no mezclar respuestas. Espera a que termine «Preparando la nueva pregunta» antes de dictar otra opción.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true
+      },
+      "Texto y voz, en tu idioma": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "revisionReason": "Replaced mixed-Spanish provider output with an unreviewed native-language UI draft."
+      },
+      "Elige una lengua: cambia el texto de la pantalla y el idioma que transcribe el micrófono.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "ayr_Latn",
+        "retrievedAt": "2026-10-18T12:38:53.911928+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Se envía audio para transcribir y estimar emoción. No se guarda la grabación.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "ayr_Latn",
+        "retrievedAt": "2026-10-18T12:39:03.621801+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Revisa la transcripción. La traducción asistida y la emoción de la mascota son experimentales; no son una evaluación.": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "revisionReason": "Replaced mixed-Spanish provider output with an unreviewed native-language UI draft."
+      },
+      "Micrófono apagado. Puedes completar el quiz escribiendo o tocando las opciones.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "ayr_Latn",
+        "retrievedAt": "2026-10-18T12:39:21.813869+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Meta ASR disponible. Envía segmentos de 8 segundos: las respuestas aparecen después de procesarlos, no instantáneamente.": {
+        "origin": "provider-output",
+        "provider": "Meta NLLB via public indigenous endpoint",
+        "model": "facebook/nllb-200-distilled-600M",
+        "sourceLanguage": "spa_Latn",
+        "targetLanguage": "ayr_Latn",
+        "retrievedAt": "2026-10-18T12:39:32.462506+00:00",
+        "researchOnly": true,
+        "humanReviewed": false
+      },
+      "Idioma": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "revisionReason": "Localized the previously multilingual selector label."
+      },
+      "Transformaciones": {
+        "origin": "AI-drafted",
+        "humanReviewed": false,
+        "researchOnly": true,
+        "status": "proposed-ui-label",
+        "draftNote": "Experimental AI-authored interface proposal, not validated by a speaker or credited as an established UI translation. The lexical occurrence supports word usage only, not exact equivalence to the interface label Transformaciones.",
+        "lexicalReferences": [
+          {
+            "url": "https://umc.minedu.gob.pe/wp-content/uploads/2016/03/LF_Aimara_ECE_2015.pdf",
+            "kind": "official-educational-lexical-occurrence",
+            "excerpt": "Mayjt’awinaka",
+            "limitation": "A lexical occurrence in educational material is not a professional translation or validation of this interface label."
+          }
+        ]
+      }
+    }
+  }
+}

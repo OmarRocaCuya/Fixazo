@@ -57,6 +57,18 @@ afterEach(() => {
 });
 
 describe("reading PCM capture", () => {
+  it("publishes actual RMS within one 64 ms frame, before an eight-second ASR chunk exists", async () => {
+    const b = browser(); const onLevel = vi.fn();
+    const c = capture({ chunkSeconds: 8, onLevel });
+    await c.client.start();
+    expect(b.contexts[0].createScriptProcessor).toHaveBeenCalledWith(1024, 1, 1);
+    expect(b.emit(new Float32Array(1024).fill(0.05)).every(value => value === 0)).toBe(true);
+    expect(onLevel).toHaveBeenCalledWith(expect.closeTo(0.4, 3));
+    b.emit(new Float32Array(1024));
+    expect(onLevel).toHaveBeenLastCalledWith(0);
+    expect(c.onChunk).not.toHaveBeenCalled();
+    expect(b.getUserMedia).toHaveBeenCalledOnce();
+  });
   it("never captures on construction and prevents duplicate microphone requests", async () => {
     const b = browser();
     let grant!: (value: unknown) => void;
@@ -69,7 +81,7 @@ describe("reading PCM capture", () => {
     expect(b.getUserMedia).toHaveBeenCalledOnce();
     grant(b.stream);
     expect(await first).toBe(true);
-    expect(b.contexts[0].createScriptProcessor).toHaveBeenCalledWith(4096, 1, 1);
+    expect(b.contexts[0].createScriptProcessor).toHaveBeenCalledWith(1024, 1, 1);
   });
 
   it("emits ordered four-second WAV chunks, silences output, and flushes a final partial once", async () => {

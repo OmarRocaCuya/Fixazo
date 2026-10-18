@@ -1,3 +1,5 @@
+
+import { TranslatedText } from "@/components/i18n/LanguageProvider";
 // Portada del periódico: ediciones guardadas en data/ediciones, sin programador automático configurado.
 // La app de familia de Fixazo sigue disponible en /chat (/consentimiento redirige ahí).
 import Link from "next/link";
@@ -20,7 +22,7 @@ function Miradas({ n }: { n: NoticiaGuardada }) {
       {m.map((x, k) => (
         <div key={k} className={`pd-mirada ${k ? "b" : "a"}`}>
           <div className="pd-mirada-medio">{x.medio}</div>
-          {x.texto ? <div className="pd-mirada-cita">«{x.texto}»</div> : <div className="pd-mirada-cita sin-cita">Otra voz en la misma nota</div>}
+          {x.texto ? <div className="pd-mirada-cita">«<TranslatedText text={x.texto} />»</div> : <div className="pd-mirada-cita sin-cita"><TranslatedText text="Otra voz en la misma nota" /></div>}
         </div>
       ))}
     </div>
@@ -31,14 +33,14 @@ function Meta({ n }: { n: NoticiaGuardada }) {
   return (
     <div className="pd-meta">
       <EstadoNoticia id={n.id} />
-      <span>{n.minutos} min</span>
+      <span>{n.minutos} <TranslatedText text="min" /></span>
     </div>
   );
 }
 
 export default function Portada() {
   return (
-    <Suspense fallback={<div className="pd-wrap"><p className="pd-vacio">Cargando la edición…</p></div>}>
+    <Suspense fallback={<div className="pd-wrap"><p className="pd-vacio"><TranslatedText text="Cargando la edición…" /></p></div>}>
       <Edicion />
     </Suspense>
   );
@@ -67,29 +69,29 @@ async function Edicion() {
       </div>
       <header className="pd-masthead">
         <h1>Fixazo</h1>
-        <div className="pd-lema">Periódico para leer con criterio</div>
+        <div className="pd-lema"><TranslatedText text="Periódico para leer con criterio" /></div>
       </header>
 
       <Reveladas reservadas={reservadas} />
       {!principal ? (
-        <p className="pd-vacio">Todavía no hay noticias publicadas.</p>
+        <p className="pd-vacio"><TranslatedText text="Todavía no hay noticias publicadas." /></p>
       ) : (
         <main className="pd-grid">
           <Link className="pd-card pd-principal" href={`/noticia/${principal.id}`}>
-            <div className="eyebrow">{principal.seccion}</div>
-            <h2>{principal.titular}</h2>
-            <p className="pd-bajada">{principal.bajada}</p>
+            <div className="eyebrow"><TranslatedText text={principal.seccion} /></div>
+            <h2><TranslatedText text={principal.titular} /></h2>
+            <p className="pd-bajada"><TranslatedText text={principal.bajada} /></p>
             <Miradas n={principal} />
             <Meta n={principal} />
-            <span className="pd-leer">Leer y responder</span>
+            <span className="pd-leer"><TranslatedText text="Leer y responder" /></span>
           </Link>
           {resto.length > 0 && (
             <section className="pd-lista" aria-label="Más noticias">
-              <p className="eyebrow">Más noticias</p>
+              <p className="eyebrow"><TranslatedText text="Más noticias" /></p>
               {resto.map((n) => (
                 <Link key={n.id} className="pd-card pd-item" href={`/noticia/${n.id}`}>
-                  <div className="eyebrow">{n.seccion}</div>
-                  <h3>{n.titular}</h3>
+                  <div className="eyebrow"><TranslatedText text={n.seccion} /></div>
+                  <h3><TranslatedText text={n.titular} /></h3>
                   <Meta n={n} />
                 </Link>
               ))}
@@ -98,7 +100,7 @@ async function Edicion() {
         </main>
       )}
       <ExplorarVozYLenguas />
-      <p className="pd-pie">Fragmentos citados de cada medio, con enlace al original.</p>
+      <p className="pd-pie"><TranslatedText text="Fragmentos citados de cada medio, con enlace al original." /></p>
     </div>
   );
 }

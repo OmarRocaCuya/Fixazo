@@ -1,0 +1,5 @@
+.control { position: relative; display: inline-flex; align-items: center; gap: .5rem; max-width: 100%; }
+.control select { font: inherit; min-height: 44px; max-width: 190px; cursor: pointer; background: var(--surface); color: var(--ink); }
+.label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.status { position: absolute; z-index: 3; right: 0; top: 100%; width: min(300px, 75vw); background: var(--surface); color: var(--ink); font-size: .72rem; padding: .4rem .6rem; border-radius: .5rem; }
+.retry { font: inherit; font-size: .75rem; min-height: 44px; }

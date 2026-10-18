@@ -1,4 +1,6 @@
 "use client";
+import { TranslatedText } from "@/components/i18n/LanguageProvider";
+
 // Authored passages/options remain fixed. The protocol adapts support, not truth or learner traits.
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { guardarAvance, guardarResultado, leerAvance, leerResultados, registrarVozQuiz, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
@@ -13,6 +15,7 @@ import { EmocionRespuestaCard, type EstadoEmocion } from "./EmocionRespuesta";
 import { applyVoiceEvaluation } from "./voz-state";
 import { QuizAudioPanel, type QuizAudioHandle } from "./QuizAudioPanel";
 import { InformeFinal } from "./InformeFinal";
+import { publishCompanionEmotion, publishCompanionValidation } from "@/lib/browser/voice-companion";
 
 interface BorradorOpcion { preguntaId: string; opcion: number | null }
 
@@ -25,16 +28,17 @@ function BloqueFragmento({ f }: { f: Fragmento }) {
   return (
     <div className={`pd-bloque pd-frag ${f.lado}`}>
       <div className="pd-frag-medio">{f.medio} · {f.fecha}</div>
-      <blockquote>{f.texto}</blockquote>
-      <p className="pd-frag-ref">{f.titular} · <a href={f.url} target="_blank" rel="noopener noreferrer">Leer la nota completa</a></p>
+      <blockquote><TranslatedText text={f.texto} /></blockquote>
+      <p className="pd-frag-ref"><TranslatedText text={f.titular} /> · <a href={f.url} target="_blank" rel="noopener noreferrer"><TranslatedText text="Leer la nota completa" /></a></p>
     </div>
   );
 }
 
-export function BloqueOpciones({ p, intentos, activa, apoyo, borrador, onElegir, onContinuar }: {
+export function BloqueOpciones({ p, intentos, activa, apoyo, borrador, onElegir, onContinuar, onVolverAlTexto }: {
   p: PreguntaOpciones; intentos: number[]; activa: boolean;
   apoyo: ReturnType<typeof apoyoAdaptativo>; borrador: BorradorOpcion | null;
   onElegir: (k: number) => void; onContinuar: () => void;
+  onVolverAlTexto?: () => void;
 }) {
   const elegida = intentos.at(-1);
   const respondida = elegida !== undefined;
@@ -44,36 +48,35 @@ export function BloqueOpciones({ p, intentos, activa, apoyo, borrador, onElegir,
   const draft = activa && !agotada && borrador?.preguntaId === p.id ? borrador : null;
   return (
     <div className="pd-bloque pd-pregunta">
-      <div className="pd-tipo">{p.etiqueta}</div>
-      <h2>{p.titulo}</h2>
+      <div className="pd-tipo"><TranslatedText text={p.etiqueta} /></div>
+      <h2><TranslatedText text={p.titulo} /></h2>
       <div className="pd-ops">
         {p.opciones.map((o, k) => (
           <button key={o} type="button"
             className={`pd-op${revelar && k === p.correcta ? " correcta" : ""}${k === elegida ? " elegida" : ""}`}
             disabled={!activa || agotada} aria-pressed={k === elegida}
             onClick={() => onElegir(k)}>
-            <span className="muted">{k + 1}. </span>{o}
+            <span className="muted">{k + 1}. </span><TranslatedText text={o} />
           </button>
         ))}
       </div>
       <p className={`pd-retro${acerto ? " bien" : ""}`} role="status">{apoyo.mensaje}</p>
-      {activa && apoyo.fuente && (apoyo.fase === "releer" || apoyo.fase === "contraprueba") && (
-        <details open>
-          <summary>Volver a la evidencia de {apoyo.fuente.medio}</summary>
-          <blockquote>{apoyo.fuente.texto}</blockquote>
-        </details>
+      {activa && respondida && p.correcta !== null && !acerto && onVolverAlTexto && (
+        <div className="pd-acciones">
+          <button type="button" className="btn ghost" onClick={onVolverAlTexto}><TranslatedText text="Volver al texto" /></button>
+        </div>
       )}
       {draft && (
         <div className="pd-aviso" role="status">
           {draft.opcion === null
-            ? <p>No pude identificar una sola opción. Di su número o elige con los botones; no se ha enviado una respuesta.</p>
-            : <><p>Por voz se preseleccionó: «{p.opciones[draft.opcion]}». Revisa antes de confirmar.</p>
-              <button type="button" className="btn ghost" onClick={() => onElegir(draft.opcion!)}>Confirmar esta opción de voz</button></>}
+            ? <p><TranslatedText text="No pude identificar una sola opción. Di su número o elige con los botones; no se ha enviado una respuesta." /></p>
+            : <><p><TranslatedText text="Por voz se preseleccionó: «" />{p.opciones[draft.opcion]}<TranslatedText text="». Revisa antes de confirmar." /></p>
+              <button type="button" className="btn ghost" onClick={() => onElegir(draft.opcion!)}><TranslatedText text="Confirmar esta opción de voz" /></button></>}
         </div>
       )}
       {activa && (
         <div className="pd-acciones">
-          {p.correcta !== null && <p className="muted small">{intentos.length} de {MAX_INTENTOS_OPCIONES} elecciones · una revisión con apoyo como máximo</p>}
+          {p.correcta !== null && <p className="muted small">{intentos.length} <TranslatedText text="de" />{" "}{MAX_INTENTOS_OPCIONES} <TranslatedText text="elecciones · una revisión con apoyo como máximo" /></p>}
           <button type="button" className="btn primary" disabled={!respondida} onClick={onContinuar}>
             {respondida && !agotada ? "Continuar con mi elección actual" : "Continuar"}
           </button>
@@ -88,25 +91,39 @@ interface FinVoz {
   criterios: RespuestaVoz["criterios"]; texto: string; porVoz: boolean;
 }
 
+interface RetroVoz { texto: string; bien: boolean; evaluada: boolean }
+
+/** Transient review state; never persisted or used as a learner profile. */
+export interface RevisionVoz {
+  preguntaId: string; texto: string; porVoz: boolean; intentos: number;
+  retro: RetroVoz | null; finalizada: boolean;
+}
+
 /** Audio is owned by the single foreground panel; this block only reviews/submits text. */
-export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoExterno, onTextoChange, porVoz = false, onBusyChange }: {
+export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoExterno, onTextoChange, porVoz: porVozExterno, onBusyChange, onVolverAlTexto, revisionVoz, onRevisionVozChange }: {
   p: PreguntaVozPublica; noticiaId: string; onFin: (r: FinVoz) => void;
   elecciones?: Array<{ preguntaId: string; opcion: number }>;
   texto?: string; onTextoChange?: (texto: string) => void; porVoz?: boolean; onBusyChange?: (busy: boolean) => void;
+  onVolverAlTexto?: () => void; revisionVoz?: RevisionVoz | null; onRevisionVozChange?: (revision: RevisionVoz) => void;
 }) {
-  const [textoLocal, setTextoLocal] = useState("");
+  const revision = revisionVoz?.preguntaId === p.id ? revisionVoz : null;
+  const porVoz = porVozExterno ?? revision?.porVoz ?? false;
+  const [textoLocal, setTextoLocal] = useState(revision?.texto ?? "");
   const texto = textoExterno ?? textoLocal;
   const setTexto = onTextoChange ?? setTextoLocal;
-  const [estado, setEstado] = useState<"quieto" | "pensando" | "listo">("quieto");
-  const [retro, setRetro] = useState<{ texto: string; bien: boolean } | null>(null);
+  const [estado, setEstado] = useState<"quieto" | "pensando" | "listo">(revision?.finalizada ? "listo" : "quieto");
+  const [retro, setRetro] = useState<RetroVoz | null>(revision?.retro ?? null);
   const [pista, setPista] = useState(0);
   const [capacidad, setCapacidad] = useState({ enabled: false, reason: "Comprobando disponibilidad de evaluación…" });
-  const intentos = useRef(0);
-  const [respondidas, setRespondidas] = useState(0);
+  const intentos = useRef(revision?.intentos ?? 0);
+  const [respondidas, setRespondidas] = useState(revision?.intentos ?? 0);
   const requestEpoch = useRef(0);
   const pending = useRef<AbortController | null>(null);
   const busyCallback = useRef(onBusyChange);
   useEffect(() => { busyCallback.current = onBusyChange; }, [onBusyChange]);
+  useEffect(() => {
+    onRevisionVozChange?.({ preguntaId: p.id, texto, porVoz, intentos: respondidas, retro, finalizada: estado === "listo" });
+  }, [p.id, texto, porVoz, respondidas, retro, estado, onRevisionVozChange]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -121,20 +138,34 @@ export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoEx
   }, []);
 
   useEffect(() => {
-    const stop = () => { requestEpoch.current++; pending.current?.abort(); pending.current = null; busyCallback.current?.(false); };
+    const stop = () => {
+      requestEpoch.current++;
+      if (pending.current) publishCompanionValidation(null);
+      pending.current?.abort(); pending.current = null; busyCallback.current?.(false);
+    };
     const visibility = () => {
       if (document.visibilityState !== "hidden" || !pending.current) return;
       stop(); setEstado((current) => current === "listo" ? current : "quieto");
-      setRetro({ texto: "La espera se detuvo al salir. No se cuenta una evaluación pendiente.", bien: false });
+      setRetro({ texto: "La espera se detuvo al salir. No se cuenta una evaluación pendiente.", bien: false, evaluada: false });
     };
     document.addEventListener("visibilitychange", visibility);
-    return () => { stop(); document.removeEventListener("visibilitychange", visibility); };
+    const languageChanged = () => {
+      if (!pending.current) return;
+      stop(); setEstado((current) => current === "listo" ? current : "quieto");
+    };
+    window.addEventListener("fixazo:language-changing", languageChanged);
+    window.addEventListener("pagehide", languageChanged);
+    return () => {
+      stop(); document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("fixazo:language-changing", languageChanged); window.removeEventListener("pagehide", languageChanged);
+    };
   }, []);
 
   function terminarSinEvaluacion() {
+    publishCompanionValidation(null);
     requestEpoch.current++; pending.current?.abort(); pending.current = null; busyCallback.current?.(false);
     setEstado("listo");
-    setRetro({ texto: "Lectura terminada sin evaluación de la explicación. No se registra una habilidad como lograda o por practicar.", bien: false });
+    setRetro({ texto: "Lectura terminada sin evaluación de la explicación. No se registra una habilidad como lograda o por practicar.", bien: false, evaluada: false });
     onFin({ evaluada: false, listo: false, intentos: intentos.current, criterios: [], texto, porVoz: false });
   }
 
@@ -143,6 +174,7 @@ export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoEx
     const epoch = ++requestEpoch.current;
     const controller = new AbortController(); pending.current = controller;
     setEstado("pensando"); busyCallback.current?.(true);
+    publishCompanionValidation("thinking");
     let d: RespuestaVoz;
     try {
       const r = await fetch("/api/periodico/responder", {
@@ -159,8 +191,13 @@ export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoEx
     if (requestEpoch.current !== epoch || controller.signal.aborted) return;
     pending.current = null; busyCallback.current?.(false);
     const outcome = applyVoiceEvaluation(d, intentos.current);
+    // Evaluation and vocal emotion are independent; unavailable/opinion is not a grade.
+    publishCompanionValidation(outcome.evaluated ? d.listo ? "success" : "retry" : null);
     intentos.current = outcome.attempts; setRespondidas(outcome.attempts);
-    setRetro({ texto: outcome.evaluated ? d.retro : `Sin evaluación: ${d.retro}`, bien: outcome.evaluated && d.listo });
+    const feedback = { texto: outcome.evaluated ? d.retro : `Sin evaluación: ${d.retro}`, bien: outcome.evaluated && d.listo, evaluada: outcome.evaluated };
+    setRetro(feedback);
+    // Save before onFin can unmount this block; pending requests are never restored.
+    onRevisionVozChange?.({ preguntaId: p.id, texto, porVoz, intentos: outcome.attempts, retro: feedback, finalizada: outcome.complete });
     if (outcome.complete) {
       setEstado("listo");
       onFin({ evaluada: true, listo: d.listo, intentos: outcome.attempts, criterios: d.criterios, texto, porVoz });
@@ -169,38 +206,47 @@ export function BloqueVoz({ p, noticiaId, onFin, elecciones = [], texto: textoEx
 
   return (
     <div className="pd-bloque pd-pregunta">
-      <div className="pd-tipo">{p.etiqueta}</div>
-      <h2>{p.titulo}</h2>
-      <p className="muted small">Relaciona tu elección inicial, el fragmento nuevo y la decisión de mantener o cambiar. Usa evidencia del texto. El micrófono es opcional; solo se envía el texto visible. Revisa y edita la transcripción antes de enviar: el último audio puede seguir pendiente.</p>
-      <p className="muted small">La evaluación por IA es una demo y puede equivocarse.</p>
+      <div className="pd-tipo"><TranslatedText text={p.etiqueta} /></div>
+      <h2><TranslatedText text={p.titulo} /></h2>
+      <p className="muted small"><TranslatedText text="Relaciona tu elección inicial, el fragmento nuevo y la decisión de mantener o cambiar. Usa evidencia del texto. El micrófono es opcional; solo se envía el texto visible. Revisa y edita la transcripción antes de enviar: el último audio puede seguir pendiente." /></p>
+      <p className="muted small"><TranslatedText text="La evaluación por IA es una demo y puede equivocarse." /></p>
       <p className="pd-aviso" role="status">{capacidad.reason}</p>
-      <label htmlFor={`r-${p.id}`}>Tu explicación ({texto.length}/800 caracteres)</label>
+      <label htmlFor={`r-${p.id}`}><TranslatedText text="Tu explicación (" />{texto.length}<TranslatedText text="/800 caracteres)" /></label>
       <textarea id={`r-${p.id}`} className="pd-respuesta" rows={4} aria-label="Tu respuesta"
         placeholder="Escribe o activa el panel de voz. La transcripción nunca se envía automáticamente."
         value={texto} maxLength={800} disabled={estado !== "quieto"} onChange={(e) => setTexto(e.target.value)} />
-      {pista > 0 && <p className="pd-retro">Pista: {p.pistas[pista - 1]}</p>}
+      {pista > 0 && <p className="pd-retro"><TranslatedText text="Pista:" />{" "}{p.pistas[pista - 1]}</p>}
       {retro && <p className={`pd-retro${retro.bien ? " bien" : ""}`} role="status">{retro.texto}</p>}
-      {estado === "pensando" && <p role="status">Leyendo tu explicación… micrófono detenido.</p>}
-      {estado === "listo" && retro?.bien === false && respondidas >= 2 && <p className="pd-aviso">Terminaste los intentos evaluados. Puedes revisar esta idea con un docente.</p>}
+      {respondidas > 0 && <p className="muted small">{respondidas} <TranslatedText text="de 2 intentos evaluados" /></p>}
+      {retro?.evaluada && !retro.bien && estado !== "pensando" && onVolverAlTexto && <div className="pd-acciones"><button type="button" className="btn ghost" onClick={onVolverAlTexto}><TranslatedText text="Volver al texto" /></button></div>}
+      {estado === "pensando" && <p role="status"><TranslatedText text="Leyendo tu explicación… micrófono detenido." /></p>}
+      {estado === "listo" && retro?.bien === false && respondidas >= 2 && <p className="pd-aviso"><TranslatedText text="Terminaste los intentos evaluados. Puedes revisar esta idea con un docente." /></p>}
       {estado === "quieto" && (
         <div className="pd-acciones">
-          {capacidad.enabled && texto.trim() && <button type="button" className="btn primary" disabled={texto.length > 800} onClick={() => void enviar()}>Pedir evaluación de mi respuesta</button>}
-          {pista < p.pistas.length && <button type="button" className="btn ghost" onClick={() => setPista((n) => n + 1)}>Pedir pista</button>}
-          <button type="button" className="btn ghost" onClick={terminarSinEvaluacion}>Continuar sin evaluación</button>
+          {capacidad.enabled && texto.trim() && <button type="button" className="btn primary" disabled={texto.length > 800} onClick={() => void enviar()}><TranslatedText text="Pedir evaluación de mi respuesta" /></button>}
+          {pista < p.pistas.length && <button type="button" className="btn ghost" onClick={() => setPista((n) => n + 1)}><TranslatedText text="Pedir pista" /></button>}
+          <button type="button" className="btn ghost" onClick={terminarSinEvaluacion}><TranslatedText text="Continuar sin evaluación" /></button>
         </div>
       )}
     </div>
   );
 }
 
-export default function NoticiaFlow({ noticia }: { noticia: NoticiaPublica }) {
-  const enNavegador = useSyncExternalStore(() => () => undefined, () => true, () => false);
-  if (!enNavegador) return <div className="pd-flujo"><p className="pd-vacio">Cargando…</p></div>;
-  const r = leerResultados()[noticia.id];
-  return <Flujo key={noticia.id} noticia={noticia} inicial={leerAvance(noticia.id)} terminada={r && !r.enCurso ? r : null} />;
+interface ApoyosLectura {
+  embedded?: boolean;
+  onVolverAlTexto?: () => void;
+  revisionVoz?: RevisionVoz | null;
+  onRevisionVozChange?: (revision: RevisionVoz) => void;
 }
 
-function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inicial: Avance | null; terminada: ResultadoNoticia | null }) {
+export default function NoticiaFlow({ noticia, ...apoyos }: { noticia: NoticiaPublica } & ApoyosLectura) {
+  const enNavegador = useSyncExternalStore(() => () => undefined, () => true, () => false);
+  if (!enNavegador) return <div className="pd-flujo"><p className="pd-vacio"><TranslatedText text="Cargando…" /></p></div>;
+  const r = leerResultados()[noticia.id];
+  return <Flujo key={noticia.id} noticia={noticia} inicial={leerAvance(noticia.id)} terminada={r && !r.enCurso ? r : null} {...apoyos} />;
+}
+
+function Flujo({ noticia, inicial, terminada, embedded = false, onVolverAlTexto, revisionVoz, onRevisionVozChange }: { noticia: NoticiaPublica; inicial: Avance | null; terminada: ResultadoNoticia | null } & ApoyosLectura) {
   const pasos = noticia.pasos;
   const [intentosOpciones, setIntentosOpciones] = useState<IntentosOpciones>(() => restaurarIntentos(pasos, inicial?.elegidas ?? {}, inicial?.intentosOpciones));
   const [inicialesDesconocidas] = useState(() => Array.from(new Set([
@@ -217,8 +263,8 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   // Solo al terminar en esta visita: reabrir una noticia no suma otro día.
   const [racha, setRacha] = useState<Racha | null>(null);
   const [borradorOpcion, setBorradorOpcion] = useState<BorradorOpcion | null>(null);
-  const [respuestaVoz, setRespuestaVoz] = useState("");
-  const [porVoz, setPorVoz] = useState(false);
+  const [respuestaVoz, setRespuestaVoz] = useState(revisionVoz?.texto ?? "");
+  const [porVoz, setPorVoz] = useState(revisionVoz?.porVoz ?? false);
   const [avisoAudio, setAvisoAudio] = useState("");
   const [judgeBusy, setJudgeBusy] = useState(false);
   const [capturePaused, setCapturePaused] = useState(false);
@@ -229,18 +275,35 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   const emocionPedida = useRef(new Set<string>());
   const metricasPorPaso = useRef<Record<string, MetricasVoz>>({});
   const emotionAbort = useRef<AbortController | null>(null);
-  useEffect(() => { const c = new AbortController(); emotionAbort.current = c; return () => c.abort(); }, []);
-
+  const hastaAnterior = useRef(hasta);
   let visibles = hasta;
   while (visibles < pasos.length - 1 && pasos[visibles].tipo === "fragmento") visibles++;
   const activa = pasos[visibles];
   const activeId = activa && "id" in activa && !fin ? activa.id : null;
 
   useEffect(() => {
+    const renew = () => {
+      emotionAbort.current?.abort(); emotionAbort.current = new AbortController();
+      emocionPedida.current.clear(); publishCompanionEmotion(null);
+    };
+    const hidden = () => { if (document.hidden) renew(); };
+    renew(); window.addEventListener("fixazo:language-changing", renew);
+    window.addEventListener("pagehide", renew);
+    document.addEventListener("visibilitychange", hidden);
+    return () => {
+      emotionAbort.current?.abort(); publishCompanionEmotion(null);
+      window.removeEventListener("fixazo:language-changing", renew);
+      window.removeEventListener("pagehide", renew);
+      document.removeEventListener("visibilitychange", hidden);
+    };
+  }, [activeId]);
+
+  useEffect(() => {
     if (fin) return; // Opening a completed report must not recreate a draft.
     guardarAvance(noticia.id, { hasta, elegidas: Object.fromEntries(Object.entries(intentosOpciones).map(([id, elecciones]) => [id, elecciones.at(-1)!])), intentosOpciones, inicialesDesconocidas });
-    if (hasta > 0) bajar(ultimo.current);
-  }, [hasta, intentosOpciones, inicialesDesconocidas, noticia.id, fin]);
+    if (hasta > 0 && (!embedded || hasta !== hastaAnterior.current)) bajar(ultimo.current);
+    hastaAnterior.current = hasta;
+  }, [hasta, intentosOpciones, inicialesDesconocidas, noticia.id, fin, embedded]);
 
   function guardarParcial(historial: IntentosOpciones) {
     const habilidades: Record<string, boolean> = {};
@@ -252,6 +315,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
     if (fin || p.id !== activeId) return;
     const nuevas = registrarIntento(p, intentosOpciones, opcion);
     if (nuevas === intentosOpciones) return;
+    publishCompanionValidation(p.correcta === null ? null : opcion === p.correcta ? "success" : "retry");
     setIntentosOpciones(nuevas); setBorradorOpcion(null); guardarParcial(nuevas);
   }
 
@@ -283,6 +347,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
     setEmociones((m) => ({ ...m, [stepId]: "analizando" }));
     void estimarEmocionRespuesta(event.audio, undefined, signal).then((estimate) => {
       if (signal?.aborted) return;
+      publishCompanionEmotion(estimate.source === "voz-emotion2vec" ? estimate.label : null);
       setEmociones((m) => ({ ...m, [stepId]: estimate }));
       registrarVozQuiz(noticia.id, noticia.titular, { emocion: emocionDesdeEstimacion(stepId, estimate) });
       setFin((f) => (f ? leerResultados()[noticia.id] ?? f : f));
@@ -322,12 +387,12 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
 
   return (
     <div className="pd-flujo">
-      <header className="pd-noticia-cabeza">
-        <div className="eyebrow">{noticia.seccion}</div>
-        <h1>{noticia.titular}</h1>
-        <p className="pd-bajada">{noticia.bajada}</p>
-        <p className="muted small">{noticia.minutos} min</p>
-      </header>
+      {!embedded && <header className="pd-noticia-cabeza">
+        <div className="eyebrow"><TranslatedText text={noticia.seccion} /></div>
+        <h1><TranslatedText text={noticia.titular} /></h1>
+        <p className="pd-bajada"><TranslatedText text={noticia.bajada} /></p>
+        <p className="muted small">{noticia.minutos} <TranslatedText text="min" /></p>
+      </header>}
       {!fin && <QuizAudioPanel ref={audio} stepId={activeId} paused={judgeBusy || capturePaused} onTranscript={recibirTranscripcion} onAnswerAudio={recibirAudio} />}
       {avisoAudio && !fin && <p role="status" className="pd-aviso">{avisoAudio}</p>}
       {pasos.slice(0, visibles + 1).map((p, k) => (
@@ -336,7 +401,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
           {/* Una idea a la vez: las preguntas ya cerradas quedan plegadas en una línea. */}
           {p.tipo === "opciones" && elegidas[p.id] !== undefined && k < visibles && (
             <details className="pd-cerrado">
-              <summary><span className="pd-tipo">{p.etiqueta.split(" · ")[0]}</span><span>{p.opciones[elegidas[p.id]]}</span></summary>
+              <summary><span className="pd-tipo">{p.etiqueta.split(" · ")[0]}</span><span><TranslatedText text={p.opciones[elegidas[p.id]]} /></span></summary>
               <BloqueOpciones p={p} intentos={intentosOpciones[p.id] ?? []} activa={false}
                 apoyo={apoyoAdaptativo(pasos, p, intentosOpciones, elegidas)} borrador={null}
                 onElegir={() => undefined} onContinuar={() => undefined} />
@@ -344,17 +409,20 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
           )}
           {p.tipo === "opciones" && !(elegidas[p.id] !== undefined && k < visibles) && <BloqueOpciones p={p} intentos={intentosOpciones[p.id] ?? []} activa={!fin && k === visibles}
             apoyo={apoyoAdaptativo(pasos, p, intentosOpciones, elegidas)} borrador={borradorOpcion}
+            onVolverAlTexto={onVolverAlTexto}
             onElegir={(opcion) => elegir(p, opcion)}
             onContinuar={() => { if (!fin && k === visibles && puedeContinuar(p, intentosOpciones)) { setBorradorOpcion(null); setHasta(k + 1); } }} />}
           {p.tipo === "voz" && !fin && <BloqueVoz p={p} noticiaId={noticia.id} onFin={terminar}
+            onVolverAlTexto={onVolverAlTexto} revisionVoz={revisionVoz} onRevisionVozChange={onRevisionVozChange}
             elecciones={eleccionesParaJuez(pasos, elegidas)} texto={respuestaVoz} onTextoChange={setRespuestaVoz} porVoz={porVoz} onBusyChange={(busy) => { if (busy) audio.current?.stop(); setJudgeBusy(busy); }} />}
           {"id" in p && emociones[p.id] && <EmocionRespuestaCard estado={emociones[p.id]} />}
         </div>
       ))}
-      {visibles < pasos.length - 1 && !fin && <p className="pd-candado">Confirma tu elección y pulsa Continuar para abrir el siguiente paso.</p>}
+      {visibles < pasos.length - 1 && !fin && <p className="pd-candado"><TranslatedText text="Confirma tu elección y pulsa Continuar para abrir el siguiente paso." /></p>}
       {fin && <div ref={ultimo}>
-        {racha?.estado === "hoy" && <p className="pd-racha-fin">🔥 Sumaste el día {racha.dias} de tu racha{racha.marca ? `. ${racha.marca} días seguidos leyendo con criterio` : ""}</p>}
+        {racha?.estado === "hoy" && <p className="pd-racha-fin">🔥 <TranslatedText text="Sumaste el día" /> {racha.dias} <TranslatedText text="de tu racha" />{racha.marca ? <>. {racha.marca} <TranslatedText text="días seguidos leyendo con criterio" /></> : null}</p>}
         <InformeFinal resultado={fin} />
+        {fin.voz && !fin.voz.listo && onVolverAlTexto && <button type="button" className="btn ghost" onClick={onVolverAlTexto}><TranslatedText text="Volver al texto" /></button>}
       </div>}
     </div>
   );

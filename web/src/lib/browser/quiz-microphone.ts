@@ -1,5 +1,6 @@
 import type { CloudVoiceAccess } from "@/lib/voice/types";
-import { MetaReadingClient, ReadingChunkQueue, ReadingClientError } from "./meta-reading-client";
+import { MetaReadingClient, ReadingChunkQueue, ReadingClientError, type ReadingAsrLanguage } from "./meta-reading-client";
+import { publishCompanionAudio, publishCompanionEmotion } from "./voice-companion";
 import { ReadingPcmCapture, type ReadingPcmCaptureOptions } from "./reading-pcm-capture";
 import { metricasDeVoz, type MetricasVoz } from "@/lib/periodico/voz-quiz";
 
@@ -13,7 +14,7 @@ export interface QuizMicrophoneState {
 }
 interface Capture { start(): Promise<boolean>; abort(): void }
 interface AsrResult { text: string; durationSeconds?: number; words?: Array<{ start: number; end: number }> }
-interface Client { transcribe(audio: Blob, language: "spa_Latn"): Promise<AsrResult>; cancel(): void; close(): void }
+interface Client { transcribe(audio: Blob, language: ReadingAsrLanguage): Promise<AsrResult>; cancel(): void; close(): void }
 interface Dependencies {
   capture(options: ReadingPcmCaptureOptions): Capture;
   client(access: CloudVoiceAccess): Client;
@@ -39,6 +40,7 @@ export class QuizMicrophone {
   private stepId: string | null = null;
   private stepVersion = 0;
   private disposed = false;
+  private language: ReadingAsrLanguage = "spa_Latn";
   constructor(private readonly handlers: {
     onTranscript(event: QuizAudioTranscript): void;
     onState(state: QuizMicrophoneState): void;
@@ -56,9 +58,11 @@ export class QuizMicrophone {
     }
   }
 
-  async start(access: CloudVoiceAccess, stepId: string | null): Promise<boolean> {
+  async start(access: CloudVoiceAccess, stepId: string | null, language: ReadingAsrLanguage = "spa_Latn"): Promise<boolean> {
     if (this.disposed || this.session || !this.deps.visible()) return false;
     this.setStep(stepId);
+    this.language = language;
+    publishCompanionEmotion(null);
     const client = this.deps.client({ ...access });
     const session: Session = { epoch: ++this.epoch, client, capture: null, queue: null!, timer: null,
       startedAt: this.deps.now(), ready: false, boundaryStep: this.stepId, boundaryVersion: this.stepVersion };
@@ -84,7 +88,7 @@ export class QuizMicrophone {
     return new ReadingChunkQueue(async (chunk) => {
       if (!this.current(session) || chunk.version !== this.stepVersion || chunk.stepId !== this.stepId) return;
       let result: AsrResult;
-      try { result = await session.client.transcribe(chunk.audio, "spa_Latn"); }
+      try { result = await session.client.transcribe(chunk.audio, this.language); }
       catch (error) {
         // Silence/no observable words are absence of evidence, not an answer or a service failure.
         if (error instanceof ReadingClientError && ["audio-not-observable", "asr-not-observable", "no-observable-words"].includes(error.code)) return;
@@ -111,6 +115,7 @@ export class QuizMicrophone {
     if (maximum <= 0) { this.pause("Se alcanzó el límite de 10 minutos. Pulsa Iniciar para retomarlo."); return false; }
     session.boundaryStep = this.stepId; session.boundaryVersion = this.stepVersion;
     const capture = this.deps.capture({ chunkSeconds: 8, maxSeconds: maximum,
+      onLevel: (level) => { if (this.current(session) && session.capture === capture && this.deps.visible()) publishCompanionAudio(true, level); },
       onChunk: (audio) => {
         if (!this.current(session) || session.capture !== capture) return;
         const stepId = session.boundaryStep, version = session.boundaryVersion;
@@ -135,12 +140,14 @@ export class QuizMicrophone {
     if (!started) { this.fail("Micrófono no disponible. Puedes escribir o pulsar Iniciar para reintentar."); return false; }
     if (!this.deps.visible()) { this.pause("Micrófono detenido al salir de esta pantalla."); return false; }
     session.ready = true;
+    publishCompanionAudio(true, 0); // Listening is immediate; PCM moves the condor before the first 8 s chunk.
     this.emit("listening", "Micrófono activo durante el quiz. Puedes pausarlo cuando quieras.", session);
     return true;
   }
   pause(message = "Micrófono pausado. Pulsa Iniciar para retomarlo.") { this.release(); if (!this.disposed) this.emit("stopped", message); }
   private fail(message: string) { this.release(); if (!this.disposed) this.emit("error", message); }
   private release() {
+    publishCompanionAudio(false, 0);
     const session = this.session; this.session = null; this.epoch++;
     if (!session) return;
     if (session.timer) clearInterval(session.timer);

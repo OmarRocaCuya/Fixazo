@@ -1,5 +1,5 @@
-import { IndigenousPanel } from "@/components/IndigenousPanel";
+import LanguagesPage from "@/components/i18n/LanguagesPage";
 
-export default function LanguagesPage() {
-  return <IndigenousPanel />;
+export default function LanguagesRoute() {
+  return <LanguagesPage />;
 }

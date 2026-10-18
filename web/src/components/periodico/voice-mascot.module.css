@@ -1,0 +1,77 @@
+.widget {
+  position: fixed;
+  z-index: 25;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  width: 132px;
+  pointer-events: none;
+  color: var(--ink);
+}
+
+.figure { padding-top: 24px; text-align: center; }
+.figure[hidden] { display: none; }
+.condor, .miniature {
+  background-image: url("/mascot/fixazo-condor-v1.png");
+  background-repeat: no-repeat;
+  background-size: 300% 300%;
+}
+.condor {
+  width: 112px;
+  height: 112px;
+  margin-inline: auto;
+  /* Actual PCM drives the body/wing spread; the speaking frame opens the beak.
+     No timer, inference response, or second audio stream drives this movement. */
+  transform: translateY(calc(var(--audio-level, 0) * -12px)) rotate(calc(var(--audio-level, 0) * -4deg)) scale(calc(1 + var(--audio-level, 0) * 0.16), calc(1 + var(--audio-level, 0) * 0.05));
+  transform-origin: center bottom;
+  transition: transform 90ms ease-out;
+}
+.toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.toggle:hover { background: var(--accent-soft); }
+.toggle:focus-visible { outline: 3px solid var(--maize); outline-offset: 3px; }
+.miniature { width: 40px; height: 40px; background-position: 0% 0%; }
+.collapsed { width: 44px; height: 44px; }
+.caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.wave { display: flex; height: 16px; justify-content: center; align-items: center; gap: 3px; margin: 2px 0 4px; }
+.wave i { display: block; width: 3px; height: calc(3px + var(--audio-level, 0) * 8px); border-radius: 2px; background: var(--accent); transition: height 60ms linear; }
+.wave i:nth-child(2), .wave i:nth-child(4) { height: calc(3px + var(--audio-level, 0) * 12px); }
+.wave i:nth-child(3) { height: calc(3px + var(--audio-level, 0) * 15px); }
+
+@media (max-width: 600px) {
+  .widget { width: 96px; right: max(8px, env(safe-area-inset-right)); bottom: max(8px, env(safe-area-inset-bottom)); }
+  .condor { width: 80px; height: 80px; }
+  .caption { font-size: 10px; }
+  .collapsed { width: 44px; }
+  /* Never cover text being entered or microphone/submit controls with the figure. */
+  :global(body:has(textarea:focus, input:focus)) .figure { visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .condor { transform: none; transition: none; }
+  .wave i { transition: none; }
+}
+@media print { .widget { display: none; } }
