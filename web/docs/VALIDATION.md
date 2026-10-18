@@ -1,5 +1,22 @@
 # Verificación de la demo
 
+## Emociones desde audio: implementación local verificada — 18 de octubre de 2026
+
+**Este cambio está probado localmente, no publicado en Vercel ni en el VPS.** Los despliegues históricos de lectura descritos abajo no incluyen esta nueva verificación de emociones.
+
+- Se ejecutó **emotion2vec+ base real**, no un doble, en CPU Windows con Python 3.12.14, Torch/torchaudio 2.8.0 CPU, FunASR 1.4.16 y NumPy 1.26.4. `pip check` no encontró conflictos. Docker Linux no se compiló: el daemon local no está disponible.
+- Modelo `emotion2vec/emotion2vec_plus_base`, revisión `b318240bfe67db81a8c572ecb37ce9c3759b81c9`; pesos de 1.118.245.678 bytes, SHA-256 `60710b5aae1dbe69bdac8920028fb05882d4314fd09031922b4b61ee9e7aadbd`.
+- Audio hablado público `example/test.wav` de esa revisión: **4,104125 s**, SHA-256 `a4839eaaa3d54bd2db6eb48aa3d40def1b5c5004df3fd163a8dcd045097f8a23`. No se usaron voces infantiles ni un micrófono físico. La inferencia directa tardó **1,250 s** después de **26,703 s** de carga con pesos en caché.
+- La cadena real **WAV → `/api/emotion` de Next → `/v1/emotion` de Python → modelo CPU** devolvió HTTP 200 y las mismas nueve probabilidades. Una petición directa tardó **0,718 s** y la petición por Next **3,359 s**; son mediciones individuales, no un SLA. La etiqueta superior fue `angry`, puntaje redondeado `1.0`: eso no verifica la emoción verdadera del hablante ni demuestra exactitud.
+- También se verificó la **interfaz real en Edge con un contexto nuevo**: consentimiento ficticio de demo, micrófono desactivado, misión de ejemplo, autorización específica y subida del WAV público. El POST real respondió **200 en 1.441 ms** y el panel mostró `enojado/a · voz (emotion2vec+) · 100 %`, sin proporcionar transcripción ni interceptar la respuesta. Se cerró el navegador de prueba. Evidencia local: `outputs/emotion-ui-real.png`, `outputs/emotion-ui-real-report.json` y `outputs/emotion-ui-smoke.cjs`. La captura histórica muestra el aviso anterior de micrófono en modo manual; se aclaró después para distinguir captura de sesión y archivo de prueba.
+- Los dos endpoints rechazaron silencio con **422**. El backend rechazó falta de credencial con **401**; Next rechazó falta de consentimiento experimental y otro origen con **403**. No se registraron ni guardaron grabaciones de usuarios.
+- El cliente envía únicamente WAV: **no envía texto ni depende de que el ASR consiga una transcripción**. Congela la captura antes del flush ASR, cancela solicitudes al terminar/reiniciar, valida el contrato de nueve clases y muestra indisponibilidad si falta modelo. Ya no sustituye una inferencia fallida por una emoción heurística.
+- Readiness exige un forward real, no sólo importación/carga de pesos. `EMOTION_WARMUP=true` prepara únicamente emoción, sin descargar/calentar los modelos ASR, traducción o diálogo.
+- La prueba real detectó un **403 de origen** que los dobles no cubrían: Next usa `localhost` como origen canónico aunque escuche en `127.0.0.1`. El launcher usa ahora `http://localhost:3001`, mantiene binding loopback y no relaja same-origin. La salida `.next-emotion` evita interferir con el servidor del usuario en el puerto 3000.
+- Verificación automatizada: **657 pruebas web**, **154 pruebas Python del servicio** y **11 pruebas de scripts** correctas; ESLint y build de producción Next/TypeScript correctos (**20 rutas**). El prerender inicial encontró un permiso `EPERM` del sandbox; repetir el mismo build con permiso fuera del sandbox pasó, sin cambiar el código para ocultar el error. Estas suites no sustituyen la inferencia real enumerada arriba. RDD: **disabled/unmanaged**, sin activar revisión ni emitir recibos de aprobación.
+
+Evidencia local saneada, no versionada: `outputs/emotion-real-http.json`. [Preparación y arranque reproducibles](../services/indigenous/EMOTION_LOCAL.md). Sigue siendo una estimación experimental con consentimiento adulto, revisión humana y sin uso en la nota; no hay validación con menores, castellano peruano o quechua. Quedan fuera de esta evidencia el micrófono físico, precisión emocional, rendimiento móvil y despliegue de este cambio.
+
 ## Estado más reciente: lectura con tiempos, voz MMS y diálogo local — 18 de octubre de 2026
 
 **Publicado y comprobado en producción, además del backend aislado y el preview.** Los apartados históricos de abajo describen versiones anteriores, no las capacidades actuales de esta entrega.

@@ -42,7 +42,7 @@ describe("reading capabilities and preflight", () => {
   it("permits lazy MMS loading without inventing speech readiness or downloading a model in GET", async () => {
     fetcher.mockImplementation(() => Promise.resolve(Response.json(health())));
     const status = await getReadingCapabilities();
-    expect(status).toMatchObject({ enabled: true, adultOnly: true, dialogueMode: "guided-reading", asr: { ready: true, wordTimestamps: true, timingMethod: "ctc-greedy-frames" }, speech: { enabled: true, ready: { quy_Latn: false, ayr_Latn: false } } });
+    expect(status).toMatchObject({ enabled: true, dialogueMode: "guided-reading", asr: { ready: true, wordTimestamps: true, timingMethod: "ctc-greedy-frames" }, speech: { enabled: true, ready: { quy_Latn: false, ayr_Latn: false } } });
     expect(status.languages).toEqual(["quy_Latn", "ayr_Latn"]);
     expect(status.limitations).toContain("guided-not-general-conversation");
     expect(status.limitations).not.toContain("local-llm-may-hallucinate");

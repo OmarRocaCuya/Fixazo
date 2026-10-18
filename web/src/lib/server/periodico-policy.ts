@@ -1,7 +1,7 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 
 // Per-instance abuse guard only: this is NOT a distributed quota or a spending
-// cap. Configure a provider budget before enabling even the private adult demo.
+// cap. Configure a provider budget before enabling even the private demo.
 const WINDOW_MS = 10 * 60 * 1000;
 const CREDENTIAL_LIMIT = 12;
 const IP_LIMIT = 6;
@@ -13,7 +13,7 @@ export function getPeriodicoPolicy() {
   if (process.env.PERIODICO_JUDGE_ENABLED !== "true") reason = "periodico-judge-disabled";
   else if (!process.env.OPENROUTER_API_KEY?.trim()) reason = "periodico-provider-not-configured";
   else if (!process.env.VOICE_ACCESS_CODE || process.env.VOICE_ACCESS_CODE.trim().length < 16) reason = "periodico-access-not-configured";
-  return { enabled: reason === null, reason, adultOnly: true as const };
+  return { enabled: reason === null, reason };
 }
 
 const digest = (value: string) => createHash("sha256").update(value).digest();

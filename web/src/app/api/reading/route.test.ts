@@ -4,7 +4,7 @@ vi.mock("next/server", () => ({ connection: vi.fn(async () => {}) }));
 
 let serial = 0;
 const fetcher = vi.fn();
-const auth = { audience: "adult-demo", consent: true, adultConfirmed: true };
+const auth = { audience: "adult-demo" };
 const backendToken = "server-only-backend-private-token-over-thirty-two-characters";
 const input = { action: "prepare", passage: "Ana llevó agua porque el camino era largo.", language: "spa_Latn", ...auth };
 function request(body: unknown = input, headers: Record<string, string> = {}) {
@@ -19,7 +19,7 @@ function wav(seconds = 1) {
 }
 function upload(bytes = wav(), fields: Record<string, string> = {}) {
   const form = new FormData();
-  Object.entries({ action: "transcribe", language: "quy_Latn", audience: "adult-demo", consent: "true", adultConfirmed: "true", ...fields }).forEach(([key, value]) => form.set(key, value));
+  Object.entries({ action: "transcribe", language: "quy_Latn", audience: "adult-demo", ...fields }).forEach(([key, value]) => form.set(key, value));
   form.set("file", new Blob([bytes as BlobPart], { type: "audio/wav" }), "real-name-not-forwarded.wav");
   return new Request("https://education.example/api/reading", { method: "POST", headers: { Origin: "https://education.example", "X-Voice-Access-Code": process.env.VOICE_ACCESS_CODE ?? "" }, body: form });
 }
@@ -32,7 +32,7 @@ beforeEach(() => {
 });
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
 
-describe("adult research guided-reading route", () => {
+describe("research guided-reading route", () => {
   it("reports timed ASR unavailable with an old backend, not fake word times", async () => {
     fetcher.mockImplementation(() => Promise.resolve(Response.json({ asr: { model: "omniASR_LLM_300M_v2", ready: true }, translation: { enabled: true, ready: true } })));
     const response = await GET(new Request("https://education.example/api/reading"));
@@ -59,11 +59,12 @@ describe("adult research guided-reading route", () => {
     const wrapper = { url: req.url, headers: req.headers, get body() { read(); throw new Error("do not buffer"); } } as unknown as Request;
     const response = await POST(wrapper); expect([401, 403]).toContain(response.status); expect(read).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
   });
-  it("requires the actual body consent and adult attestation, even in an approved pilot", async () => {
-    expect((await POST(request({ ...input, consent: false }))).status).toBe(403);
-    expect((await POST(request({ ...input, adultConfirmed: false }))).status).toBe(403);
+  it("does not require body consent or adult attestation, in a demo or an approved pilot", async () => {
+    const { audience: _audience, ...bare } = input;
+    void _audience;
+    expect((await POST(request(bare))).status).toBe(200);
     vi.stubEnv("VOICE_CLOUD_MODE", "approved-pilot"); vi.stubEnv("CHILD_VOICE_PRIVACY_APPROVED", "true");
-    expect((await POST(request({ ...input, audience: "approved-pilot", adultConfirmed: false }))).status).toBe(403);
+    expect((await POST(request({ ...bare, consent: false, adultConfirmed: false }))).status).toBe(200);
     expect(fetcher).not.toHaveBeenCalled();
   });
   it("fails closed without configured permission, no matter what the body requests", async () => {

@@ -4,8 +4,11 @@ import { useState } from "react";
 import type { LevelResult, Report, ReviewerRole, ReviewTarget } from "@/lib/types";
 import { provisionalReview, reviewReport } from "@/lib/report/build";
 import { getStore } from "@/lib/storage";
+import { buildVoiceFamilySummary } from "@/lib/report/family-share";
+import { FamilyShare } from "./FamilyShare";
 import { notifyStore } from "@/lib/useStore";
 import { CONFIDENCE_LABELS, Face, MetricCard, SignalRow, moodLabel } from "@/components/ui";
+import { ExperimentalAffectBlock } from "./ExperimentalAffectBlock";
 
 const LEVEL_PHRASE = (r: LevelResult) => {
   if (r.status === "no_observable") return "No se pudo observar (no es un 0).";
@@ -238,6 +241,9 @@ export function ReportView({ report }: { report: Report }) {
           </div>
         )}
       </section>
+
+      <FamilyShare summary={buildVoiceFamilySummary(r)} />
+      {r.experimentalAffect && <ExperimentalAffectBlock block={r.experimentalAffect} />}
 
       <section className="card no stack-sm">
         <h2 style={{ color: "var(--red)" }}>Lo que no medimos</h2>

@@ -65,8 +65,15 @@ NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED=true
 ENABLE_RESEARCH_SPEECH=true
 MMS_NONCOMMERCIAL_RESEARCH_ACCEPTED=true
 ENABLE_LOCAL_READING_LLM=true
+# EXPERIMENTAL emotion2vec+ (demo con voces adultas). Las tres en false por defecto.
+# INSTALL_EXPERIMENTAL_EMOTION es build arg: requiere reconstruir la imagen.
+INSTALL_EXPERIMENTAL_EMOTION=true
+ENABLE_EXPERIMENTAL_EMOTION=true
+EMOTION2VEC_LICENSE_ACCEPTED=true
 INDIGENOUS_IMAGE_TAG=nawinchay-meta:REVISION_NUEVA
 ```
+
+Las tres variables de emoción activan el endpoint `POST /v1/emotion`, que es experimental (ver README). Activarlas solo para la demo, aceptando la FunASR Model License v1.1 con su atribución. Sumar ≈1–2 GB a `INDIGENOUS_MEMORY_LIMIT`. En el Perú, inferir emociones en educación es de alto riesgo (DS 115-2025-PCM, art. 24.1 i).
 
 El valor de `INDIGENOUS_API_KEY` debe ser aleatorio, 32–512 caracteres ASCII imprimibles sin espacios. El marcador anterior no es una clave para usar. No añadir `INDIGENOUS_API_KEY_FILE`: esta variante utiliza el secreto de Dokploy por entorno; la variante manual `compose.vps.yaml` utiliza archivo. La app falla si recibe ambos.
 

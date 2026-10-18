@@ -6,8 +6,11 @@ import type { Confidence } from "@/lib/types";
 import { STEP_LABELS, type SessionState } from "@/lib/session/machine";
 import { buildJudgmentChain, scoreInfiere, scoreObtiene, scoreReflexiona } from "@/lib/scoring";
 import { PAUSE_OFFER } from "@/lib/signals/pace";
+import { completedReportHref } from "@/lib/report/family-share";
 import { CONFIDENCE_LABELS, Face, Icon, LevelCell, MoodPicker, SignalRow, moodLabel } from "@/components/ui";
+import { toChildView } from "@/lib/session/childView";
 import { ReadingText } from "./ReadingText";
+import { ExperimentalAffectCards } from "./ExperimentalAffectCards";
 import { MultilingualReadingSession } from "./MultilingualReadingSession";
 import { READ_LIMIT_S, SessionController, type SessionAsrProvider, type Snapshot } from "./controller";
 
@@ -41,6 +44,10 @@ export function SessionScreen() {
     return () => ctl.dispose();
   }, [ctl]);
 
+  useEffect(() => {
+    const href = completedReportHref(snap.phase, snap.reportId);
+    if (href) router.replace(href);
+  }, [snap.phase, snap.reportId, router]);
   const ctx = snap.ctx;
   const state: SessionState | null = ctx ? (ctx.state === "PAUSED" ? (ctx.resumeState ?? "CHECK_IN") : ctx.state) : null;
   const current = state ? stepIndex(state) : -1;
@@ -94,8 +101,8 @@ export function SessionScreen() {
       <div className="s-body">
         <section className="kid-zone" aria-label="Zona del niño">
           {snap.phase === "intro" && snap.mission && <div className="notice info stack-sm">
-            <strong>Sesión multilingüe · demo adulta</strong>
-            <p className="small">Prueba esta lectura en quechua Ayacucho o aimara con Meta, traducción y voz por turnos. Solo voces adultas o sintéticas; no modifica la evaluación ni crea informes.</p>
+            <strong>Sesión multilingüe · demo</strong>
+            <p className="small">Prueba esta lectura en quechua Ayacucho o aimara con Meta, traducción y voz por turnos. No modifica la evaluación ni crea informes.</p>
             <button type="button" className="btn subtle" disabled={!spanishPassage || snap.localPreparing || snap.micTesting || snap.micBusy} onClick={() => { ctl.cancelMicrophoneTest(); setMultilingualOpen(true); }}>Abrir lectura multilingüe de esta misión</button>
             {!spanishPassage && <p className="small">Esta misión no tiene texto original en castellano para preparar la prueba. No sustituimos ni etiquetamos el texto quechua como castellano.</p>}
           </div>}
@@ -106,7 +113,7 @@ export function SessionScreen() {
             <button type="button" className="btn subtle adult-toggle" onClick={() => setAdultOpen((v) => !v)} aria-expanded={adultOpen} style={{ justifySelf: "start" }}>
               {adultOpen ? "Ocultar vista del adulto" : "Ver como adulto"}
             </button>
-            <AdultPanel snap={snap} open={adultOpen} />
+            <AdultPanel snap={snap} ctl={ctl} open={adultOpen} />
           </>
         )}
       </div>
@@ -252,12 +259,15 @@ function KidZone({ snap, ctl, onDone }: { snap: Snapshot; ctl: SessionController
       </div>
     );
 
+
   const ctx = snap.ctx;
   if (!ctx || !snap.mission) return null;
   const st = ctx.state === "PAUSED" ? ctx.resumeState : ctx.state;
   const mission = snap.mission;
-  const lastAgent = [...snap.lines].reverse().find((l) => l.who === "agente");
-  const kidLines = snap.lines.slice(-4);
+  // The child zone reads an allowlisted projection: adult-only data never reaches it.
+  const child = toChildView(snap);
+  const lastAgent = [...child.lines].reverse().find((l) => l.who === "agente");
+  const kidLines = child.lines.slice(-4);
 
   return (
     <>
@@ -510,7 +520,7 @@ function Intro({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
         <div className="card tight stack-sm" aria-label="Diagnóstico de voz">
           <strong>Antes de empezar: micrófono y transcripción son distintos</strong>
           <p className="small">Micrófono: {snap.voiceSupport.canRecord ? "API disponible; falta comprobar permiso y sonido" : "no disponible en esta página"}.</p>
-          <p className="small">Web Speech del navegador: {snap.voiceSupport.canTranscribe ? "API disponible; el servicio aún debe responder" : "no disponible; puedes elegir el modelo local, una nube autorizada o escribir"}.</p>
+          <p className="small">Web Speech del navegador: {snap.voiceSupport.canTranscribe ? "API disponible; el servicio aún debe responder" : "no disponible; puedes elegir el modelo local, una nube con código de acceso o escribir"}.</p>
           <p className="small muted">{snap.voiceSupport.message}</p>
           <p className="small muted">La voz necesita HTTPS o localhost. Abrir una IP local con HTTP desde el celular no lo soluciona.</p>
           {snap.voiceSupport.canRecord && snap.permissions.voice && (
@@ -526,7 +536,7 @@ function Intro({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
       ) : (
         <p className="small muted">
           Al empezar, el navegador pedirá permiso para usar el micrófono. La app no guarda grabaciones. La transcripción puede enviar audio a un proveedor externo del navegador;
-          las señales acústicas de lectura se calculan en el dispositivo. El modelo local evita enviar la voz al ASR; la nube requiere una autorización adicional. Si prefieres, escribe la transcripción.
+          las señales acústicas de lectura se calculan en el dispositivo. El modelo local evita enviar la voz al ASR; la nube requiere el código de acceso del despliegue. Si prefieres, escribe la transcripción.
         </p>
       )}
       <div className="big-actions">
@@ -558,7 +568,7 @@ function VoiceProviderSetup({ snap, ctl }: { snap: Snapshot; ctl: SessionControl
         <select id="asr-provider" className="input" value={snap.voiceProvider} onChange={(event) => ctl.selectVoiceProvider(event.target.value as SessionAsrProvider)} disabled={snap.micTesting || snap.localPreparing}>
           <option value="browser">Web Speech · servicio del navegador</option>
           <option value="local-whisper">Whisper base · en este dispositivo</option>
-          <option value="deepgram">Deepgram Nova-3 · nube con autorización</option>
+          <option value="deepgram">Deepgram Nova-3 · nube con código de acceso</option>
         </select>
       </div>
       {snap.voiceProvider === "browser" && <p className="small muted">No elegimos el modelo interno del navegador. Puede enviar audio a su proveedor y no ofrece tiempos por palabra. Opera puede permitir el micrófono sin transcribir.</p>}
@@ -579,10 +589,7 @@ function VoiceProviderSetup({ snap, ctl }: { snap: Snapshot; ctl: SessionControl
 
 function CloudAuthorization({ snap, ctl }: { snap: Snapshot; ctl: SessionController }) {
   const [code, setCode] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [adult, setAdult] = useState(false);
   const policy = snap.cloudStatus;
-  const demo = policy?.mode === "adult-demo";
   const revoke = () => ctl.authorizeCloud(null);
   if (snap.cloudStatusLoading) return <p className="small" role="status">Comprobando disponibilidad de Deepgram…</p>;
   if (!policy?.enabled) return (
@@ -593,26 +600,17 @@ function CloudAuthorization({ snap, ctl }: { snap: Snapshot; ctl: SessionControl
   );
   return (
     <div className="stack-sm">
-      <p className="notice info">{demo ? "Demo con voz adulta o sintética. No envíes voces de menores de 13 años. No sustituye una validación infantil." : "Piloto autorizado por el responsable del despliegue. Usa únicamente las condiciones y participantes aprobados para este piloto."}</p>
-      <p className="small muted">La voz se envía a Deepgram (Nova-3) para transcribir en castellano y obtener tiempos estimados. La app no almacena audio; el tratamiento del proveedor depende del acuerdo y la configuración del despliegue. Este permiso es separado del permiso general de micrófono.</p>
-      <label className="row small" style={{ gap: 8 }}>
-        <input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); revoke(); }} style={{ width: 22, height: 22 }} />
-        Autorizo enviar audio a Deepgram para esta sesión.
-      </label>
-      {demo && <label className="row small" style={{ gap: 8 }}>
-        <input type="checkbox" checked={adult} onChange={(event) => { setAdult(event.target.checked); revoke(); }} style={{ width: 22, height: 22 }} />
-        Confirmo que usaré solo voz adulta o sintética, no la voz de un menor de 13 años.
-      </label>}
+      <p className="small muted">La voz se envía a Deepgram (Nova-3) para transcribir en castellano y obtener tiempos estimados. La app no almacena audio; el tratamiento del proveedor depende del acuerdo y la configuración del despliegue.</p>
       {!snap.cloudReady && <div className="field">
         <label htmlFor="cloud-code">Código de acceso del responsable</label>
         <input id="cloud-code" type="password" className="input" value={code} maxLength={256} autoComplete="off" aria-describedby="cloud-code-help" onChange={(event) => { setCode(event.target.value); revoke(); }} />
         <span id="cloud-code-help" className="small muted">Se usa solo en memoria durante esta sesión. No se guarda en el perfil ni en los informes.</span>
       </div>}
-      {snap.cloudReady ? <p className="small" role="status">Autorización lista para esta sesión. El servidor comprobará el acceso al conectar.</p> : <button type="button" className="btn subtle" disabled={!consent || (demo && !adult) || !code.trim() || !snap.permissions.voice || snap.mission?.lang !== "es"} onClick={() => {
+      {snap.cloudReady ? <p className="small" role="status">Código listo para esta sesión. El servidor comprobará el acceso al conectar.</p> : <button type="button" className="btn subtle" disabled={!code.trim() || !snap.permissions.voice || snap.mission?.lang !== "es"} onClick={() => {
         if (!policy || policy.mode === "disabled") return;
-        ctl.authorizeCloud({ accessCode: code, audience: policy.mode, consent: true, adultConfirmed: adult });
+        ctl.authorizeCloud({ accessCode: code, audience: policy.mode });
         setCode("");
-      }}>Autorizar esta sesión con Deepgram</button>}
+      }}>Usar Deepgram en esta sesión</button>}
     </div>
   );
 }
@@ -621,7 +619,7 @@ function CloudAuthorization({ snap, ctl }: { snap: Snapshot; ctl: SessionControl
 // Adult view (desktop panel / mobile toggle)
 // ---------------------------------------------------------------------------
 
-function AdultPanel({ snap, open }: { snap: Snapshot; open: boolean }) {
+function AdultPanel({ snap, ctl, open }: { snap: Snapshot; ctl: SessionController; open: boolean }) {
   const ctx = snap.ctx;
   const mission = snap.mission;
   if (!mission) return null;
@@ -701,6 +699,7 @@ function AdultPanel({ snap, open }: { snap: Snapshot; open: boolean }) {
           <span className="small muted">{snap.permissions.mood ? "Sin dato" : "Desactivado por la familia"}</span>
         )}
       </div>
+      {snap.experimentalEmotion && <ExperimentalAffectCards state={snap} actions={ctl} moodStart={ctx?.moodStart ?? null} />}
       <SignalRow name="Ruido" value={snap.simulation ? "no disponible" : live.noise === "alto" ? "alto" : live.noise === "ok" ? "bien" : "—"} />
       <SignalRow name="Juez" value={snap.judgeMode === "ia" ? "IA (3 corridas)" : "reglas"} />
       <p className="small muted">Las señales de proceso describen cómo lo dijo; no son una nota.</p>

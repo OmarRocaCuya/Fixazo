@@ -53,7 +53,6 @@ function Chat() {
   const router = useRouter();
   const store = useStore();
   const profile = store?.loadProfile() ?? null;
-  const consent = store?.loadConsent() ?? null;
   const paused = store?.loadPaused() ?? null;
   const reminder = store?.loadReminder() ?? null;
   const saved = store?.loadChat() ?? [];
@@ -240,11 +239,7 @@ function Chat() {
         </div>
 
         <div className="thread" aria-live="polite">
-          {!consent && (
-            <p className="notice">
-              Antes de la primera sesión, revisa los permisos. <Link href="/consentimiento">Ir al consentimiento</Link>
-            </p>
-          )}
+          <p className="small muted">Puedes empezar sin crear un perfil. El micrófono se activa solo cuando lo eliges dentro de la sesión.</p>
           {paused && (
             <div className="card warn tight spread">
               <span>Tienes una misión en pausa. Puedes retomarla dentro de 24 horas.</span>

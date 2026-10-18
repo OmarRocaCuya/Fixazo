@@ -17,6 +17,7 @@ from typing import Any, Callable
 from ctc_timing import MAX_TIMED_SECONDS, MAX_TIMED_WORDS, TIMED_MODEL, TIMING_METHOD, TimingUnavailable, infer_asr_timed, normalized_text, timing_supported
 from speech import SPEECH_MODELS, SpeechAudio, SpeechFailure, infer_speech, load_speech, validate_speech, validate_speech_audio
 from dialogue import DIALOGUE_MODEL, DIALOGUE_MODE, DialogueFailure, infer_dialogue, load_dialogue, validate_dialogue
+from emotion import EMOTION_ATTRIBUTION, EMOTION_LICENSE, EMOTION_MODEL, EMOTION_REVISION, MAX_EMOTION_SECONDS, MIN_EMOTION_SECONDS, EmotionFailure, infer_emotion, load_emotion, normalize_emotion_result, warmup_audio
 
 ASR_LANGUAGES = ("spa_Latn", "quy_Latn", "quz_Latn", "ayr_Latn")
 TRANSLATION_LANGUAGES = ("spa_Latn", "quy_Latn", "ayr_Latn")
@@ -67,6 +68,9 @@ class Settings:
     research_speech: bool = False
     speech_accepted: bool = False
     local_reading_llm: bool = False
+    experimental_emotion: bool = False
+    emotion_license_accepted: bool = False
+    emotion_warmup: bool = False
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -82,6 +86,9 @@ class Settings:
             research_speech=os.getenv("ENABLE_RESEARCH_SPEECH") == "true",
             speech_accepted=os.getenv("MMS_NONCOMMERCIAL_RESEARCH_ACCEPTED") == "true",
             local_reading_llm=os.getenv("ENABLE_LOCAL_READING_LLM") == "true",
+            experimental_emotion=os.getenv("ENABLE_EXPERIMENTAL_EMOTION") == "true",
+            emotion_license_accepted=os.getenv("EMOTION2VEC_LICENSE_ACCEPTED") == "true",
+            emotion_warmup=os.getenv("EMOTION_WARMUP") == "true",
         )
 
     @property
@@ -95,6 +102,10 @@ class Settings:
     @property
     def speech_enabled(self) -> bool:
         return self.research_speech and self.speech_accepted
+
+    @property
+    def emotion_enabled(self) -> bool:
+        return self.experimental_emotion and self.emotion_license_accepted
 
 
 def authorize(settings: Settings, header: str) -> None:
@@ -207,13 +218,18 @@ def infer_translation(bundle: tuple[Any, Any], text: str, source: str, target: s
 class Runtime:
     """One ASR/NLLB/dialogue model and one TTS language, serialized, no queue."""
 
-    def __init__(self, settings: Settings, *, asr_loader: Callable = load_asr, asr_infer: Callable = infer_asr, translation_loader: Callable = load_translation, translation_infer: Callable = infer_translation, timed_infer: Callable = infer_asr_timed, speech_loader: Callable = load_speech, speech_infer: Callable = infer_speech, dialogue_loader: Callable = load_dialogue, dialogue_infer: Callable = infer_dialogue):
+    def __init__(self, settings: Settings, *, asr_loader: Callable = load_asr, asr_infer: Callable = infer_asr, translation_loader: Callable = load_translation, translation_infer: Callable = infer_translation, timed_infer: Callable = infer_asr_timed, speech_loader: Callable = load_speech, speech_infer: Callable = infer_speech, dialogue_loader: Callable = load_dialogue, dialogue_infer: Callable = infer_dialogue, emotion_loader: Callable = load_emotion, emotion_infer: Callable = infer_emotion):
         self.settings = settings
         self._asr_loader, self._asr_infer = asr_loader, asr_infer
         self._translation_loader, self._translation_infer = translation_loader, translation_infer
         self._timed_infer = timed_infer
         self._speech_loader, self._speech_infer = speech_loader, speech_infer
         self._dialogue_loader, self._dialogue_infer = dialogue_loader, dialogue_infer
+        self._emotion_loader, self._emotion_infer = emotion_loader, emotion_infer
+        self._emotion: Any = None
+        self._emotion_loading = False
+        self._emotion_error: str | None = None
+        self._emotion_verified = False
         self._asr: Any = None
         self._translation: Any = None
         self._speech: Any = None
@@ -239,6 +255,7 @@ class Runtime:
             "translation": {"ready": self._translation is not None, "enabled": self.settings.translation_enabled, "loading": self._translation_loading, "lastError": self._translation_error, "model": NLLB_MODEL, "languages": list(TRANSLATION_LANGUAGES), "researchOnly": True},
             "speech": {"enabled": self.settings.speech_enabled, "ready": {language: self._speech is not None and self._speech_language == language for language in SPEECH_MODELS}, "loading": self._speech_loading, "lastError": self._speech_error, "models": dict(SPEECH_MODELS), "languages": list(SPEECH_MODELS), "researchOnly": True},
             "dialogue": {"enabled": self.settings.local_reading_llm, "ready": self._dialogue is not None, "loading": self._dialogue_loading, "lastError": self._dialogue_error, "model": DIALOGUE_MODEL, "mode": DIALOGUE_MODE, "researchOnly": True},
+            "emotion": {"enabled": self.settings.emotion_enabled, "loaded": self._emotion is not None, "ready": self._emotion_verified and not self._emotion_loading, "inferenceVerified": self._emotion_verified, "loading": self._emotion_loading, "lastError": self._emotion_error, "model": EMOTION_MODEL, "revision": EMOTION_REVISION, "license": EMOTION_LICENSE, "experimental": True},
         }
 
     def _ensure_asr(self) -> None:
@@ -287,6 +304,13 @@ class Runtime:
         if not self.settings.configured or not self._lock.acquire(blocking=False):
             return
         try:
+            # Prioritize the small emotion model; the same worker/semaphore
+            # then warms ASR, so enabling both cannot starve either loader.
+            if self.settings.emotion_enabled:
+                self._prepare_emotion_locked()
+        except ServiceError:
+            pass
+        try:
             self._ensure_asr()
             if self.settings.translation_enabled:
                 self._ensure_translation()
@@ -294,6 +318,51 @@ class Runtime:
             pass  # Read /health; never log raw exceptions, paths, audio or text.
         finally:
             self._lock.release()
+
+    def start_emotion_warmup(self) -> None:
+        """Load and verify only emotion in the background; never load ASR.
+
+        A cold user request must not wait through a model download (potentially
+        minutes) and hit the web proxy timeout. One semaphore owns both loading
+        and inference; repeated requests cannot spawn duplicate downloads.
+        """
+        if not self.settings.configured or not self.settings.emotion_enabled or self._emotion_verified:
+            return
+        if not self._lock.acquire(blocking=False):
+            return
+        self._emotion_loading = True
+
+        def prepare():
+            try:
+                self._prepare_emotion_locked()
+            except ServiceError:
+                pass  # Sanitized state is available from /health.
+            finally:
+                self._lock.release()
+
+        try:
+            threading.Thread(target=prepare, daemon=True, name="emotion-warmup").start()
+        except Exception:
+            self._emotion_loading = False
+            self._emotion_error = "model-load-failed"
+            self._lock.release()
+
+    def _prepare_emotion_locked(self) -> None:
+        self._emotion_loading = True
+        try:
+            self._ensure_emotion()
+            normalize_emotion_result(self._emotion_infer(self._emotion, warmup_audio()))
+            self._emotion_verified = True
+            self._emotion_error = None
+        except ServiceError:
+            raise
+        except Exception:
+            self._emotion = None
+            self._emotion_verified = False
+            self._emotion_error = "model-inference-failed"
+            raise ServiceError("emotion-inference-failed", 503) from None
+        finally:
+            self._emotion_loading = False
 
     def _ensure_dialogue(self) -> None:
         if self._dialogue is not None:
@@ -307,6 +376,50 @@ class Runtime:
             raise ServiceError("dialogue-model-unavailable", 503) from None
         finally:
             self._dialogue_loading = False
+
+    def _ensure_emotion(self) -> None:
+        if self._emotion is not None:
+            return
+        self._emotion_loading = True
+        try:
+            self._emotion = self._emotion_loader(self.settings)
+            self._emotion_error = None
+        except Exception:
+            self._emotion_error = "model-load-failed"
+            raise ServiceError("emotion-model-unavailable", 503) from None
+
+    def emotion(self, payload: bytes) -> dict:
+        """EXPERIMENTAL: 9-class emotion probabilities for one short utterance."""
+        if not self.settings.experimental_emotion:
+            raise ServiceError("not-found", 404)
+        if not self.settings.emotion_license_accepted:
+            raise ServiceError("emotion-license-not-accepted", 403)
+        audio = validate_wav(payload)
+        if not MIN_EMOTION_SECONDS <= audio.seconds <= MAX_EMOTION_SECONDS:
+            raise ServiceError("emotion-audio-duration-invalid", 422)
+        if not self._emotion_verified:
+            self.start_emotion_warmup()
+            code = "emotion-model-loading" if self._emotion_loading or self._emotion_verified else "emotion-model-unavailable" if self._emotion_error else "model-busy"
+            raise ServiceError(code, 503)
+        if not self._lock.acquire(blocking=False):
+            raise ServiceError("model-busy", 503)
+        try:
+            self._ensure_emotion()
+            labels = normalize_emotion_result(self._emotion_infer(self._emotion, audio))
+            self._emotion_error = None
+            return {"labels": labels, "top": labels[0], "model": EMOTION_MODEL, "revision": EMOTION_REVISION, "license": EMOTION_LICENSE, "attribution": EMOTION_ATTRIBUTION, "durationSeconds": audio.seconds, "experimental": True, "requiresHumanReview": True}
+        except EmotionFailure as error:
+            self._emotion_error = "model-inference-failed"
+            self._emotion_verified = False
+            raise ServiceError(error.code, error.status) from None
+        except ServiceError:
+            raise
+        except Exception:
+            self._emotion_error = "model-inference-failed"
+            self._emotion_verified = False
+            raise ServiceError("emotion-inference-failed", 503) from None
+        finally:
+            self._lock.release()
 
     def transcribe(self, payload: bytes, language: Any) -> dict:
         language = validate_language(language)

@@ -1,3 +1,4 @@
+import type { AffectEstimate, ExperimentalAffectReport } from "./signals/affect";
 // Shared domain types for Ñawinchay. Pure data, no browser APIs.
 
 export type Lang = "es" | "qu";
@@ -110,6 +111,8 @@ export interface TurnRecord {
   /** True when measurement conditions made the turn not observable. */
   unobservable?: boolean;
   transcription?: TranscriptionProvenance;
+  /** EXPERIMENTAL, model output only: derived label and two numbers, never audio. */
+  affect?: AffectEstimate;
   at: number;
 }
 
@@ -124,12 +127,6 @@ export interface Permissions {
   voice: boolean;
   process: boolean; // "cómo lo dice"
   mood: boolean; // "cómo se siente"
-}
-
-export interface Consent {
-  version: string;
-  acceptedAt: string;
-  permissions: Permissions;
 }
 
 export type ResultStatus = "ok" | "dudoso" | "no_observable";
@@ -230,4 +227,6 @@ export interface Report {
   };
   homeQuestion: { es: string };
   notMeasured: string[];
+  /** EXPERIMENTAL, shown only in the adult view. Never used for grading. */
+  experimentalAffect?: ExperimentalAffectReport;
 }

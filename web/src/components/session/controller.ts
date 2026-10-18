@@ -1,7 +1,7 @@
 // Session orchestrator for the browser. Owns the state machine, the agent voice,
 // the transcriber and the on-device audio analyzer, and exposes an immutable
 // snapshot to React (useSyncExternalStore).
-import type { Confidence, Consent, Decision, FrameFeature, Mission, Mood, Permissions, Profile, TranscriptionProvenance, TurnRecord, TurnState } from "@/lib/types";
+import type { Confidence, Decision, FrameFeature, Mission, Mood, Permissions, Profile, TranscriptionProvenance, TurnRecord, TurnState } from "@/lib/types";
 import { initialContext, start, transition, type Effect, type MachineContext, type MachineEvent, type Utterance } from "@/lib/session/machine";
 import { liveReadingProgress, readingMetrics } from "@/lib/signals/reading";
 import { summarizeTurnAudio } from "@/lib/signals/summary";
@@ -9,6 +9,9 @@ import { detectLongPauses, f0RangeSemitones, prosodyScore, speechOnset } from "@
 import { classifyPace, computeBaseline, paceFeatures, shouldOfferBreak, type PaceFeatures } from "@/lib/signals/pace";
 import { noiseFloorDb } from "@/lib/signals/context";
 import { answerLength } from "@/lib/signals/text";
+import { mapModelResult, unavailableAffect, type AffectEstimate, type EmotionModelResult } from "@/lib/signals/affect";
+import { capSeconds, encodeWav16, mixToMono, resampleTo16k, TARGET_RATE } from "@/lib/audio/wav";
+import { EmotionClientError, requestEmotionModel } from "@/lib/browser/emotion-client";
 import { buildReport, type JudgeOutcome } from "@/lib/report/build";
 import { getStore, type PausedSession } from "@/lib/storage";
 import { notifyStore } from "@/lib/useStore";
@@ -98,6 +101,20 @@ export interface Snapshot {
   localReady: boolean;
   localPreparing: boolean;
   localProgress: string | null;
+  /** Experimental emotion estimate (shown in the adult view only). */
+  experimentalEmotion: boolean;
+  /** Adult-only timeline of estimates. Never projected into the child view (see childView.ts). */
+  affect: Array<{ state: TurnState; estimate: AffectEstimate }>;
+  /** An access code enables sending answer audio to the private emotion2vec+ backend. */
+  emotionBackendAuthorized: boolean;
+  /** The last request failed. No local emotion is substituted. */
+  emotionBackendFallback: boolean;
+  emotionBackendError: string | null;
+  emotionStatus: VoicePolicyStatus | null;
+  emotionStatusLoading: boolean;
+  affectTest: AffectEstimate | null;
+  affectTestBusy: boolean;
+  affectTestError: string | null;
 }
 
 const EMPTY_LIVE: LiveSignals = { pcpm: null, accuracy: null, selfCorrections: 0, longPauses: null, prosody: null, differentIdx: [], noise: null };
@@ -146,6 +163,16 @@ function initialSnapshot(): Snapshot {
     localReady: false,
     localPreparing: false,
     localProgress: null,
+    experimentalEmotion: true,
+    affect: [],
+    emotionBackendAuthorized: false,
+    emotionBackendFallback: false,
+    emotionBackendError: null,
+    emotionStatus: null,
+    emotionStatusLoading: true,
+    affectTest: null,
+    affectTestBusy: false,
+    affectTestError: null,
   };
 }
 
@@ -155,7 +182,15 @@ export class SessionController {
   private ctx: MachineContext | null = null;
   private mission: Mission | null = null;
   private profile: Profile | null = null;
-  private permissions: Permissions = DEFAULT_PERMS;
+  private permissions: Permissions;
+  private experimentalEmotion = true;
+  private emotionAccess: CloudVoiceAccess | null = null;
+  private pendingAffect: Promise<void>[] = [];
+  private emotionGeneration = 0;
+  private emotionRequests = new Set<AbortController>();
+  private emotionBuffers = new Set<Float32Array>();
+  private emotionTurns = new Set<TurnRecord>();
+  private emotionStatusRequest: AbortController | null = null;
   private voice = new AgentVoice(() => this.clock());
   private analyzer = new AudioAnalyzer();
   private transcriber: Transcriber | null = null;
@@ -208,15 +243,26 @@ export class SessionController {
     return this.analyzer.running ? this.analyzer.now() : typeof performance !== "undefined" ? performance.now() : Date.now();
   }
 
+  /** Session defaults. There is no stored consent: the MVP always uses these. */
+  constructor(private readonly defaults: Permissions = DEFAULT_PERMS) {
+    this.permissions = defaults;
+  }
+
   // ------------------------------------------------------------- lifecycle
   init() {
+    this.cancelEmotionRequests();
+    this.emotionStatusRequest?.abort();
+    this.emotionStatusRequest = null;
     this.disposed = false;
     const request = ++this.lifecycleRequest;
     this.cloudAccess = null;
     this.snap = initialSnapshot();
     const store = getStore();
-    const consent: Consent | null = store.loadConsent();
-    this.permissions = consent?.permissions ?? DEFAULT_PERMS;
+    // No adult/guardian consent gate in the MVP: defaults apply and the
+    // experimental emotion estimate is available whenever the model is.
+    this.permissions = this.defaults;
+    this.experimentalEmotion = true;
+    this.emotionAccess = null;
     this.profile = store.loadProfile() ?? { alias: "tu hijo", grade: 4, homeLang: "es", readingLang: "es" };
     this.mission = store.currentMission();
     if (!this.mission) {
@@ -232,6 +278,7 @@ export class SessionController {
       mission: this.mission,
       profile: this.profile,
       permissions: this.permissions,
+      experimentalEmotion: this.experimentalEmotion,
       simulation: forced !== null,
       simulationForced: forced,
       resumable,
@@ -243,6 +290,36 @@ export class SessionController {
       .then((j: { mode?: "ia" | "reglas" }) => request === this.lifecycleRequest && this.patch({ judgeMode: j.mode === "ia" ? "ia" : "reglas" }))
       .catch(() => request === this.lifecycleRequest && this.patch({ judgeMode: "reglas" }));
     void this.refreshAsrStatus();
+    if (this.experimentalEmotion) void this.refreshEmotionStatus();
+    else this.patch({ emotionStatusLoading: false });
+  }
+
+  async refreshEmotionStatus() {
+    if (!this.experimentalEmotion || this.disposed) return;
+    const request = this.lifecycleRequest;
+    const controller = new AbortController();
+    this.emotionStatusRequest?.abort();
+    this.emotionStatusRequest = controller;
+    const timeout = setTimeout(() => controller.abort(), 10_000);
+    this.patch({ emotionStatusLoading: true });
+    let status: VoicePolicyStatus;
+    try {
+      const response = await fetch("/api/emotion", { cache: "no-store", signal: controller.signal });
+      const data = await response.json() as VoicePolicyStatus;
+      if (!response.ok || !["disabled", "adult-demo", "approved-pilot"].includes(data.mode) || typeof data.enabled !== "boolean") throw new Error("invalid status");
+      status = { enabled: data.enabled, mode: data.mode, reason: typeof data.reason === "string" ? data.reason.slice(0, 500) : null };
+    } catch {
+      status = { enabled: false, mode: "disabled", reason: "No pudimos comprobar emotion2vec+. Reintenta; no se usará texto ni una emoción simulada." };
+    } finally { clearTimeout(timeout); }
+    if (this.disposed || request !== this.lifecycleRequest || this.emotionStatusRequest !== controller) return;
+    this.emotionStatusRequest = null;
+    if (this.emotionAccess && (!status.enabled || status.mode !== this.emotionAccess.audience)) {
+      this.emotionAccess = null;
+      this.cancelEmotionRequests();
+      this.analyzer.discardCapture();
+      this.patch({ affectTestBusy: false, affectTest: null });
+    }
+    this.patch({ emotionStatus: status, emotionStatusLoading: false, emotionBackendAuthorized: !!this.emotionAccess });
   }
 
   async refreshAsrStatus() {
@@ -276,8 +353,7 @@ export class SessionController {
   authorizeCloud(access: CloudVoiceAccess | null) {
     if (this.snap.phase !== "intro" || this.snap.voiceProvider !== "deepgram") return;
     const policy = this.snap.cloudStatus;
-    const allowed = access?.consent === true && !!access.accessCode.trim() && policy?.enabled === true && policy.mode === access.audience
-      && (access.audience !== "adult-demo" || access.adultConfirmed === true);
+    const allowed = access !== null && !!access.accessCode.trim() && policy?.enabled === true && policy.mode === access.audience;
     this.cloudAccess = allowed ? { ...access, accessCode: access.accessCode.trim() } : null;
     this.patch({ cloudReady: !!this.cloudAccess });
     this.applyVoiceSetup();
@@ -311,9 +387,14 @@ export class SessionController {
   }
 
   dispose() {
+    this.cancelEmotionRequests();
+    this.emotionStatusRequest?.abort();
+    this.emotionStatusRequest = null;
     this.disposed = true;
     this.lifecycleRequest++;
     this.cloudAccess = null;
+    this.emotionAccess = null;
+    this.pendingAffect = [];
     releaseLocalAsr();
     this.epoch++;
     this.micRequest++;
@@ -357,7 +438,9 @@ export class SessionController {
     this.breakOffered = false;
     this.answerLengths = [];
     this.startedAt = Date.now();
-    this.patch({ phase: "running", lines: [], reportId: null, error: null });
+    this.cancelEmotionRequests();
+    this.pendingAffect = [];
+    this.patch({ phase: "running", lines: [], reportId: null, error: null, affect: [], affectTest: null, affectTestBusy: false, affectTestError: null });
 
     if (!this.snap.simulation) await this.startMic(epoch);
     if (this.disposed || epoch !== this.epoch) return;
@@ -580,6 +663,8 @@ export class SessionController {
       // time, response latency or evidence that the learner stayed silent.
       this.turnStart = this.clock();
       this.turnFrames = [];
+      // EXPERIMENTAL: hold this ANSWER turn's audio in RAM (never READ).
+      if (this.experimentalEmotion && this.emotionAccess && state !== "READ" && voiceMode && this.analyzer.running) this.analyzer.startCapture(15);
       this.patch({ listening: true, asrConnecting: false });
       this.startTurnTicker(state, epoch, !!voiceMode);
     };
@@ -728,6 +813,15 @@ export class SessionController {
     this.epoch++; // freeze this turn
     const frozen = this.epoch;
     const turnEndedAt = this.clock();
+    // Freeze audio now, before a recognizer's delayed final flush can capture
+    // unrelated speech. Every early return below wipes this owned clip.
+    const clip = kind === "read" ? null : this.analyzer.takeCapture();
+    if (clip) this.emotionBuffers.add(clip.samples);
+    // The emotion model starts from audio alone, before ASR completes. A failed
+    // or empty transcript must not suppress a valid voice-model observation.
+    const emotionTurn: TurnRecord | null = this.experimentalEmotion && clip
+      ? { state: this.ctx.state as TurnState, transcript: "", simulated: false, audio: null, at: Date.now() } : null;
+    if (emotionTurn) this.queueAffect(emotionTurn, clip);
     this.clearTimers();
     this.patch({ listening: false, asrFinalizing: true });
     let text: string;
@@ -736,16 +830,19 @@ export class SessionController {
       const result = await this.transcriber?.stop();
       text = result ? [this.transcriptPrefix, result].filter(Boolean).join(" ").trim() : this.turnText.trim();
     } catch {
+      this.releaseEmotionSamples(clip?.samples);
       if (frozen === this.epoch) this.useManualInput(voiceErrorMessage("network"));
       return;
     }
-    if (frozen !== this.epoch) return;
+    if (frozen !== this.epoch) { this.releaseEmotionSamples(clip?.samples); return; }
     if ((this.snap.voiceProvider === "deepgram" || this.snap.voiceProvider === "local-whisper") && this.snap.asrMetadata?.isFinal !== true) {
       this.turnText = text || this.turnText;
+      this.releaseEmotionSamples(clip?.samples);
       this.useManualInput("El reconocedor no confirmó el texto final. Revisa y completa la transcripción antes de enviarla; no lo contamos como un error del niño.");
       return;
     }
     if (!text) {
+      this.releaseEmotionSamples(clip?.samples);
       this.useManualInput(voiceErrorMessage("no-speech"));
       return;
     }
@@ -766,7 +863,11 @@ export class SessionController {
       return;
     }
     const unobservable = audio ? audio.snrDb !== null && audio.snrDb < 6 && answerLength(text) < 2 : false;
-    this.turns.push({ state: this.ctx.state as TurnState, transcript: text, simulated: false, audio, bargeIn: this.turnBargeIn, unobservable, transcription, at: Date.now() });
+    const turnRecord: TurnRecord = emotionTurn ?? { state: this.ctx.state as TurnState, transcript: "", simulated: false, audio: null, at: Date.now() };
+    Object.assign(turnRecord, { transcript: text, audio, bargeIn: this.turnBargeIn, unobservable, transcription });
+    this.turns.push(turnRecord);
+    if (this.experimentalEmotion && !emotionTurn) this.queueAffect(turnRecord, clip);
+    else this.releaseEmotionSamples(clip?.samples);
     this.turnBargeIn = false;
     this.checkPace(frames, text);
     this.patch({ lines: [...this.snap.lines, { who: "nino" as const, show: text }].slice(-8) });
@@ -805,12 +906,151 @@ export class SessionController {
     }
   }
 
+  // ------------------------------------------------- experimental emotion
+  // EXPERIMENTAL: estimate shown only in the adult view, from the VOICE of one answer
+  // turn. Never spoken, never shown in the child zone, never changes the state
+  // machine, help offers or pace check, and never reads the transcript.
+
+  /** Enables sending answer audio to emotion2vec+ with the deployment access code. */
+  authorizeEmotionBackend(accessCode: string) {
+    if (!this.experimentalEmotion) return;
+    const status = this.snap.emotionStatus;
+    const audience = status?.mode;
+    const code = accessCode.trim();
+    this.cancelEmotionRequests();
+    this.emotionAccess = code && status?.enabled && (audience === "approved-pilot" || audience === "adult-demo")
+      ? { accessCode: code, audience } : null;
+    if (!this.emotionAccess) this.analyzer.discardCapture();
+    this.patch({ emotionBackendAuthorized: !!this.emotionAccess, emotionBackendFallback: false, emotionBackendError: this.emotionAccess ? null : "Falta el código de acceso para usar emotion2vec+.", affectTestBusy: false,
+      affect: this.snap.affect.map((entry) => entry.estimate.note === "Analizando la voz con emotion2vec+…" ? { ...entry, estimate: unavailableAffect("Análisis cancelado al cambiar la autorización.") } : entry) });
+  }
+
+  private cancelEmotionRequests() {
+    this.emotionGeneration++;
+    for (const controller of this.emotionRequests) controller.abort();
+    this.emotionRequests.clear();
+    for (const samples of this.emotionBuffers) samples.fill(0);
+    this.emotionBuffers.clear();
+    this.emotionTurns.clear();
+    this.pendingAffect = [];
+  }
+
+  private releaseEmotionSamples(samples?: Float32Array) {
+    samples?.fill(0);
+    if (samples) this.emotionBuffers.delete(samples);
+  }
+
+  private emotionError(error: unknown): string {
+    const code = error instanceof EmotionClientError ? error.code : "invalid-audio";
+    if (code === "not-authorized") return "Falta el código de acceso para usar emotion2vec+.";
+    if (code === "invalid-audio") return "Se necesita al menos un segundo de audio de voz (máximo 15 segundos).";
+    if (code === "cancelled") return "Análisis de voz cancelado; no se estimó una emoción.";
+    if (code === "timeout") return "emotion2vec+ tardó demasiado. Reintenta con un audio de prueba; no se inventó una emoción.";
+    if (code === "emotion-model-loading") return "emotion2vec+ aún está cargando. Espera y vuelve a probar el audio.";
+    if (code === "no-speech") return "No se detectó voz suficiente en el audio; no se estimó una emoción.";
+    return `No se pudo ejecutar emotion2vec+ (${code}). No se sustituye con texto ni heurísticas.`;
+  }
+
+  /** Real model inference only, authorized separately from the ASR provider. */
+  private async fetchRemoteEmotion(samples16k: Float32Array | null, controller: AbortController): Promise<EmotionModelResult> {
+    const access = this.emotionAccess;
+    if (!access) throw new EmotionClientError("not-authorized");
+    if (!samples16k || samples16k.length < TARGET_RATE) throw new EmotionClientError("invalid-audio");
+    const wav = encodeWav16(samples16k);
+    try {
+      return await requestEmotionModel(wav, access, fetch, controller.signal);
+    } finally {
+      wav.fill(0);
+    }
+  }
+
+  private queueAffect(turn: TurnRecord, clip: { samples: Float32Array; rate: number } | null) {
+    const generation = this.emotionGeneration;
+    const controller = new AbortController();
+    this.emotionRequests.add(controller);
+    this.emotionTurns.add(turn);
+    // Reserve the turn's chronological position before asynchronous inference.
+    const entry = { state: turn.state, estimate: unavailableAffect("Analizando la voz con emotion2vec+…") };
+    turn.affect = entry.estimate;
+    this.patch({ affect: [...this.snap.affect, entry].slice(-12) });
+    const job = (async () => {
+      let samples16k: Float32Array | null = null;
+      let estimate: AffectEstimate;
+      let failure: string | null = null;
+      try {
+        samples16k = clip ? resampleTo16k(clip.samples, clip.rate) : null;
+        this.releaseEmotionSamples(clip?.samples);
+        const remote = await this.fetchRemoteEmotion(samples16k ? capSeconds(samples16k, TARGET_RATE, 15) : null, controller);
+        estimate = mapModelResult(remote);
+      } catch (error) {
+        failure = this.emotionError(error);
+        estimate = unavailableAffect(failure);
+      } finally {
+        this.releaseEmotionSamples(clip?.samples);
+        samples16k?.fill(0);
+        this.emotionRequests.delete(controller);
+      }
+      if (this.disposed || generation !== this.emotionGeneration || !this.emotionTurns.has(turn)) return;
+      turn.affect = estimate;
+      this.patch({ affect: this.snap.affect.map((value) => value === entry ? { state: turn.state, estimate } : value), emotionBackendFallback: failure !== null, emotionBackendError: failure });
+      this.emotionTurns.delete(turn);
+    })();
+    this.pendingAffect.push(job);
+    void job.finally(() => { this.pendingAffect = this.pendingAffect.filter((value) => value !== job); });
+  }
+
+  /** Demo helper: analyze a chosen audio file with the same pipeline (adult panel). */
+  async analyzeTestAudio(file: Blob) {
+    if (!this.experimentalEmotion || this.snap.affectTestBusy) return;
+    if (!this.emotionAccess) { this.patch({ affectTest: null, affectTestError: this.emotionError(new EmotionClientError("not-authorized")) }); return; }
+    if (file.size > 10 * 1024 * 1024) {
+      this.patch({ affectTestError: "El archivo pesa más de 10 MB." });
+      return;
+    }
+    this.patch({ affectTestBusy: true, affectTestError: null, affectTest: null });
+    const generation = this.emotionGeneration;
+    const controller = new AbortController();
+    this.emotionRequests.add(controller);
+    const active = () => !this.disposed && generation === this.emotionGeneration && !controller.signal.aborted;
+    let samples: Float32Array | null = null;
+    let mono: Float32Array | null = null;
+    let decoded: AudioBuffer | null = null;
+    let encoded: ArrayBuffer | null = null;
+    try {
+      const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new Ctx();
+      try {
+        encoded = await file.arrayBuffer();
+        decoded = await ctx.decodeAudioData(encoded);
+      } finally {
+        void ctx.close();
+      }
+      const buffer = decoded;
+      const channels = Array.from({ length: buffer.numberOfChannels }, (_, i) => buffer.getChannelData(i));
+      mono = mixToMono(channels.map((channel) => channel.subarray(0, Math.ceil(buffer.sampleRate * 15))));
+      samples = resampleTo16k(mono, buffer.sampleRate);
+      if (!active()) return;
+      const remote = await this.fetchRemoteEmotion(capSeconds(samples, TARGET_RATE, 15), controller);
+      if (active()) this.patch({ affectTest: mapModelResult(remote), emotionBackendFallback: false, emotionBackendError: null });
+    } catch (error) {
+      if (active()) this.patch({ affectTestError: error instanceof EmotionClientError ? this.emotionError(error) : "No se pudo leer ese audio. Usa un WAV o WebM corto." });
+    } finally {
+      if (encoded?.byteLength) new Uint8Array(encoded).fill(0);
+      if (decoded) for (let i = 0; i < decoded.numberOfChannels; i++) decoded.getChannelData(i).fill(0);
+      mono?.fill(0);
+      samples?.fill(0);
+      this.emotionRequests.delete(controller);
+      if (!this.disposed && generation === this.emotionGeneration) this.patch({ affectTestBusy: false });
+    }
+  }
+
   /** Dispatch even though endVoiceTurn bumped the epoch. */
   private forceDispatch(ev: MachineEvent) {
     this.dispatch(ev);
   }
 
   private stopListening() {
+    this.analyzer.discardCapture();
     if (this.ticker) clearInterval(this.ticker);
     this.ticker = null;
     this.transcriber?.abort();
@@ -860,6 +1100,7 @@ export class SessionController {
       return;
     }
     if (!ANSWER_STATES.has(ctx.state) || (ctx.state === "STANCE" && ctx.awaitingConfidence)) return;
+    // No audio in simulation: the experimental estimate needs the microphone.
     this.turns.push({
       state: ctx.state as TurnState,
       transcript: t,
@@ -985,7 +1226,17 @@ export class SessionController {
       };
       await Promise.all([ask("infiere", ctx.answers.infiere ?? ""), ask("reflexiona", ctx.answers.revise ?? "")]);
     }
+    if (this.pendingAffect.length) {
+      // Bound report latency and seal the result: no inference may mutate a
+      // report or adult timeline after it has been saved.
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      await Promise.race([Promise.allSettled(this.pendingAffect), new Promise((resolve) => { timer = setTimeout(resolve, 12_000); })]);
+      if (timer) clearTimeout(timer);
+    }
     if (epoch !== this.epoch) return;
+    this.cancelEmotionRequests();
+    for (const turn of this.turns) if (turn.affect?.note === "Analizando la voz con emotion2vec+…") turn.affect = unavailableAffect("El análisis no terminó antes de cerrar el informe.");
+    this.patch({ affect: this.snap.affect.map((entry) => entry.estimate.note === "Analizando la voz con emotion2vec+…" ? { ...entry, estimate: unavailableAffect("El análisis no terminó antes de cerrar el informe.") } : entry) });
     const simulated = this.turns.length > 0 && this.turns.every((t) => t.simulated);
     const id = `r-${Date.now().toString(36)}`;
     try {
@@ -1001,6 +1252,7 @@ export class SessionController {
           simulated,
           bargeIns: this.bargeIns,
           judge,
+          experimentalEmotion: this.experimentalEmotion,
         },
         { id },
       );

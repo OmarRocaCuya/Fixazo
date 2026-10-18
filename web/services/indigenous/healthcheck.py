@@ -17,7 +17,14 @@ def is_ready(payload) -> bool:
     asr, translation = payload.get("asr"), payload.get("translation")
     if not isinstance(asr, dict) or asr.get("ready") is not True or not isinstance(translation, dict):
         return False
-    return translation.get("enabled") is False or (translation.get("enabled") is True and translation.get("ready") is True)
+    if not (translation.get("enabled") is False or (translation.get("enabled") is True and translation.get("ready") is True)):
+        return False
+    # Legacy backends omit this optional feature. An enabled emotion model is
+    # not healthy merely because its weights loaded: a forward must succeed.
+    emotion = payload.get("emotion")
+    return emotion is None or (isinstance(emotion, dict) and (
+        emotion.get("enabled") is False or (emotion.get("enabled") is True
+        and emotion.get("ready") is True and emotion.get("inferenceVerified") is True)))
 
 
 def check(opener=None) -> bool:

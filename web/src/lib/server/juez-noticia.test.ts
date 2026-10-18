@@ -30,6 +30,28 @@ describe("bounded periodico judge contract", () => {
       expect(body.messages[1].content).toContain(params.texto); expect(body.messages[1].content).not.toContain("alumno");
     }
   });
+  it("passes authored choices only as feedback context and forbids grading or emotional inferences from them", async () => {
+    const elecciones = [{ preguntaId: "opcion-previa", pregunta: "¿Cuál es el propósito?", opcionElegida: "Informar a la comunidad", habilidad: "contrastar" }];
+    expect(await juzgarVoz({ ...params, elecciones })).toEqual([run, run, run]);
+    for (const [, init] of fetcher.mock.calls) {
+      const body = JSON.parse(init.body);
+      const system = body.messages[0].content;
+      const context = JSON.parse(body.messages[1].content);
+      expect(context.elecciones_previas_solo_para_personalizar_retroalimentacion).toEqual(elecciones);
+      expect(context.respuesta_del_estudiante).toBe(params.texto);
+      expect(context.criterios).toEqual([{ id: criterion.id, descripcion: criterion.descripcion, ejemplo_cumple: "", ejemplo_no_cumple: "" }]);
+      expect(context).not.toHaveProperty("correcta");
+      expect(system).toContain("Evalúas SOLO la respuesta libre actual contra sus criterios");
+      expect(system).toContain("No son prueba de habilidad ni de corrección");
+      expect(system).toContain('nunca justifican "cumple" ni una "cita"');
+      expect(system).toContain("No infieras ni etiquetes emociones");
+    }
+  });
+  it("keeps the legacy prompt compatible when no choices were supplied", async () => {
+    await juzgarVoz(params);
+    const body = JSON.parse(fetcher.mock.calls[0][1].body);
+    expect(JSON.parse(body.messages[1].content).elecciones_previas_solo_para_personalizar_retroalimentacion).toEqual([]);
+  });
   it.each([null, [], {}, { criterios: [], retro: "No" }, { ...run, retro: "" }, { ...run, criterios: [{ id: "otro", cumple: false, cita: "" }] }, { ...run, criterios: [{ id: "pista", cumple: "false", cita: "" }] }, { ...run, criterios: [{ id: "pista", cumple: false, cita: 7 }] }, { ...run, extra: "unknown" }])("rejects malformed criteria instead of treating them as a failed skill", async (bad) => {
     fetcher.mockImplementation(() => Promise.resolve(provider(bad)));
     expect(await juzgarVoz(params)).toEqual([]);

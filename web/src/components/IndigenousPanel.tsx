@@ -12,7 +12,7 @@ type Capabilities = {
   translation: { model: string; languages: string[]; enabled: boolean; ready: boolean; researchOnly: true };
 };
 type Result = { text: string; language?: string; sourceLanguage?: string; targetLanguage?: string; model: string };
-type Access = { audience: "adult-demo" | "approved-pilot"; consent: true; adultConfirmed: boolean; code: string };
+type Access = { audience: "adult-demo" | "approved-pilot"; code: string };
 const LANGUAGES: { value: Language; label: string }[] = [
   { value: "quy_Latn", label: "Quechua Ayacucho (quy)" }, { value: "quz_Latn", label: "Quechua Cusco (quz)" },
   { value: "ayr_Latn", label: "Aimara central (ayr)" }, { value: "spa_Latn", label: "Castellano (spa)" },
@@ -21,7 +21,7 @@ const TRANSLATION_LANGUAGES = LANGUAGES.filter((language) => language.value !== 
 const ERROR_COPY: Record<string, string> = {
   "not-authorized": "El código de acceso no fue aceptado. Pide al responsable el código vigente.",
   "access-denied": "El código de acceso no fue aceptado. Pide al responsable el código vigente.",
-  "not-allowed": "No se autorizó la solicitud. Revisa el código, la modalidad del despliegue y el consentimiento.",
+  "not-allowed": "No se autorizó la solicitud. Revisa el código y la modalidad del despliegue.",
   "voice-disabled": "El servicio está desactivado en este despliegue. No se procesó la solicitud.",
   "indigenous-unavailable": "El servidor de modelos no respondió. Conservamos el texto escrito para que puedas reintentar.",
   "backend-not-ready": "El servidor aún no terminó de cargar los modelos. Comprueba la disponibilidad antes de reintentar.",
@@ -33,8 +33,6 @@ const ERROR_COPY: Record<string, string> = {
   "indigenous-not-configured": "El servidor de modelos no está configurado. Pide al responsable que complete el despliegue; no se está simulando la transcripción.",
   "request-too-large": "La solicitud supera el límite. Usa hasta 30 segundos de voz o 1500 caracteres de texto.",
   "voice-access-required": "El código de acceso no fue aceptado. Pide al responsable el código vigente.",
-  "voice-consent-required": "Falta el consentimiento específico o cambió la modalidad del servidor. Revisa la autorización antes de enviar.",
-  "adult-demo-only": "Esta demo solo admite voz adulta o sintética. No envíes voces de menores de 13 años.",
   "voice-rate-limit": "Se alcanzó el límite de solicitudes. Espera antes de volver a intentarlo.",
 };
 
@@ -46,8 +44,6 @@ export function IndigenousPanel() {
   const [target, setTarget] = useState<Language>("spa_Latn");
   const [text, setText] = useState("");
   const [code, setCode] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [adult, setAdult] = useState(false);
   const [recording, setRecording] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -67,7 +63,7 @@ export function IndigenousPanel() {
     };
     const stop = () => {
       release();
-      setRecording(false); setBusy(false); setCode(""); setConsent(false); setAdult(false);
+      setRecording(false); setBusy(false); setCode("");
       setText(""); setTranscript(null); setTranslation(null);
       setMessage("Se cerró la prueba al salir u ocultar la pestaña. El micrófono está apagado y se borró el contenido temporal.");
     };
@@ -99,14 +95,14 @@ export function IndigenousPanel() {
     } finally { if (!signal?.aborted) setChecking(false); }
   }
 
-  const accessReady = status?.enabled && status.mode !== "disabled" && consent && (status.mode !== "adult-demo" || adult) && code.trim().length >= 16;
+  const accessReady = status?.enabled && status.mode !== "disabled" && code.trim().length >= 16;
   const canRecord = !!accessReady && supported && status?.backendReachable === true && status.asr.ready && status.asr.languages.includes(language);
   const canTranslate = !!accessReady && status?.backendReachable === true && status.translation.enabled && status.translation.ready
     && status.translation.languages.includes(language) && status.translation.languages.includes(target) && language !== target && !!text.trim();
 
   function access(): Access | null {
     if (!accessReady || !status || status.mode === "disabled") return null;
-    return { audience: status.mode, consent: true, adultConfirmed: adult, code: code.trim() };
+    return { audience: status.mode, code: code.trim() };
   }
 
   function cancel() {
@@ -139,7 +135,7 @@ export function IndigenousPanel() {
     setMessage("Transcribiendo en el servidor de Meta… No hay evaluación ni seguimiento por palabra.");
     const form = new FormData();
     form.set("action", "transcribe"); form.set("file", audio, "muestra.wav"); form.set("language", selected);
-    form.set("audience", accessValue.audience); form.set("consent", "true"); form.set("adultConfirmed", String(accessValue.adultConfirmed));
+    form.set("audience", accessValue.audience);
     try {
       const result = await send(form, accessValue, token);
       if (result && token === epoch.current) { setTranscript(result); setText(result.text); setMessage("Transcripción recibida. Debe revisarla una persona que hable esta variante antes de usarla."); }
@@ -172,7 +168,7 @@ export function IndigenousPanel() {
     const original = text.trim();
     setBusy(true); setTranslation(null); setMessage("Traduciendo texto en el servidor de investigación…");
     try {
-      const result = await send(JSON.stringify({ action: "translate", text: original, sourceLanguage: language, targetLanguage: target, audience: allowed.audience, consent: true, adultConfirmed: allowed.adultConfirmed }), allowed, token, true);
+      const result = await send(JSON.stringify({ action: "translate", text: original, sourceLanguage: language, targetLanguage: target, audience: allowed.audience }), allowed, token, true);
       if (result && token === epoch.current) { setTranslation({ ...result, original }); setMessage("Traducción automática de investigación. Revisa el original y la traducción con una persona hablante; puede cambiar el sentido."); }
     } catch (error) { if (token === epoch.current) setMessage(ERROR_COPY[error instanceof Error ? error.message : ""] ?? "La traducción no se completó. El texto escrito sigue disponible para corregirlo o reintentar."); }
     finally { if (token === epoch.current) setBusy(false); }
@@ -195,14 +191,13 @@ export function IndigenousPanel() {
         <button type="button" className="btn subtle" disabled={checking || busy} onClick={() => void readStatus()}>Comprobar modelos otra vez</button>
       </section>
       <section className="card stack" aria-labelledby="indigenous-access-title">
-        <h2 id="indigenous-access-title">Autorizar esta prueba</h2>
+        <h2 id="indigenous-access-title">Acceso a esta prueba</h2>
         <p className="small muted">Audio o texto se envían al servidor externo configurado por el responsable. No se guardan en el perfil, informes ni almacenamiento local. El tratamiento externo depende del despliegue. No incluyas nombres completos, datos personales ni contenido sensible.</p>
         <fieldset className="stack-sm" style={{ border: 0, padding: 0, margin: 0 }} disabled={busy || !status?.enabled}>
-          <legend className="sr-only">Permisos de la prueba de lenguas</legend>
+          <legend className="sr-only">Acceso a la prueba de lenguas</legend>
           <div className="field"><label htmlFor="indigenous-code">Código privado del responsable</label><input id="indigenous-code" type="password" className="input" value={code} minLength={16} maxLength={128} autoComplete="off" onChange={(event) => setCode(event.target.value)} /></div>
-          {status?.mode === "adult-demo" && <label className="row" style={{ alignItems: "start" }}><input type="checkbox" checked={adult} onChange={(event) => setAdult(event.target.checked)} /><span>Confirmo que solo usaré voz adulta o sintética, sin voces de menores de 13 años.</span></label>}
           {status?.mode === "approved-pilot" && <p className="small">Piloto autorizado: usa solo los participantes y condiciones aprobados por el responsable.</p>}
-          <label className="row" style={{ alignItems: "start" }}><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /><span>Autorizo enviar la muestra de audio o el texto para esta prueba y entiendo que requiere revisión de una persona hablante.</span></label>
+          <p className="small muted">La transcripción y la traducción requieren revisión de una persona hablante.</p>
         </fieldset>
       </section>
       <section className="card stack" aria-labelledby="indigenous-input-title">

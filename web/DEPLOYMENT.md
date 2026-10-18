@@ -87,7 +87,7 @@ Para una regresión tras promover: vuelve al último despliegue estable con [Rol
 - Voz de la misión: `speechSynthesis` del navegador/sistema operativo. `/voz` añade una demo independiente OpenAI Realtime 2.1, no vinculada al informe ni activa sin claves.
 - IA opcional: [Claude Haiku 5.5](https://platform.claude.com/docs/en/models/haiku-5-5/overview) (`claude-haiku-5-5`) para misiones y juez de texto, no para escuchar ni alinear la lectura.
 - `/lenguas`: adaptador de Meta Omnilingual ASR autoalojado, distinto del seguimiento de lectura. Requiere un servidor de modelos externo operativo; Vercel NO ejecuta los pesos. Traducción NLLB únicamente de investigación no comercial. Separación de voces y alineación forzada con el pasaje no están implementadas.
-- Sin etiquetas emocionales inferidas, huella vocal, juicios de acento ni señales de salud. La evidencia educativa sigue requiriendo confirmación humana y las heurísticas no están validadas para evaluación de niños.
+- Sin huella vocal, juicios de acento ni señales de salud. La evidencia educativa no usa etiquetas emocionales para calificar; la única estimación emocional es la demo adulta experimental y opcional descrita abajo. La evidencia educativa sigue requiriendo confirmación humana y las heurísticas no están validadas para evaluación de niños.
 
 ## Servicios de voz nuevos: activación y límites
 
@@ -100,7 +100,16 @@ Variables del servidor: consultar `.env.example`. Para una demo cerrada con voce
 3. Añadir únicamente las claves necesarias: `DEEPGRAM_API_KEY` para streaming; `OPENAI_API_KEY` para `/voz`.
 4. Para Meta, desplegar y precalentar por separado [el servicio Python](services/indigenous/README.md), con su token de servidor. Configurar aquí `INDIGENOUS_BACKEND_URL` HTTPS y `INDIGENOUS_BACKEND_TOKEN`. No exponer los pesos, token ni un endpoint abierto en Vercel.
 5. Para NLLB, confirmar el uso **no comercial** y habilitar su opción de investigación tanto en ese backend como `INDIGENOUS_TRANSLATION_RESEARCH_ONLY=true` en Next.js. Revisar las traducciones con hablantes. No hay conversión implícita de quechua Cusco a Ayacucho.
-6. Redesplegar y verificar `/api/asr`, `/api/voice/session` y `/api/indigenous`. Configurado no significa alcanzable ni modelo listo. Probar un turno real autorizado antes de declarar operativo el proveedor.
+6. **Emociones (EXPERIMENTAL, opcional):** solo para la demo con voces adultas.
+   - En el servicio Python: reconstruir con `--build-arg INSTALL_EXPERIMENTAL_EMOTION=true`, definir `ENABLE_EXPERIMENTAL_EMOTION=true` y `EMOTION2VEC_LICENSE_ACCEPTED=true`, y sumar ≈1–2 GB de memoria.
+   - Aceptar la FunASR Model License v1.1 con su atribución: emotion2vec+, Ma et al. 2024, Alibaba DAMO / FunASR.
+   - En Next.js `/api/emotion` reutiliza `INDIGENOUS_BACKEND_URL`, `INDIGENOUS_BACKEND_TOKEN`, `VOICE_CLOUD_MODE` y `VOICE_ACCESS_CODE`, con autorización propia para la demo emocional. Sin modelo listo o autorización, la app muestra ausencia de inferencia y su motivo: nunca reemplaza emotion2vec+ con texto ni heurísticas acústicas, aunque una respuesta de error mantenga `{fallback:true}` por compatibilidad de transporte.
+   - `GET /api/emotion` anuncia disponibilidad del modelo, independiente de ASR. `ready=true` exige `inferenceVerified=true`, no sólo cargar pesos. Para calentar sólo emoción: `EMOTION_WARMUP=true` e `INDIGENOUS_WARMUP=false`.
+   - Para desarrollo CPU Windows, [guía local aislada](services/indigenous/EMOTION_LOCAL.md): sólo ese launcher activa `INDIGENOUS_ALLOW_LOOPBACK=true` y `NAWINCHAY_EMOTION_LOCAL=true` bajo `NODE_ENV=development`. Producción mantiene HTTPS obligatorio y output Next predeterminado; no trasladar esos permisos al despliegue.
+   - En el Perú, inferir emociones en educación es de alto riesgo (DS 115-2025-PCM, art. 24.1 i). No activarlo en un piloto infantil sin evaluación de impacto.
+7. Redesplegar y verificar `/api/asr`, `/api/voice/session` y `/api/indigenous`. Configurado no significa alcanzable ni modelo listo. Probar un turno real autorizado antes de declarar operativo el proveedor.
+
+La ejecución real de emotion2vec+ en CPU Windows está comprobada con voz pública; no equivale a un build Linux con emoción, una cadena HTTP/UI íntegra ni publicación del cambio. Exigir el smoke real de la guía y revisar la [evidencia actual](docs/VALIDATION.md), sin usar resultados históricos de otros modelos como sustituto.
 
 Para un piloto infantil, no basta cambiar una bandera: revisar consentimiento, responsables y ubicación/retención de datos. El código exige `VOICE_CLOUD_MODE=approved-pilot` y `CHILD_VOICE_PRIVACY_APPROVED=true`; OpenAI exige adicionalmente `OPENAI_ZDR_CONFIRMED=true` tras la aprobación real correspondiente. Mantener todo desactivado hasta completar esas gestiones.
 

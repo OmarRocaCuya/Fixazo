@@ -4,7 +4,11 @@
 //  (c) judgments about accent or way of speaking;
 //  (d) health signals (hoarseness, breathing…).
 // Plus: live pace state and raw audio are never persisted.
+// Exception (demo): an `experimentalAffect` block is allowed ONLY with every entry
+// marked experimental and nothing but labels and two bounded numbers. It never
+// feeds scoring and is never invented without a real model result.
 // `assertReportIsClean` runs before ANY report is saved (see storage.ts).
+import { experimentalAffectViolations } from "./signals/affect";
 
 export const FORBIDDEN_FIELDS = [
   // (a) emotions
@@ -30,7 +34,7 @@ export const MOOD_VALUES = ["muy_bien", "bien", "regular", "no_tan_bien", "mal"]
 
 /** Shown in every report under "Lo que no medimos". */
 export const NOT_MEASURED = [
-  "Emociones detectadas por la voz: solo usamos la carita que eligió tu hijo.",
+  "Emociones con etiqueta para calificar: la estimación experimental nunca entra en la nota.",
   "Identidad de la voz: no guardamos huellas de voz; solo usamos su alias.",
   "Acento o forma de hablar: no se juzga ni se califica.",
   "Señales de salud (ronquera, respiración): no se miden.",
@@ -77,6 +81,9 @@ export function findViolations(value: unknown, path = "report", parentKey = ""):
   }
   if (value && typeof value === "object") {
     for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      // The opt-in experimental block is validated separately with a strict
+      // allowlist (see assertReportIsClean); only there may emotion words appear.
+      if (path === "report" && k === "experimentalAffect") continue;
       if (isForbiddenKey(k)) out.push(`${path}.${k}: forbidden field`);
       out.push(...findViolations(v, `${path}.${k}`, k));
     }
@@ -101,5 +108,9 @@ export class GuardrailViolation extends Error {
 /** Throws if the report contains anything the product promised not to measure. */
 export function assertReportIsClean(report: unknown): void {
   const v = findViolations(report);
+  if (report && typeof report === "object" && "experimentalAffect" in report) {
+    const block = (report as { experimentalAffect?: unknown }).experimentalAffect;
+    if (block !== undefined) v.push(...experimentalAffectViolations(block));
+  }
   if (v.length > 0) throw new GuardrailViolation(v);
 }

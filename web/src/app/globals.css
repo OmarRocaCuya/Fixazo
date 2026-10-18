@@ -101,6 +101,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .stack-sm { display: grid; gap: 8px; align-content: start; }
 .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .spread { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.app-icon { display: inline-block; width: 32px; height: 32px; object-fit: contain; flex: none; vertical-align: middle; }
 
 /* ---------------------------------------------------------------------------
    Buttons, chips, toggles
@@ -208,7 +209,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .nav a { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 12px; border-radius: 10px; color: var(--sidebar-ink); text-decoration: none; font-weight: 700; }
 .nav a:hover { background: rgb(255 255 255 / 0.07); }
 .nav a[aria-current="page"] { background: var(--accent); color: #fff; }
-.nav svg { width: 22px; height: 22px; flex: none; }
+.nav svg, .nav .app-icon { width: 32px; height: 32px; flex: none; }
 .sidebar-foot { margin-top: auto; font-size: 0.82rem; color: #9db0a6; padding: 0 8px; display: grid; gap: 4px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--maize); display: inline-block; }
 .main { padding: 32px 40px 64px; min-width: 0; }
@@ -417,7 +418,7 @@ textarea.input { min-height: 96px; resize: vertical; }
 
 .pd-wrap { max-width: 1080px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left)) 48px max(16px, env(safe-area-inset-right)); }
 .pd-angosto { max-width: 720px; }
-.pd-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0 6px; font-size: 0.85rem; color: var(--muted); }
+.pd-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0 6px; font-size: 0.85rem; color: var(--muted); }
 .pd-hoy::first-letter { text-transform: uppercase; }
 .pd-marca { font: 700 1.5rem var(--f-serif); color: var(--ink); text-decoration: none; }
 .pd-insights { font-weight: 700; font-size: 0.9rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; text-decoration: none; white-space: nowrap; }

@@ -9,9 +9,14 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    ".next-emotion/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local Python inference environments and downloaded third-party assets.
+    "services/**/.venv*/**",
+    "services/**/.cache/**",
+    "services/**/.test-deps/**",
   ]),
 ]);
 

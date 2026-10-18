@@ -1,0 +1,8 @@
+-c constraints.txt
+# EXPERIMENTAL speech emotion (emotion2vec+ base via FunASR). Installed ONLY when
+# the image is built with --build-arg INSTALL_EXPERIMENTAL_EMOTION=true.
+# FunASR pulls modelscope, librosa, umap-learn/numba and others. Their
+# compatibility with Torch 2.8.0 + NumPy 1.26.4 was NOT verified in the
+# development environment: constraints keep Torch/NumPy fixed and `pip check`
+# plus an offline import fail the build loudly instead of breaking the service.
+funasr

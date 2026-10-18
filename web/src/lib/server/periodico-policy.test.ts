@@ -6,7 +6,7 @@ beforeEach(() => { vi.stubEnv("PERIODICO_JUDGE_ENABLED", "true"); vi.stubEnv("OP
 afterEach(() => { vi.unstubAllEnvs(); vi.useRealTimers(); });
 describe("periodico private process guard", () => {
   it("requires exact explicit opt-in and substantial configured code", () => {
-    expect(getPeriodicoPolicy()).toEqual({ enabled: true, reason: null, adultOnly: true });
+    expect(getPeriodicoPolicy()).toEqual({ enabled: true, reason: null });
     vi.stubEnv("PERIODICO_JUDGE_ENABLED", "TRUE"); expect(getPeriodicoPolicy().enabled).toBe(false);
     vi.stubEnv("PERIODICO_JUDGE_ENABLED", "true"); vi.stubEnv("VOICE_ACCESS_CODE", "short"); expect(getPeriodicoPolicy().reason).toBe("periodico-access-not-configured");
   });

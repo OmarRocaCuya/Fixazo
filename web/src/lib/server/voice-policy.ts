@@ -22,6 +22,14 @@ export function getIndigenousBackendConfig(): { baseUrl: URL; token: string } | 
   try {
     const url = new URL(raw);
     const host = url.hostname.toLowerCase().replace(/\.$/, "");
+    // Explicit local developer mode only. Never broaden this to arbitrary
+    // private hosts, production builds, credentials, paths or redirects.
+    if (process.env.NODE_ENV === "development" && process.env.INDIGENOUS_ALLOW_LOOPBACK === "true"
+      && url.protocol === "http:" && url.hostname === "127.0.0.1" && url.port !== ""
+      && url.pathname === "/" && !url.username && !url.password && !url.search && !url.hash
+      && /^http:\/\/127\.0\.0\.1:[1-9]\d{0,4}\/?$/.test(raw)) {
+      return { baseUrl: url, token };
+    }
     if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash
       || !host.includes(".") || host.startsWith("[") || /(^|\.)(localhost|local|internal)$/.test(host)
       || /^(0|10|127)\./.test(host) || /^169\.254\./.test(host) || /^192\.168\./.test(host)
@@ -42,7 +50,11 @@ export function getVoicePolicyStatus(provider: VoiceProvider): VoicePolicyStatus
   return { enabled: reason === null, mode, reason };
 }
 
-export function authorizeVoiceRequest(request: Request, body: unknown, provider: VoiceProvider): Authorization {
+/**
+ * Operator-level access only (configured mode, same origin, private access code,
+ * rate limit). The MVP no longer asks for an adult/guardian attestation.
+ */
+export function authorizeVoiceRequest(request: Request, provider: VoiceProvider): Authorization {
   const policy = getVoicePolicyStatus(provider);
   if (!policy.enabled || policy.mode === "disabled") return { ok: false, status: 503, error: policy.reason ?? "cloud-disabled" };
   const origin = request.headers.get("origin");
@@ -56,9 +68,6 @@ export function authorizeVoiceRequest(request: Request, body: unknown, provider:
   if (supplied.length > 256 || !timingSafeEqual(digest(supplied), digest(expected))) {
     return { ok: false, status: 401, error: "voice-access-required" };
   }
-  const value = body && typeof body === "object" ? body as Record<string, unknown> : {};
-  if (value.consent !== true || value.audience !== policy.mode) return { ok: false, status: 403, error: "voice-consent-required" };
-  if (policy.mode === "adult-demo" && value.adultConfirmed !== true) return { ok: false, status: 403, error: "adult-demo-only" };
 
   const now = Date.now();
   for (const [key, bucket] of buckets) if (bucket.resetAt <= now) buckets.delete(key);

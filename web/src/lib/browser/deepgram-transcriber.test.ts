@@ -35,7 +35,7 @@ class FakeRecorder {
   });
 }
 
-const access = { accessCode: "ephemeral-demo-code", audience: "adult-demo" as const, consent: true as const, adultConfirmed: true };
+const access = { accessCode: "ephemeral-demo-code", audience: "adult-demo" as const };
 const fetcher = vi.fn();
 const getUserMedia = vi.fn();
 const stopTrack = vi.fn();

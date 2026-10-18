@@ -1,0 +1,12 @@
+# Emotion-only CPU environment; intentionally excludes fairseq2/Omnilingual,
+# MMS, translation and llama-cpp. Direct versions share the service constraints.
+-c ../constraints.txt
+fastapi
+uvicorn
+python-multipart
+torch
+torchaudio
+numpy
+transformers
+huggingface-hub
+funasr

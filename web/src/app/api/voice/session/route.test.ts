@@ -6,7 +6,7 @@ import { authorizeVoiceRequest, getVoicePolicyStatus } from "@/lib/server/voice-
 import { GET, POST } from "./route";
 
 const fetchMock = vi.fn();
-function request(body: unknown = { audience: "adult-demo", consent: true, adultConfirmed: true }) {
+function request(body: unknown = { audience: "adult-demo" }) {
   return new Request("https://nawinchay.example/api/voice/session", { method: "POST", headers: { Origin: "https://nawinchay.example", "X-Voice-Access-Code": "a-private-pilot-code", "Content-Type": "application/json" }, body: JSON.stringify(body) });
 }
 
@@ -46,7 +46,7 @@ describe("voice session issuance", () => {
     const input = request();
     const response = await POST(input);
     expect(response.status).toBe(200);
-    expect(authorizeVoiceRequest).toHaveBeenCalledWith(input, { audience: "adult-demo", consent: true, adultConfirmed: true }, "openai");
+    expect(authorizeVoiceRequest).toHaveBeenCalledWith(input, "openai");
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe("https://api.openai.com/v1/realtime/client_secrets");
     expect(init.headers).toMatchObject({ Authorization: "Bearer sk-server-secret-test", "Content-Type": "application/json" });

@@ -1,5 +1,23 @@
 # Fixazo
 
+## MVP educativo de cinco capas · Ñawinchay
+
+El MVP con castellano/quechua, sesiones, evidencia y revisión familiar/docente está en [`web/`](web/README.md). Es una aplicación distinta de Fixazo.
+
+```sh
+npm run mvp          # Ñawinchay: http://localhost:3000
+npm run test:mvp     # Pruebas del MVP
+npm run build:mvp    # Compilación de producción
+```
+
+`npm run dev` desde esta raíz sigue iniciando Fixazo. No levantes ambas apps en el mismo puerto.
+
+**Para desplegar Ñawinchay:** sigue [`web/DEPLOYMENT.md`](web/DEPLOYMENT.md), con Root Directory `web` y preset Next.js. Los pasos de Vercel más abajo en este README corresponden únicamente a Fixazo y no deben aplicarse al MVP Next.
+
+**Emoción experimental de Ñawinchay:** sólo desde audio con emotion2vec+ y el código de acceso del despliegue (sin pantalla de consentimiento ni confirmación adulta en el MVP), nunca desde texto ni con reemplazo heurístico. El modelo real ya se ejecutó en CPU Windows; eso no acredita por sí solo la cadena HTTP/UI ni un despliegue. La [guía local aislada](web/services/indigenous/EMOTION_LOCAL.md) explica cómo arrancarlo y verificarlo sin afectar Fixazo.
+
+Para voz, prueba Chrome en la misma computadora: no es necesario usar móvil. Opera puede permitir micrófono sin ofrecer transcripción. En móvil, abrir una IP de red con HTTP no habilita el micrófono: se necesita HTTPS. Siempre puedes continuar con transcripción manual, sin penalizar un fallo técnico como respuesta incorrecta.
+
 Web para escolares (12 a 16 años) que entrena **lectura crítica de fuentes**. El alumno lee dos fuentes reales que cuentan distinto el mismo hecho, predice qué dirá cada una, elige y **explica con su voz por qué**. La IA no da respuestas: revisa la explicación y devuelve una pista para que el alumno la encuentre solo.
 
 Texto de prueba inicial: **Sputnik, 1957**, contado por TASS (agencia del gobierno soviético) y por Eisenhower (presidente de EE. UU.). Vamos a probar con otros textos; cada uno es un archivo en `casos/`.

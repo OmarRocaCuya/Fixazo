@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RealtimeTutor, type TutorAccess, type TutorState } from "./realtime-tutor";
 
-const access: TutorAccess = { audience: "adult-demo", consent: true, adultConfirmed: true, accessCode: "private-pilot-code" };
+const access: TutorAccess = { audience: "adult-demo", accessCode: "private-pilot-code" };
 function harness() {
   const track = { enabled: true, stop: vi.fn() };
   const stream = { getAudioTracks: () => [track], getTracks: () => [track] } as unknown as MediaStream;
@@ -30,7 +30,7 @@ describe("ephemeral WebRTC tutor lifecycle", () => {
     expect(h.fetchMock.mock.calls[0][0]).toBe("/api/voice/session");
     const init = h.fetchMock.mock.calls[0][1] as RequestInit;
     expect(init.headers).toMatchObject({ "X-Voice-Access-Code": access.accessCode });
-    expect(JSON.parse(String(init.body))).toEqual({ audience: "adult-demo", consent: true, adultConfirmed: true });
+    expect(JSON.parse(String(init.body))).toEqual({ audience: "adult-demo" });
     expect(String(init.body)).not.toContain(access.accessCode);
     expect(h.fetchMock.mock.calls[1][1].headers.Authorization).toBe("Bearer ek_test");
     h.open();

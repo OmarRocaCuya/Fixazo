@@ -5,7 +5,7 @@ import { MultilingualReadingSession, ObservedPassageText, readingDialoguePresent
 
 afterEach(() => { vi.unstubAllGlobals(); });
 
-describe("adult-only multilingual reading surface", () => {
+describe("multilingual reading surface (no adult gate)", () => {
   it("labels the scripted opening separately from configured local-model turns", () => {
     const view = readingDialoguePresentation({ enabled: true, ready: false, model: "Qwen local" }, null);
     expect(view.heading).toBe("Conversación con modelo local");
@@ -36,14 +36,14 @@ describe("adult-only multilingual reading surface", () => {
     expect(view.questionLabel).toBe("Pregunta de apertura predefinida");
     expect(view.description).toContain("preguntas programadas");
   });
-  it("renders an opt-in form without sending a passage or opening the microphone", () => {
+  it("renders the access form without adult checkboxes, sending a passage or opening the microphone", () => {
     const request = vi.fn(); const getUserMedia = vi.fn();
     vi.stubGlobal("fetch", request);
     vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
     const markup = renderToStaticMarkup(createElement(MultilingualReadingSession, { passage: "Rosa fue al río.", title: "La misión", onClose: () => {} }));
     expect(request).not.toHaveBeenCalled(); expect(getUserMedia).not.toHaveBeenCalled();
-    expect(markup).toContain("Demo adulta no comercial");
-    expect(markup).toContain("solo voz adulta o sintética");
+    expect(markup).toContain("Demo no comercial");
+    expect(markup).not.toMatch(/voz adulta|Confirmo|type="checkbox"/);
     expect(markup).toContain("según el modelo realmente habilitado");
     expect(markup).toContain('type="password"');
     expect(markup).toContain('value="quy_Latn"'); expect(markup).toContain('value="ayr_Latn"');

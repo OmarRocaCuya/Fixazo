@@ -16,8 +16,6 @@ export function VoiceTutorPanel() {
   const [loadingFailed, setLoadingFailed] = useState(false);
   const [supported, setSupported] = useState(false);
   const [state, setState] = useState<TutorState>("idle");
-  const [consent, setConsent] = useState(false);
-  const [adult, setAdult] = useState(false);
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [texts, setTexts] = useState<string[]>([]);
@@ -46,7 +44,7 @@ export function VoiceTutorPanel() {
   }, []);
 
   const active = !["idle", "error"].includes(state);
-  const canStart = policy?.enabled && policy.mode !== "disabled" && supported && consent && (policy.mode !== "adult-demo" || adult) && code.trim().length >= 16;
+  const canStart = policy?.enabled && policy.mode !== "disabled" && supported && code.trim().length >= 16;
 
   async function connect() {
     if (!canStart || !policy || policy.mode === "disabled") return;
@@ -60,7 +58,7 @@ export function VoiceTutorPanel() {
       onEnd: (reason) => { setTexts([]); setMessage(reason === "time-limit" ? "La prueba terminó al llegar a tres minutos. El micrófono está apagado." : "Conexión cerrada. El micrófono está apagado y el texto temporal se borró."); },
     });
     tutor.current = client;
-    await client.start({ audience: policy.mode, consent: true, ...(adult ? { adultConfirmed: true as const } : {}), accessCode: code.trim() });
+    await client.start({ audience: policy.mode, accessCode: code.trim() });
     setCode("");
   }
 
@@ -81,10 +79,7 @@ export function VoiceTutorPanel() {
         {policy?.enabled && !supported && <p role="alert">Necesitas HTTPS y un navegador con WebRTC y permiso de micrófono. Prueba Chrome o Edge actualizados.</p>}
         {policy?.enabled && supported && !active && (
           <div className="stack">
-            <p><strong>{policy.mode === "adult-demo" ? "Prueba solo para adultos o audio sintético" : "Piloto con autorización de privacidad configurada"}</strong></p>
             <div className="field"><label htmlFor="voice-demo-code">Código privado del piloto</label><input id="voice-demo-code" type="password" autoComplete="off" className="input" value={code} minLength={16} maxLength={128} onChange={(event) => setCode(event.target.value)} aria-describedby="voice-demo-code-help" /><span id="voice-demo-code-help" className="small muted">Pídelo al responsable del despliegue; tiene al menos 16 caracteres. No se guarda en este dispositivo.</span></div>
-            {policy.mode === "adult-demo" && <label className="row" style={{ alignItems: "start" }}><input type="checkbox" checked={adult} onChange={(event) => setAdult(event.target.checked)} /><span>Confirmo que probaré solo con mi voz adulta o audio sintético, sin voz de niños.</span></label>}
-            <label className="row" style={{ alignItems: "start" }}><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /><span>Autorizo el envío de voz a OpenAI para esta prueba y entiendo que no es una evaluación. No incluiré datos personales.</span></label>
           </div>
         )}
         <p role="status" aria-live="polite"><strong>{LABELS[state]}</strong></p>

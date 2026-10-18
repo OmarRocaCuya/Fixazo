@@ -26,7 +26,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  let body: unknown;
   try {
     if (Number(request.headers.get("content-length") ?? 0) > 2048) return Response.json({ error: "invalid-request" }, { status: 400, headers: HEADERS });
     // Content-Length is optional/untrusted. Bound streaming bytes before JSON
@@ -47,12 +46,12 @@ export async function POST(request: Request) {
     const bytes = new Uint8Array(size);
     let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-    body = JSON.parse(new TextDecoder().decode(bytes));
+    JSON.parse(new TextDecoder().decode(bytes));
   } catch {
     return Response.json({ error: "invalid-request" }, { status: 400, headers: HEADERS });
   }
 
-  const authorization = authorizeVoiceRequest(request, body, "openai");
+  const authorization = authorizeVoiceRequest(request, "openai");
   if (!authorization.ok) return Response.json({ error: authorization.error }, { status: authorization.status, headers: HEADERS });
 
   try {

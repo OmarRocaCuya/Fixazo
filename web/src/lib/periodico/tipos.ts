@@ -82,3 +82,11 @@ export interface RespuestaVoz {
   listo: boolean;
   ia: boolean;
 }
+
+/** Supported retries do not prove independent transfer. */
+export interface ProtocoloNoticia {
+  version: "contraprueba-v1";
+  preguntas: Array<{ preguntaId: string; habilidad: string | null; aciertoInicial: boolean | null; aciertoFinal: boolean | null; conApoyo: boolean; intentos: number }>;
+  apoyos: number;
+  transferencia: "no_observada";
+}

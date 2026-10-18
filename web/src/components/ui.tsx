@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import type { Confidence, Level, Mood } from "@/lib/types";
 
 export function Toggle({ checked, onChange, label, disabled }: { checked: boolean; onChange?: (v: boolean) => void; label: string; disabled?: boolean }) {
@@ -93,23 +94,33 @@ export function MoodPicker({ value, onPick, legend }: { value: Mood | null; onPi
 
 export const CONFIDENCE_LABELS: Record<Confidence, string> = { poco: "Poco", mas_o_menos: "Más o menos", muy: "Muy seguro" };
 
-export function Icon({ name }: { name: "chat" | "report" | "progress" | "privacy" | "menu" | "mic" | "photo" | "book" | "pause" | "sound" | "mute" }) {
-  const p: Record<string, React.ReactNode> = {
-    chat: <path d="M4 5h16v11H8l-4 4z" />,
-    report: <path d="M6 3h9l4 4v14H6zM9 12h7M9 16h7M9 8h4" />,
-    progress: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
-    privacy: <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />,
-    menu: <path d="M3 6h18M3 12h18M3 18h18" />,
-    mic: <path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zM5 11a7 7 0 0 0 14 0M12 18v3" />,
-    photo: <path d="M4 7h4l2-3h4l2 3h4v13H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />,
-    book: <path d="M4 4h7v16H4zM13 4h7v16h-7" />,
-    pause: <path d="M8 5v14M16 5v14" />,
-    sound: <path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8" />,
-    mute: <path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6" />,
-  };
+const ICON_ASSETS = {
+  chat: "/icons/chat.png",
+  report: "/icons/report.png",
+  progress: "/icons/progress.png",
+  privacy: "/icons/privacy.png",
+  menu: "/icons/menu.png",
+  mic: "/icons/mic.png",
+  photo: "/icons/photo.png",
+  book: "/icons/book.png",
+  pause: "/icons/pause.png",
+  sound: "/icons/sound.png",
+  mute: "/icons/mute.png",
+  languages: "/icons/languages.png",
+} as const;
+
+export type IconName = keyof typeof ICON_ASSETS;
+
+export function Icon({ name }: { name: IconName }) {
   return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {p[name]}
-    </svg>
+    <Image
+      src={ICON_ASSETS[name]}
+      width={32}
+      height={32}
+      className="app-icon"
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+    />
   );
 }

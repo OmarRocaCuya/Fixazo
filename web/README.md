@@ -27,9 +27,9 @@ Desarrollo: `npm run dev` en 3000. No ejecutar dos builds sobre `.next` a la vez
 
 | Ruta | Función |
 |---|---|
-| `/consentimiento` | Alias, grado, lenguas y permisos separados |
+| `/consentimiento` | Ruta antigua: redirige a `/chat`. El MVP no tiene pantalla de consentimiento ni permisos |
 | `/chat` | Lectura pegada, ejemplos; foto solo con Claude configurado |
-| `/sesion` | Recorrido habitual de lectura y razonamiento; antes de iniciarlo ofrece una **sesión multilingüe adulta independiente de la evaluación** |
+| `/sesion` | Recorrido habitual de lectura y razonamiento; antes de iniciarlo ofrece una **sesión multilingüe independiente de la evaluación** |
 | `/informe` | Evidencia provisional, revisión humana, contexto y fuente ASR |
 | `/progreso` | Historial local del navegador, no cuenta remota |
 | `/privacidad` | Exportar, borrar datos y revisar permisos |
@@ -61,6 +61,7 @@ Prepara y revisa la traducción automática del pasaje. Después puedes leer has
 | Conversación sin LLM local configurado | `guided-reading`: guion determinista de preguntas, **etiquetado como tal**. No se presenta como conversación libre ni se usa silenciosamente para ocultar un fallo del LLM habilitado |
 | Misiones/juez | Reglas por defecto. Claude Haiku 5.5 opcional (`ANTHROPIC_API_KEY`), tres corridas para el juez y fallback a reglas. Claude no recibe audio para alinear lectura |
 | Señales acústicas | Web Audio y heurísticas locales; no modelo de emoción, identidad, edad, acento o salud |
+| Emoción experimental opcional | Sólo `emotion2vec/emotion2vec_plus_base` sobre audio de la respuesta, con el código de acceso del despliegue. Sin modelo listo no hay inferencia emocional ni respaldo por texto/energía. Ver [guía local](services/indigenous/EMOTION_LOCAL.md) |
 
 **Tener el código no significa que el servicio esté activo.** `/api/asr`, `/api/voice/session`, `/api/indigenous` y `/api/reading` muestran configuración y límites. Meta/Qwen se ejecutan en el servicio Linux CPU del VPS, separado de Vercel; los pesos deben cargarse antes o bajo una petición explícita. `ready` confirma carga, no precisión ni una inferencia end-to-end. La apertura de lectura puede seguir un guion aunque las respuestas posteriores usen el LLM. Los smokes anteriores de ASR/NLLB no prueban automáticamente CTC temporizado, MMS ni Qwen: [estado evidenciado](docs/VALIDATION.md).
 
@@ -86,14 +87,59 @@ La evidencia de lectura, obtención, inferencia y postura/revisión debe confirm
 
 ## Privacidad y límites
 
-- Sin clasificación emocional inferida, huella vocal, identificación de hablante, juicios de acento ni señales de salud. El ánimo es únicamente autorreporte voluntario identificado como tal.
+- Sin huella vocal, identificación de hablante, juicios de acento ni señales de salud. El ánimo del informe es el autorreporte voluntario identificado como tal. La única excepción emocional es la **estimación experimental opcional** (ver abajo): apagada por defecto, solo para el adulto y nunca usada para calificar.
 - Cambios de ritmo solo ofrecen una pausa genérica en vivo; no se guardan como ansiedad o cansancio.
 - El audio de Whisper se conserva temporalmente en memoria para transcribir en el dispositivo y se descarta. Deepgram/OpenAI reciben audio al elegirlos; las demos Meta envían muestras/fragmentos al servidor configurado. «LLM local» significa **local al VPS**, no al celular. La app no persiste grabaciones, pero no se promete procesamiento exclusivamente local al dispositivo para esas rutas.
 - Los códigos de acceso de demos quedan solo en memoria y no se exportan. No usar datos personales en las pruebas.
-- Servicios externos desactivados por defecto. `adult-demo` exige confirmación de voz adulta/sintética y acceso restringido. Un piloto infantil exige revisión real de privacidad; las banderas no sustituyen consentimiento, contratos ni ZDR cuando corresponde.
+- Servicios externos desactivados por defecto. `adult-demo` exige el código de acceso privado; el MVP ya no pide confirmación adulta ni consentimiento en pantalla (decisión de producto). Un piloto infantil exige revisión real de privacidad; las banderas no sustituyen consentimiento, contratos ni ZDR cuando corresponde.
 - Límites de cliente/tokens y rate limit en memoria **no son presupuestos ni cuotas distribuidas**. Configurar protección y topes del proveedor. Claude existente no tiene autenticación de aplicación: no activar una clave en una URL abierta.
 - `localStorage` es por origen y navegador; no hay sincronización entre dispositivo, localhost y Vercel. Exportar/borrar está en Privacidad.
 - Quechua de las misiones y traducciones nuevas siguen pendientes de validación por hablantes. La demo lectora usa MMS como **síntesis artificial**, no como una persona nativa identificada ni validación de pronunciación. NLLB y MMS restringen esta integración a investigación/demo no comercial; la licencia de Qwen no elimina esas restricciones.
+
+## Estimación experimental de emociones
+
+Función **experimental para la demo**, pedida explícitamente. En el MVP **no hay consentimiento ni permiso adulto**: está disponible siempre que el despliegue tenga emotion2vec+ y se introduzca el código de acceso en la vista del adulto. Privacidad solo informa y permite borrar las estimaciones guardadas.
+
+**Sale del audio, no de las palabras.** La transcripción no es una entrada del modelo. La inferencia arranca desde el WAV capturado, independientemente de que el ASR produzca texto; una transcripción vacía o un fallo de ASR no convierte texto en evidencia emocional.
+
+1. **Único estimador emocional activo: emotion2vec+ base** en el servicio privado (`POST /v1/emotion`, ver [su README](services/indigenous/README.md)).
+   - En cada respuesta hablada (nunca durante la lectura), el navegador guarda en RAM el audio del turno, hasta 15 s.
+   - Lo baja a 16 kHz, lo codifica como WAV en memoria y lo envía a `/api/emotion`. Ese proxy lo reenvía con `INDIGENOUS_BACKEND_TOKEN`. Después el buffer se borra.
+   - Requiere el código de voz en la vista del adulto, con la misma política de operador que el resto del audio enviado a Meta (modo configurado, mismo origen, código y límite de solicitudes).
+   - Las 9 clases se muestran en castellano: enojado/a, disgustado/a, con miedo, contento/a, neutral, triste y sorprendido/a; «other» y «unknown» se muestran como «sin datos suficientes».
+   - La confianza es «media» si la probabilidad mayor es ≥ 0,6 y «baja» si no; nunca «alta». La fuente se muestra como «voz (emotion2vec+)».
+2. **Sin modelo no hay inferencia.** Si no hay código de acceso, el backend no está configurado, carga o falla, se muestra «sin datos suficientes», fuente «sin inferencia del modelo» y un motivo visible. No se generan etiquetas con texto, energía, F0 ni una línea base de lectura. Los helpers acústicos históricos que aún existen no participan del estimador activo.
+3. **Modo simulación o transcripción manual:** no hay audio, así que se muestra «sin audio: la estimación necesita el micrófono» y ninguna etiqueta.
+4. **Demo sin micrófono:** «Analizar un audio de prueba» (WAV o WebM) en la vista del adulto, solo con el código de acceso. Decodifica el archivo en el navegador y lo pasa por la misma ruta.
+
+**Garantías.**
+
+- Solo la ve el adulto. La zona del niño usa una lista blanca (`lib/session/childView.ts`) y el agente nunca la dice.
+- No toca la máquina de estados, la oferta de pausa (`pace.ts`) ni `scoring.ts`.
+- `assertReportIsClean` acepta `experimentalAffect` solo con entradas marcadas `experimental: true` y campos acotados. Las inferencias nuevas tienen fuente `voz-emotion2vec`, probabilidad `score` y `activation:null`; sin modelo, `score:null` y `activation:null`. El campo de activación permanece por compatibilidad histórica, no como emoción nueva. Nada de audio, F0 ni embeddings.
+- Las palabras de emoción siguen prohibidas en cualquier otro campo del informe.
+- «Borrar estimaciones experimentales» en Privacidad elimina las estimaciones de los informes guardados.
+- El informe agrega un bloque EXPERIMENTAL con la línea de tiempo, lo más frecuente y la coincidencia con la carita al inicio y al final.
+
+**Variables.**
+
+- Next.js: `VOICE_CLOUD_MODE=adult-demo`, `VOICE_ACCESS_CODE`, `INDIGENOUS_BACKEND_URL` e `INDIGENOUS_BACKEND_TOKEN`.
+- Servicio privado: build arg `INSTALL_EXPERIMENTAL_EMOTION=true`, más `ENABLE_EXPERIMENTAL_EMOTION=true` y `EMOTION2VEC_LICENSE_ACCEPTED=true`. Ver [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Para CPU Windows sin Docker, usa el [setup y launcher locales aislados](services/indigenous/EMOTION_LOCAL.md): `EMOTION_WARMUP=true`, `INDIGENOUS_WARMUP=false`, credencial backend efímera y output Next `.next-emotion`. `GET /api/emotion` anuncia disponibilidad propia; emoción sólo está lista con `ready=true` e `inferenceVerified=true`.
+
+**Evidencia y alcance.** El modelo real se ejecutó en CPU Windows sobre una muestra pública de 4,104125 s: carga aproximada de 26,703 s e inferencia de 1,25 s en esa ejecución. No son garantías de latencia ni pruebas de exactitud emocional; tampoco acreditan por sí solas la cadena HTTP/UI completa o un despliegue publicado. Ver [validación](docs/VALIDATION.md) y ejecutar el smoke real de la guía antes de declarar operativo todo el recorrido.
+
+**Licencia y atribución.** emotion2vec+ (Ma et al., ACL Findings 2024), Alibaba DAMO / FunASR, bajo la FunASR Model License v1.1, que exige citar la fuente y el autor y conservar el nombre del modelo. La licencia no aclara el uso comercial. Los modelos de audEERING son no comerciales y no se usan.
+
+**Límites.**
+
+- El modelo se entrenó con habla adulta actuada o pseudoetiquetada. No está validado con niños, castellano peruano ni quechua.
+- El ruido, el micrófono y el eco alteran el resultado.
+- Sin servidor/modelo listo se muestra ausencia de inferencia, no una emoción local aproximada.
+- Es una estimación, no un diagnóstico. Prevalece el autorreporte.
+
+**Nota legal.** En el Perú, inferir emociones en educación se considera de **alto riesgo** (DS 115-2025-PCM, art. 24.1 i). Usar solo para demostración con voces adultas o datos de prueba. Un piloto con niños requiere evaluación de impacto y un consentimiento informado específico.
 
 ## Arquitectura breve
 
@@ -102,3 +148,30 @@ La evidencia de lectura, obtención, inferencia y postura/revisión debe confirm
 `MultilingualReadingSession` constituye una vía aislada dentro de la introducción: recibe únicamente pasaje/título, captura PCM incremental y usa `/api/reading`. `MetaReadingClient` limita solicitudes, resultados e historial español en memoria; la cola acepta una petición activa y un fragmento pendiente. Si el servidor se retrasa, se pausa explícitamente en vez de acumular audio o descartar fragmentos sin avisar. No llama a `buildReport` ni adjunta perfil/alias a sus solicitudes.
 
 Próximo requisito para un piloto real: validar WER/CER y traducciones por variedad/edad, latencia por dispositivo, errores de seguimiento y acuerdo docente; incorporar gobierno de datos con las comunidades. Ni un benchmark general ni pasar pruebas unitarias demuestran funcionamiento óptimo con niños.
+
+## Lectura enriquecida del periódico
+
+`/noticia/[id]` ofrece lectura interactiva adaptada al género (línea de tiempo,
+pancarta, pirámide, datos, diálogo o dos medios) sin reemplazar el cuestionario
+existente. El renderizado recibe solo la noticia pública; criterios y respuestas
+privadas permanecen en el servidor.
+
+Sin configuración utiliza el motor determinista compartido de
+`../services/reader-enricher`, sin llamadas al LLM ni a servicios externos.
+El frontend consume las fuentes mediante el alias `@reader-enricher/*`, no un
+`dist` precompilado. Los imports relativos `.ts` del servicio se reescriben a
+`.js` al compilarlo por separado con TypeScript 5.7 o superior.
+El glosario generativo no está disponible en ese modo. Para usar el microservicio,
+configura **solo en el servidor** `READER_ENRICHER_URL` (URL base) y, si está
+protegido con `SERVICE_TOKEN`, el mismo valor en `READER_ENRICHER_TOKEN` del frontend.
+No uses prefijos `NEXT_PUBLIC_` ni pegues tokens en el navegador.
+
+Se envían únicamente titular, bajada, sección y fragmentos con sus fuentes; nunca
+preguntas, soluciones, criterios, respuestas del lector ni audio. La petición tiene
+un límite de 4 segundos, no sigue redirecciones y valida esquema, layout, identidad,
+texto, citas y referencias antes de renderizar. Si falla, se usa el motor local;
+si este tampoco puede procesar el artículo, se conserva la lectura original.
+Los tokens no constituyen audio ni una alineación temporal verificada: el modo
+karaoke depende de los eventos de la síntesis de voz del navegador.
+
+Prueba enfocada: `npm test -- src/lib/periodico/lectura.test.ts` desde `web`.

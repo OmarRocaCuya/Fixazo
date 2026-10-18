@@ -2,7 +2,10 @@
 // Progreso del joven, guardado solo en este navegador (sin cuenta), como el resto de la app.
 // ponytail: localStorage; pasar a servidor si se agregan cuentas.
 
+import type { ProtocoloNoticia } from "./tipos";
+
 export interface ResultadoNoticia {
+  protocolo?: ProtocoloNoticia;
   noticiaId: string;
   /** true mientras la noticia está a medio responder. */
   enCurso?: boolean;
@@ -59,6 +62,8 @@ export function idAlumno(): string {
 
 /** Avance a medio camino: dónde se quedó y qué eligió, para volver al mismo lugar. */
 export interface Avance {
+  inicialesDesconocidas?: string[];
+  intentosOpciones?: Record<string, number[]>;
   hasta: number;
   elegidas: Record<string, number>;
 }

@@ -11,11 +11,9 @@ export async function GET(request: Request) {
   return Response.json(await getReadingCapabilities(request.signal), { headers: HEADERS });
 }
 
-function consent(request: Request, body: unknown) {
-  const result = authorizeVoiceRequest(request, body, "meta");
+function authorize(request: Request) {
+  const result = authorizeVoiceRequest(request, "meta");
   if (!result.ok) throw new ReadingVoiceError(result.error, result.status);
-  // This research lane remains adult-only even in a configured child pilot.
-  if (!body || typeof body !== "object" || (body as Record<string, unknown>).adultConfirmed !== true) throw new ReadingVoiceError("adult-demo-only", 403);
 }
 
 export async function POST(request: Request) {
@@ -31,7 +29,7 @@ export async function POST(request: Request) {
       let form: FormData;
       try { form = await new Response(bytes as BodyInit, { headers: { "Content-Type": type } }).formData(); }
       catch { throw new ReadingVoiceError("invalid-request", 400); }
-      consent(request, { audience: form.get("audience"), consent: form.get("consent") === "true", adultConfirmed: form.get("adultConfirmed") === "true" });
+      authorize(request);
       const file = form.get("file");
       if (form.get("action") !== "transcribe" || !(file instanceof Blob)) throw new ReadingVoiceError("invalid-request", 400);
       return Response.json(await transcribeTimedReading(file, form.get("language"), request.signal), { headers: HEADERS });
@@ -39,7 +37,7 @@ export async function POST(request: Request) {
     let body: Record<string, unknown>;
     try { body = JSON.parse(new TextDecoder().decode(bytes)); }
     catch { throw new ReadingVoiceError("invalid-request", 400); }
-    consent(request, body);
+    authorize(request);
     if (!body || typeof body !== "object") throw new ReadingVoiceError("invalid-request", 400);
     switch (body.action) {
       case "prepare": return Response.json(await prepareGuidedReading(body.passage, body.language, request.signal), { headers: HEADERS });

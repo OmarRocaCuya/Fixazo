@@ -2,6 +2,8 @@ import type { CloudVoiceAccess, VoiceCloudMode } from "@/lib/voice/types";
 import { normalizeWord } from "@/lib/signals/text";
 
 export type ReadingLanguage = "quy_Latn" | "ayr_Latn";
+/** ASR also accepts Spanish; native translation/TTS selectors stay unchanged. */
+export type ReadingAsrLanguage = ReadingLanguage | "spa_Latn";
 export type ReadingDialogueMode = "guided-reading" | "local-llm-reading";
 export interface ReadingHistoryEntry { role: "user" | "assistant"; text: string }
 export const READING_LANGUAGES: { value: ReadingLanguage; label: string }[] = [
@@ -19,7 +21,7 @@ export interface ReadingCapabilities {
 }
 export interface TimedReadingWord { word: string; start: number; end: number; confidence: null }
 export interface ReadingTranscript {
-  text: string; model: string; language: ReadingLanguage; durationSeconds: number;
+  text: string; model: string; language: ReadingAsrLanguage; durationSeconds: number;
   words: TimedReadingWord[]; wordTimestamps: true; timingMethod: "ctc-greedy-frames"; requiresHumanReview: true;
 }
 export interface PreparedReading { passage: string; opening: string; dialogueMode: ReadingDialogueMode; requiresHumanReview: true }
@@ -56,9 +58,6 @@ async function boundedBytes(response: Response, maximum: number): Promise<Uint8A
 async function jsonBody(response: Response): Promise<Record<string, unknown>> {
   try { return record(JSON.parse(new TextDecoder().decode(await boundedBytes(response, 256_000)))); }
   catch (error) { if (error instanceof ReadingClientError) throw error; throw new ReadingClientError("invalid-response"); }
-}
-function accessBody(access: CloudVoiceAccess) {
-  return { audience: access.audience, consent: access.consent, adultConfirmed: access.adultConfirmed === true };
 }
 const validDialogueMode = (value: unknown): value is ReadingDialogueMode => value === "guided-reading" || value === "local-llm-reading";
 
@@ -117,15 +116,14 @@ export class MetaReadingClient {
   }
 
   async prepare(passage: string, language: ReadingLanguage): Promise<PreparedReading> {
-    const data = record(await this.send(JSON.stringify({ action: "prepare", passage, language, ...accessBody(this.access) }), true));
+    const data = record(await this.send(JSON.stringify({ action: "prepare", passage, language }), true));
     if (!validText(data.passage, 20_000) || !validText(data.opening, 300) || !validDialogueMode(data.dialogueMode) || data.requiresHumanReview !== true) throw new ReadingClientError("invalid-response");
     return data as unknown as PreparedReading;
   }
-  async transcribe(audio: Blob, language: ReadingLanguage): Promise<ReadingTranscript> {
+  async transcribe(audio: Blob, language: ReadingAsrLanguage): Promise<ReadingTranscript> {
     if (audio.size < 44 || audio.size > 1_000_000) throw new ReadingClientError("invalid-audio");
     const form = new FormData();
     form.set("action", "transcribe"); form.set("file", audio, "turno.wav"); form.set("language", language);
-    for (const [key, value] of Object.entries(accessBody(this.access))) form.set(key, String(value));
     const data = record(await this.send(form, false));
     if (!validText(data.text, 8000) || !validText(data.model, 200) || data.language !== language || typeof data.durationSeconds !== "number" || !Number.isFinite(data.durationSeconds) || data.durationSeconds < 0.1 || data.durationSeconds > 30 || !Array.isArray(data.words) || data.words.length > 2000 || data.wordTimestamps !== true || data.timingMethod !== "ctc-greedy-frames" || data.requiresHumanReview !== true) throw new ReadingClientError("invalid-timed-transcript");
     let last = 0;
@@ -141,13 +139,13 @@ export class MetaReadingClient {
   }
   async turn(passage: string, heard: string, language: ReadingLanguage, turn: number, history: readonly ReadingHistoryEntry[] = []): Promise<ReadingReply> {
     if (!Number.isInteger(turn) || turn < 0 || turn > 8 || !heard.trim()) throw new ReadingClientError("invalid-turn");
-    const data = record(await this.send(JSON.stringify({ action: "turn", passage, heard, language, turn, ...(history.length ? { history: boundedReadingHistory(history) } : {}), ...accessBody(this.access) }), true));
+    const data = record(await this.send(JSON.stringify({ action: "turn", passage, heard, language, turn, ...(history.length ? { history: boundedReadingHistory(history) } : {}) }), true));
     if (!validText(data.heardSpanish, 8000) || !validText(data.replyText, 300) || !validText(data.replySpanish, 1500) || !validDialogueMode(data.dialogueMode) || data.requiresHumanReview !== true || (data.model !== undefined && data.model !== null && !validText(data.model, 200))) throw new ReadingClientError("invalid-response");
     return data as unknown as ReadingReply;
   }
   async speak(text: string, language: ReadingLanguage): Promise<Blob> {
     if (!validText(text, 300)) throw new ReadingClientError("speech-text-too-long");
-    return await this.send(JSON.stringify({ action: "speak", text, language, ...accessBody(this.access) }), true, true) as Blob;
+    return await this.send(JSON.stringify({ action: "speak", text, language }), true, true) as Blob;
   }
   cancel() { for (const request of this.requests) request.abort(); this.requests.clear(); }
   close() { this.closed = true; this.cancel(); this.access = { ...this.access, accessCode: "" }; }

@@ -1,13 +1,12 @@
 // Local-only persistence (no accounts). Every access is wrapped in try/catch and
 // falls back to memory, so the app keeps working in private windows.
-import type { Consent, Mission, Profile, Report } from "./types";
+import type { Mission, Profile, Report } from "./types";
 import { assertReportIsClean } from "./guardrails";
 import { z } from "zod";
 import { cleanTranscriptionProvenance } from "./transcription";
 
 const PREFIX = "nw.";
 const K = {
-  consent: `${PREFIX}consent`,
   profile: `${PREFIX}profile`,
   missions: `${PREFIX}missions`,
   current: `${PREFIX}currentMission`,
@@ -145,8 +144,6 @@ export function createStore(primary?: Storage | null) {
   }
 
   return {
-    loadConsent: () => get<Consent | null>(K.consent, null),
-    saveConsent: (c: Consent) => set(K.consent, c),
     loadProfile: () => get<Profile | null>(K.profile, null),
     saveProfile: (p: Profile) => set(K.profile, p),
 
@@ -177,6 +174,20 @@ export function createStore(primary?: Storage | null) {
       set(K.reports, [...all, clean]);
     },
 
+    /** Removes every stored experimental emotion estimate; returns how many reports changed. */
+    stripExperimentalAffect(): number {
+      let changed = 0;
+      const all = get<Report[]>(K.reports, []).map((r) => {
+        if (!("experimentalAffect" in r)) return r;
+        changed++;
+        const rest = { ...r };
+        delete rest.experimentalAffect;
+        return rest;
+      });
+      if (changed) set(K.reports, all);
+      return changed;
+    },
+
     loadChat: () => get<ChatMessage[]>(K.chat, []),
     saveChat: (msgs: ChatMessage[]) => set(K.chat, msgs.slice(-60)),
 
@@ -194,7 +205,6 @@ export function createStore(primary?: Storage | null) {
       return JSON.stringify(
         {
           exportedAt: new Date().toISOString(),
-          consent: get(K.consent, null),
           profile: get(K.profile, null),
           missions: get(K.missions, []),
           reports: get(K.reports, []),

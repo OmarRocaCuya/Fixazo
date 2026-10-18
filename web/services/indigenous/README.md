@@ -10,8 +10,9 @@ Este servicio de referencia usa un **proceso Linux separado del servidor Next.js
 | Traducir texto, de forma separada | `facebook/nllb-200-distilled-600M`: `spa_Latn`, `quy_Latn`, `ayr_Latn`, en ambas direcciones | Solo investigación/demo **no comercial**; desactivado hasta aceptar ambos indicadores. No soportamos `quz_Latn` ni lo renombramos como Ayacucho. |
 | Conversar sobre la lectura | `Qwen/Qwen2.5-1.5B-Instruct-GGUF`, Q4_K_M, castellano, CPU | Opcional y local al VPS. Contexto 2048 tokens, salida 64 tokens/300 caracteres; no es Meta ni está validado como tutor infantil. |
 | Sintetizar voz | Meta `facebook/mms-tts-quy` (Ayacucho) y `facebook/mms-tts-ayr` (aimara central) | CC-BY-NC-4.0; requiere dos banderas de investigación. Una lengua residente, no voz clonada, ni Cusco ni castellano. |
+| Estimar emoción en la voz (EXPERIMENTAL) | `emotion2vec/emotion2vec_plus_base` (emotion2vec+, FunASR), 9 clases | Único estimador emocional activo; sin modelo no hay inferencia, ni reemplazo por texto/energía. Opcional: requiere dependencias y dos banderas. No está validado con niños, castellano peruano ni quechua. Es una estimación, nunca un diagnóstico ni una nota. |
 
-La lengua la declara el usuario: no se presenta como detección verificada. Se requiere revisión de un hablante/docente competente. La traducción no reemplaza ni corrige la evidencia original de lectura. No se infieren emociones, identidad, acento, salud ni capacidades. Soporte en la lista de un modelo no demuestra calidad en niños bilingües, variantes locales o mezcla castellano/quechua.
+La lengua la declara el usuario: no se presenta como detección verificada. Se requiere revisión de un hablante/docente competente. La traducción no reemplaza ni corrige la evidencia original de lectura. No se infieren identidad, acento, salud ni capacidades. Las emociones solo se estiman en el endpoint **experimental y opcional** `POST /v1/emotion` (ver abajo). Está apagado por defecto, solo lo ve el adulto en la app y nunca entra en la nota. Soporte en la lista de un modelo no demuestra calidad en niños bilingües, variantes locales o mezcla castellano/quechua.
 
 ### Licencias y alternativas recientes
 
@@ -138,6 +139,53 @@ JSON exacto `{text,language}`: texto 1–300 caracteres y lengua `quy_Latn` o `a
 
 La cadena conversacional nativa es ASR original → NLLB al castellano → Qwen → NLLB a la lengua seleccionada → MMS. Cada componente es distinto, con latencia y errores acumulados. No afirmar conversación óptima ni calidad local validada sin pruebas de hablantes. La demo OpenAI `/voz` sigue siendo otra función independiente.
 
+### POST `/v1/emotion` (EXPERIMENTAL, apagado por defecto)
+
+Estimación de emoción **por la voz** con [emotion2vec+ base](https://huggingface.co/emotion2vec/emotion2vec_plus_base/tree/b318240bfe67db81a8c572ecb37ce9c3759b81c9), pesos fijados en la revisión `b318240bfe67db81a8c572ecb37ce9c3759b81c9` (≈1,1 GB, `model.pt`).
+
+**Cómo se carga.** El adaptador descarga esa revisión con `huggingface_hub.snapshot_download(..., revision=...)` y entrega el directorio local a `funasr.AutoModel(model=<dir>, hub="hf", device="cpu", disable_update=True)`. Lo hace así porque la descarga HF propia de FunASR ignora `model_revision`.
+
+**Inferencia.** `model.generate(waveform, granularity="utterance", extract_embedding=False)`, sin `output_dir`, así que FunASR no escribe nada a disco. Las etiquetas del modelo (`开心/happy`, …, `<unk>`) se devuelven en inglés. La traducción al castellano la hace la app Next.js.
+
+**Activación.** Se activa solo si se cumplen las tres condiciones:
+
+1. En Docker, la imagen se construyó con `--build-arg INSTALL_EXPERIMENTAL_EMOTION=true`, que instala `requirements-emotion.txt` con `funasr==1.4.16`; para CPU Windows existe el [entorno mínimo local aislado](./EMOTION_LOCAL.md), sin ASR ni imagen Docker.
+2. `ENABLE_EXPERIMENTAL_EMOTION=true`.
+3. `EMOTION2VEC_LICENSE_ACCEPTED=true`.
+
+Sin `ENABLE_EXPERIMENTAL_EMOTION=true` el endpoint responde `404 not-found`. Sin aceptar la licencia responde `403 emotion-license-not-accepted`. Para cargar sólo emoción al arrancar usa `EMOTION_WARMUP=true` con `INDIGENOUS_WARMUP=false`; la primera petición fría también puede iniciar su carga y responder `503 emotion-model-loading`. `ready` exige un forward real verificado, no sólo pesos cargados. Comparte el semáforo único con los demás modelos (`503 model-busy`). La ruta local Windows sin imagen Docker está documentada en [EMOTION_LOCAL.md](./EMOTION_LOCAL.md).
+
+**Petición.** Exige el mismo `Authorization: Bearer` que las demás rutas y `Content-Type: audio/wav`. El cuerpo es un WAV PCM16 mono de 16 kHz, de 1 a 15 s y como máximo 1 MB. Se procesa en RAM, nunca se escribe a disco y no se registra en logs.
+
+```sh
+curl -H "Authorization: Bearer $INDIGENOUS_API_KEY" -H "Content-Type: audio/wav" \
+  --data-binary @turno.wav http://127.0.0.1:8080/v1/emotion
+```
+
+Respuesta (forma ilustrativa, no resultado ejecutado):
+
+```json
+{"labels":[{"label":"neutral","score":0.62},{"label":"happy","score":0.21}],"top":{"label":"neutral","score":0.62},"model":"emotion2vec/emotion2vec_plus_base","revision":"b318240bfe67db81a8c572ecb37ce9c3759b81c9","license":"FunASR Model License v1.1","attribution":"emotion2vec+ base …","durationSeconds":4.1,"experimental":true,"requiresHumanReview":true}
+```
+
+`labels` trae siempre las 9 clases ordenadas por puntaje (el ejemplo muestra dos para abreviar). Una salida del modelo con otra forma devuelve `503 emotion-output-invalid`; nunca se inventa una etiqueta.
+
+No recibe transcripciones ni devuelve emociones heurísticas si falta el modelo. En la app, un error o falta de autorización se presenta como «sin datos suficientes», fuente «sin inferencia del modelo» y motivo visible. La inferencia emocional no depende del éxito del ASR. Consultar la [guía de ejecución y smoke local](./EMOTION_LOCAL.md); una inferencia directa real no acredita por sí sola el recorrido HTTP/UI completo ni un despliegue publicado.
+
+**Prueba manual en el VPS:** `python -B emotion.py turno.wav`.
+
+**Licencia y atribución.** [FunASR Model Open Source License v1.1](https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE) (Alibaba Group). Exige atribuir fuente y autor y conservar el nombre del modelo: «emotion2vec+ (Ma et al., *emotion2vec: Self-Supervised Pre-Training for Speech Emotion Representation*, ACL Findings 2024), Alibaba DAMO / FunASR». La licencia no aclara el uso comercial; revisarla antes de cualquier uso fuera de la demo. Los modelos de audEERING tienen licencia no comercial y no se usan aquí.
+
+**Límites.**
+
+- Entrenado con habla adulta, actuada o pseudoetiquetada.
+- No está validado con voces infantiles, castellano peruano ni quechua.
+- El ruido, el micrófono y la duración alteran el resultado.
+- El modelo añade ≈1–2 GB de RAM; revisar `INDIGENOUS_MEMORY_LIMIT`.
+- **Nota legal:** en el Perú, inferir emociones en el ámbito educativo se considera de **alto riesgo** (DS 115-2025-PCM, art. 24.1 i). Usar solo como demostración con voces adultas o datos de prueba. Un piloto con niños requiere evaluación de impacto, consentimiento informado específico y revisión humana.
+
+**Compatibilidad CPU Windows verificada, Docker Linux pendiente.** El 18 de octubre de 2026 se ejecutaron imports reales y `pip check` con Torch/torchaudio 2.8.0 CPU, FunASR 1.4.16, NumPy 1.26.4, SciPy 1.17.1, librosa 0.11.0 y numba 0.68.0. Se ejecutó la revisión fijada del modelo real sobre la muestra pública de voz de 4,1 s del repositorio; una inferencia tardó aproximadamente 1,25 s en este equipo, sin incluir carga inicial. Esa ejecución prueba funcionamiento, no exactitud emocional ni rendimiento garantizado. No equivale a haber compilado/verificado la imagen Linux con emoción. La build arg sigue siendo opt-in; la imagen predeterminada no instala FunASR y `core.py` no lo importa al arrancar. Las restricciones fijan Torch y NumPy; el build opt-in ejecuta `pip check` e import offline para detectar conflictos.
+
 Errores: `{"error":"código-estable"}` sin voz, texto de petición, claves, paths ni detalles internos. 400 JSON inválido; 413 exceso de tamaño; 415 formato; 422 audio/lengua no observable; 403 traducción de investigación deshabilitada; 503 carga/inferencia ocupada o fallida. Usar revisión humana y **No observable** cuando corresponda.
 
 ## Pruebas ligeras, sin descargar modelos
@@ -149,4 +197,4 @@ pip install -r requirements-test.txt
 python -B -m unittest discover -s tests -v
 ```
 
-123 pruebas cubren autorización, WAV real, límites/chunks, independencia de funciones, revisión humana, variantes, multipart en RAM, errores, semáforo, liveness, secretos por archivo, readiness, fuentes comprometidas por allowlist, pins/preflight, colapso CTC/Unicode/tiempos, hooks y limpieza, MMS/LRU/duración, diálogo/contexto/historial no privilegiado y salida sin truncamiento. **No prueban calidad de los modelos**, latencia, memoria nativa ni compilación del contenedor. En el sandbox Windows de Codex, `asyncio` puede bloquear al abrir su socket interno; las pruebas HTTP se ejecutaron con permiso fuera de ese sandbox, sin llamadas a modelos.
+Las pruebas cubren autorización, WAV real, límites/chunks, independencia de funciones, revisión humana, variantes, multipart en RAM, errores, semáforo, liveness, secretos por archivo, readiness, fuentes comprometidas por allowlist, pins/preflight, colapso CTC/Unicode/tiempos, hooks y limpieza, MMS/LRU/duración, diálogo/contexto/historial no privilegiado, salida sin truncamiento y el endpoint experimental de emoción (banderas, revisión fijada, WAV en RAM, salida validada) con dobles de modelo. **No prueban calidad de los modelos**, latencia, memoria nativa ni compilación del contenedor. En el sandbox Windows de Codex, `asyncio` puede bloquear al abrir su socket interno; las pruebas HTTP se ejecutaron con permiso fuera de ese sandbox, sin llamadas a modelos.

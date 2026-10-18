@@ -86,7 +86,7 @@ export class DeepgramTranscriber implements Transcriber {
       const response = await fetch("/api/asr/session", {
         method: "POST", cache: "no-store", credentials: "same-origin", signal: session.abort.signal,
         headers: { "Content-Type": "application/json", "X-Voice-Access-Code": this.access.accessCode },
-        body: JSON.stringify({ audience: this.access.audience, consent: this.access.consent, adultConfirmed: this.access.adultConfirmed === true }),
+        body: JSON.stringify({ audience: this.access.audience }),
       });
       if (!this.active(session) || session.stopping) return;
       if (!response.ok) { this.fail(session, response.status === 401 || response.status === 403 ? "voice-access-required" : response.status === 429 ? "voice-rate-limit" : "asr-unavailable"); return; }

@@ -5,7 +5,7 @@ vi.mock("next/server", () => ({ connection: vi.fn(async () => {}) }));
 
 let serial = 0;
 const mockedFetch = vi.fn();
-function request(body: unknown = { audience: "adult-demo", consent: true, adultConfirmed: true }, options: { headers?: Record<string, string>; signal?: AbortSignal } = {}) {
+function request(body: unknown = { audience: "adult-demo" }, options: { headers?: Record<string, string>; signal?: AbortSignal } = {}) {
   return new Request("https://education.example/api/asr/session", { method: "POST", signal: options.signal, headers: { Origin: "https://education.example", "X-Voice-Access-Code": process.env.VOICE_ACCESS_CODE ?? "", ...options.headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
 }
 beforeEach(() => {

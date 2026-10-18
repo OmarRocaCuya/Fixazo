@@ -14,15 +14,23 @@ function fakeReport(over: Record<string, unknown> = {}): Report {
 }
 
 describe("local persistence", () => {
-  it("round-trips consent, profile and missions", () => {
+  it("round-trips profile and missions without any consent record", () => {
     const s = createStore(memoryStorage());
-    s.saveConsent({ version: "1", acceptedAt: "x", permissions: { voice: true, process: true, mood: false } });
-    expect(s.loadConsent()?.permissions.mood).toBe(false);
+    expect("loadConsent" in s).toBe(false);
     s.saveProfile({ alias: "Yeni", grade: 4, homeLang: "qu", readingLang: "es" });
     expect(s.loadProfile()?.alias).toBe("Yeni");
     s.saveMission(SAMPLE_ES);
     s.setCurrentMission(SAMPLE_ES.id);
     expect(s.currentMission()?.title).toBe(SAMPLE_ES.title);
+  });
+
+  it("deletes a legacy consent record and no longer exports one", () => {
+    const mem = memoryStorage();
+    mem.setItem("nw.consent", JSON.stringify({ version: "1.2", acceptedAt: "x" }));
+    const s = createStore(mem);
+    expect(JSON.parse(s.exportAll())).not.toHaveProperty("consent");
+    s.deleteAllData();
+    expect(mem.getItem("nw.consent")).toBeNull();
   });
 
   it("survives corrupted JSON", () => {

@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lectura interactiva · demo</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --surface: #ffffff; --surface-2: #efece4; --text: #1d1b16; --muted: #5d584c;
+    --line: #d9d4c7; --accent: #1f5fbf; --accent-soft: #e3ecfa; --ok: #1d7a46; --ok-soft: #e1f3e8;
+    --warn: #a2541a; --warn-soft: #fbeadb; --tok-on: #ffe48a;
+    --persona: #7b3fb0; --lugar: #1d7a46; --organizacion: #1f5fbf; --fecha: #a2541a; --numero: #b0304f; --otro: #5d584c;
+    --radius: 12px; --shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15140f; --surface: #1f1d17; --surface-2: #2a2820; --text: #f1eee6; --muted: #b3ad9e;
+      --line: #3a372d; --accent: #8db4ff; --accent-soft: #22324d; --ok: #7fd3a1; --ok-soft: #1c3527;
+      --warn: #f0a868; --warn-soft: #3d2a1a; --tok-on: #6b5a12;
+      --persona: #c9a0f0; --lugar: #7fd3a1; --organizacion: #8db4ff; --fecha: #f0a868; --numero: #f08aa4; --otro: #b3ad9e;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15140f; --surface: #1f1d17; --surface-2: #2a2820; --text: #f1eee6; --muted: #b3ad9e;
+    --line: #3a372d; --accent: #8db4ff; --accent-soft: #22324d; --ok: #7fd3a1; --ok-soft: #1c3527;
+    --warn: #f0a868; --warn-soft: #3d2a1a; --tok-on: #6b5a12;
+    --persona: #c9a0f0; --lugar: #7fd3a1; --organizacion: #8db4ff; --fecha: #f0a868; --numero: #f08aa4; --otro: #b3ad9e;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  button, select, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 16px; }
+  header.top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+  header.top h1 { font-size: 1.25rem; margin: 0; }
+  .controls { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; margin: 12px 0; box-shadow: var(--shadow); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: end; }
+  label.f { display: flex; flex-direction: column; font-size: .8rem; color: var(--muted); gap: 2px; }
+  select, input[type=text], input[type=password], textarea { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+  textarea { width: 100%; min-height: 140px; font: 13px/1.4 ui-monospace, Consolas, monospace; }
+  details summary { cursor: pointer; color: var(--muted); font-size: .9rem; margin-top: 8px; }
+  .btn { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  :root[data-theme="dark"] .btn.primary { color: #111; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #111; } }
+  .btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  .status { font-size: .85rem; color: var(--muted); min-height: 1.4em; margin-top: 8px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+  .kicker { text-transform: uppercase; letter-spacing: .06em; font-size: .75rem; color: var(--accent); font-weight: 700; }
+  h2.titular { font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.2; margin: 4px 0 8px; }
+  .bajada { color: var(--muted); font-size: 1.05rem; margin: 0 0 12px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .badge { font-size: .75rem; border-radius: 999px; padding: 2px 10px; background: var(--surface-2); border: 1px solid var(--line); }
+  p.blk { margin: 0 0 12px; }
+  .tok { border-radius: 3px; transition: background .12s; }
+  .tok.on { background: var(--tok-on); }
+  .term { all: unset; cursor: pointer; text-decoration: underline dotted 2px; text-underline-offset: 3px; text-decoration-color: var(--accent); }
+  .ent { all: unset; cursor: pointer; border-bottom: 2px solid var(--c, var(--otro)); }
+  .term:focus-visible, .ent:focus-visible { outline: 3px solid var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--c); color: var(--c); background: transparent; border-radius: 999px; padding: 2px 10px; cursor: pointer; font-size: .85rem; }
+  .side h3 { font-size: .95rem; margin: 0 0 8px; }
+  .side section + section { margin-top: 16px; }
+  .gl dt { font-weight: 600; } .gl dd { margin: 0 0 8px; color: var(--muted); font-size: .9rem; }
+  /* popover */
+  #pop { position: absolute; z-index: 10; max-width: min(320px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 8px 30px rgba(0,0,0,.18); font-size: .95rem; }
+  #pop[hidden] { display: none; }
+  #pop h4 { margin: 0 0 4px; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+  #pop .ex { color: var(--muted); font-style: italic; margin-top: 6px; }
+  /* 5W */
+  .w5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 8px 0 16px; }
+  @media (max-width: 700px) { .w5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .w5 div { background: var(--accent-soft); border-radius: 10px; padding: 8px 10px; font-size: .9rem; }
+  .w5 b { display: block; font-size: .75rem; text-transform: uppercase; color: var(--accent); }
+  .w5 .none { color: var(--muted); font-style: italic; }
+  /* timeline */
+  .tl { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 3px solid var(--line); }
+  .tl li { position: relative; margin: 0 0 20px; }
+  .tl li::before { content: ""; position: absolute; left: -31px; top: 6px; width: 15px; height: 15px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); }
+  .anchor { display: inline-block; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 0 8px; margin-bottom: 4px; font-size: .9rem; }
+  /* pancarta */
+  .banner { background: var(--accent); color: #fff; border-radius: var(--radius); padding: 20px; font-size: clamp(1.2rem, 2.6vw, 1.7rem); font-weight: 800; line-height: 1.25; margin-bottom: 16px; }
+  :root[data-theme="dark"] .banner { color: #111; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .banner { color: #111; } }
+  .args { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .args div { background: var(--surface-2); border-radius: 10px; padding: 12px; border-left: 4px solid var(--accent); }
+  blockquote { margin: 0 0 12px; padding: 8px 14px; border-left: 4px solid var(--warn); background: var(--warn-soft); border-radius: 0 10px 10px 0; font-size: 1.1rem; }
+  /* piramide */
+  .lvl { border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+  .lvl h4 { margin: 0 0 6px; font-size: .8rem; text-transform: uppercase; color: var(--muted); }
+  .lvl.l1 { background: var(--accent-soft); font-size: 1.1rem; }
+  .lvl.l2 { background: var(--surface-2); }
+  .lvl.l3 { border: 1px dashed var(--line); font-size: .95rem; }
+  /* datos */
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--surface-2); border-radius: 12px; padding: 12px; }
+  .stat .n { font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1.1; }
+  .stat .l { font-size: .8rem; color: var(--muted); }
+  .bars { margin: 0 0 16px; }
+  .bars h4 { margin: 0 0 6px; font-size: .85rem; }
+  .bar { display: grid; grid-template-columns: 110px 1fr; gap: 8px; align-items: center; font-size: .85rem; margin-bottom: 4px; }
+  .bar .track { background: var(--surface-2); border-radius: 6px; height: 18px; overflow: hidden; }
+  .bar .fill { background: var(--accent); height: 100%; border-radius: 6px; }
+  /* dialogo */
+  .chat { display: flex; flex-direction: column; gap: 10px; }
+  .bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; }
+  .bubble small { display: block; font-size: .75rem; font-weight: 700; color: var(--muted); }
+  .bubble.q { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 4px; font-weight: 600; }
+  .bubble.a { align-self: flex-end; background: var(--accent-soft); border-bottom-right-radius: 4px; }
+  /* comparada */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+  .col { border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  .col h4 { margin: 0 0 4px; color: var(--accent); }
+  .pts { list-style: none; padding: 0; margin: 0; }
+  .pts li { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; }
+  .pts .rel { font-size: .75rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; }
+  .rel.coincide { background: var(--ok-soft); color: var(--ok); } .rel.difiere { background: var(--warn-soft); color: var(--warn); }
+  .pts .ab { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: .9rem; margin-top: 6px; }
+  .muted { color: var(--muted); }
+  .vis { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .mini-tl { list-style: none; padding: 0; margin: 0; } .mini-tl li { font-size: .9rem; margin-bottom: 6px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Lectura interactiva <span class="muted" style="font-weight:400">· demo del servicio</span></h1>
+    <div class="row">
+      <button class="btn" id="theme" type="button" aria-label="Cambiar tema claro u oscuro">Tema</button>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="Elegir artículo">
+    <div class="row">
+      <label class="f">Ejemplo
+        <select id="sample"></select>
+      </label>
+      <label class="f">Grado escolar
+        <select id="grado">
+          <option value="5">5.º primaria</option><option value="6">6.º primaria</option>
+          <option value="7">1.º secundaria</option><option value="8" selected>2.º secundaria</option>
+          <option value="9">3.º secundaria</option><option value="10">4.º secundaria</option><option value="11">5.º secundaria</option>
+        </select>
+      </label>
+      <label class="f">Género
+        <select id="genero">
+          <option value="">Detectar automáticamente</option>
+          <option value="cronica">Crónica</option><option value="opinion">Opinión</option><option value="informativa">Informativa</option>
+          <option value="datos">Datos</option><option value="entrevista">Entrevista</option><option value="comparada">Comparada</option>
+        </select>
+      </label>
+      <button class="btn primary" id="go" type="button">Enriquecer</button>
+      <button class="btn" id="karaoke" type="button" aria-pressed="false" disabled>▶ Leer en voz alta</button>
+    </div>
+    <details>
+      <summary>Editar el artículo (JSON) o usar un token</summary>
+      <label class="f" style="margin-top:8px">Artículo
+        <textarea id="json" spellcheck="false" aria-label="Artículo en formato JSON"></textarea>
+      </label>
+      <label class="f" style="margin-top:8px">Token del servicio (opcional)
+        <input type="password" id="token" autocomplete="off">
+      </label>
+    </details>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <div class="grid">
+    <main class="card" id="reader" aria-live="polite"><p class="empty">Elige un ejemplo y presiona «Enriquecer».</p></main>
+    <aside class="card side" id="side" aria-label="Glosario y protagonistas"></aside>
+  </div>
+</div>
+<div id="pop" role="dialog" aria-modal="false" hidden></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const NAMES = { cronica: "Crónica", opinion: "Opinión", informativa: "Informativa", datos: "Datos", entrevista: "Entrevista", comparada: "Comparada" };
+  let samples = [];
+  let doc = null;
+  let idx = {};
+
+  // ---------- theme ----------
+  try { const t = localStorage.getItem("re-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+  $("#theme").addEventListener("click", () => {
+    const dark = document.documentElement.dataset.theme
+      ? document.documentElement.dataset.theme === "dark"
+      : matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = dark ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("re-theme", next); } catch {}
+  });
+
+  // ---------- samples ----------
+  fetch("/demo/samples.json").then((r) => r.json()).then((list) => {
+    samples = list;
+    $("#sample").innerHTML = list.map((s, i) => `<option value="${i}">${esc(NAMES[s.generoEsperado])} — ${esc(s.article.titular)}</option>`).join("");
+    loadSample(0);
+  });
+  $("#sample").addEventListener("change", (e) => loadSample(Number(e.target.value)));
+  function loadSample(i) { $("#json").value = JSON.stringify(samples[i].article, null, 2); }
+
+  // ---------- call service ----------
+  $("#go").addEventListener("click", run);
+  async function run() {
+    stopKaraoke();
+    let article;
+    try { article = JSON.parse($("#json").value); } catch { return status("El JSON del artículo no es válido."); }
+    const options = { grado: Number($("#grado").value) };
+    if ($("#genero").value) options.generoForzado = $("#genero").value;
+    const headers = { "Content-Type": "application/json" };
+    if ($("#token").value) headers.Authorization = "Bearer " + $("#token").value;
+    status("Preparando la lectura…");
+    $("#go").disabled = true;
+    try {
+      const r = await fetch("/v1/enrich", { method: "POST", headers, body: JSON.stringify({ article, options }) });
+      const body = await r.json();
+      if (!r.ok) return status(`Error ${r.status}: ${body.error?.code} — ${body.error?.message}`);
+      doc = body;
+      render();
+      const m = doc.meta;
+      status(`Género: ${NAMES[doc.genero]} (${Math.round(m.generoConfianza * 100)} %, ${m.generoFuente}) · Diseño: ${doc.layout.nombre} · IA: ${m.ia ? m.modelo : "no (modo básico)"} · Descartados por no estar en el texto: ${m.descartados} · Caché: ${r.headers.get("x-cache")}`);
+    } catch (e) {
+      status("No se pudo conectar con el servicio.");
+    } finally { $("#go").disabled = false; }
+  }
+  function status(t) { $("#status").textContent = t; }
+
+  // ---------- rich text rendering (tokens + glossary/entity spans) ----------
+  function buildIndex() {
+    idx = { blocks: {}, tokens: {}, spans: {}, glos: {}, ents: {} };
+    doc.bloques.forEach((b) => (idx.blocks[b.id] = b));
+    doc.capas.karaoke.bloques.forEach((kb) => (idx.tokens[kb.bloqueId] = kb.tokens));
+    doc.spans.forEach((s) => (idx.spans[s.bloqueId] ||= []).push(s));
+    doc.capas.glosario.forEach((g) => (idx.glos[g.id] = g));
+    doc.capas.entidades.forEach((e) => (idx.ents[e.id] = e));
+  }
+
+  /** Renders block text [inicio, fin) with karaoke tokens, wrapping tokens inside spans as buttons. */
+  function rich(bloqueId, inicio = 0, fin) {
+    const b = idx.blocks[bloqueId]; if (!b) return "";
+    fin ??= b.texto.length;
+    const text = b.texto;
+    const toks = (idx.tokens[bloqueId] || []).filter((t) => t.inicio >= inicio && t.fin <= fin);
+    const spans = (idx.spans[bloqueId] || []).filter((s) => s.inicio >= inicio && s.fin <= fin);
+    let out = "", pos = inicio, open = null;
+    const closeSpan = () => { if (open) { out += "</button>"; open = null; } };
+    for (const t of toks) {
+      const s = spans.find((x) => t.inicio >= x.inicio && t.fin <= x.fin) || null;
+      if (open && open !== s) { if (pos < open.fin) { out += esc(text.slice(pos, Math.min(open.fin, t.inicio))); pos = Math.min(open.fin, t.inicio); } closeSpan(); }
+      out += esc(text.slice(pos, t.inicio));
+      if (s && open !== s) out += openSpan(s);
+      open = s;
+      out += `<span class="tok" data-t="${t.id}">${esc(t.texto)}</span>`;
+      pos = t.fin;
+    }
+    if (open) { out += esc(text.slice(pos, Math.min(open.fin, fin))); pos = Math.min(open.fin, fin); closeSpan(); }
+    return out + esc(text.slice(pos, fin));
+  }
+  function openSpan(s) {
+    if (s.tipo === "glosario") {
+      const g = idx.glos[s.refId];
+      return `<button type="button" class="term" data-g="${s.refId}" aria-haspopup="dialog" aria-label="${esc(g.termino)}: ver significado">`;
+    }
+    const e = idx.ents[s.refId];
+    return `<button type="button" class="ent" data-e="${s.refId}" style="--c:var(--${e.tipo})" aria-haspopup="dialog" aria-label="${esc(e.texto)}: ${esc(e.etiqueta)}">`;
+  }
+  const richCita = (c) => (c ? rich(c.fuente.bloqueId, c.fuente.inicio, c.fuente.fin) : "");
+  const blocksHtml = (ids) => ids.map((id) => `<p class="blk">${rich(id)}</p>`).join("");
+
+  // ---------- layouts ----------
+  const LAYOUTS = {
+    timeline: (d) => `<ol class="tl">${d.eventos.map((e) => `<li>${e.ancla ? `<span class="anchor">${esc(e.ancla.texto)}</span>` : ""}${blocksHtml(e.bloqueIds)}</li>`).join("")}</ol>`,
+    pancarta: (d) => `
+      <div class="banner" role="heading" aria-level="3">${esc(d.tesis.texto)}</div>
+      ${d.argumentos.length ? `<h3 class="sr">Argumentos</h3><div class="args">${d.argumentos.map((a) => `<div>${esc(a.cita.texto)}</div>`).join("")}</div>` : ""}
+      ${d.citas.map((c) => `<blockquote>«${esc(c.texto)}»</blockquote>`).join("")}
+      <details open><summary>Texto completo</summary>${blocksHtml(d.bloqueIds)}</details>`,
+    piramide: (d) => `${fiveW(true)}${d.niveles.map((n) => `<section class="lvl l${n.importancia}"><h4>${esc(n.etiqueta)}</h4>${blocksHtml(n.bloqueIds)}</section>`).join("")}`,
+    datos: (d) => `
+      <div class="stats">${d.destacadas.map((c) => `<div class="stat"><div class="n">${esc(c.texto)}</div><div class="l">${esc(c.etiqueta)}</div></div>`).join("")}</div>
+      ${bars(d.graficos)}${blocksHtml(d.bloqueIds)}`,
+    dialogo: (d) => `<div class="chat">${d.turnos.map((t) => `<div class="bubble ${t.rol === "entrevistador" ? "q" : "a"}"><small>${esc(t.hablante)}</small>${richCita(t.cita)}</div>`).join("")}</div>`,
+    comparada: (d) => `
+      <div class="cols">${d.columnas.map((c) => `<section class="col" aria-label="${esc(c.medio || "Lado " + c.lado)}"><h4>${esc(c.medio || "Lado " + c.lado.toUpperCase())}</h4>${c.titular ? `<p><strong>${rich(c.titular.fuente.bloqueId)}</strong></p>` : ""}${blocksHtml(c.bloqueIds)}</section>`).join("")}</div>
+      ${d.puntos.length ? `<h3>¿En qué coinciden y en qué difieren?</h3><ul class="pts">${d.puntos.map((p) => `<li><span class="rel ${p.relacion}">${p.relacion === "coincide" ? "Coinciden" : "Difieren"}</span> <strong>${esc(p.tema)}</strong><div class="ab"><div><span class="muted">A:</span> ${p.a ? "«" + esc(p.a.texto) + "»" : "<em class='muted'>No lo menciona</em>"}</div><div><span class="muted">B:</span> ${p.b ? "«" + esc(p.b.texto) + "»" : "<em class='muted'>No lo menciona</em>"}</div></div></li>`).join("")}</ul>` : ""}`,
+  };
+
+  function fiveW(force) {
+    const w = doc.capas.cincoW;
+    const keys = [["que", "Qué"], ["quien", "Quién"], ["cuando", "Cuándo"], ["donde", "Dónde"], ["porque", "Por qué"]];
+    const html = `<div class="w5">${keys.map(([k, l]) => `<div><b>${l}</b>${w[k] ? esc(w[k].texto) : '<span class="none">El texto no lo dice</span>'}</div>`).join("")}</div>`;
+    return force ? html : `<details><summary>Las 5 preguntas clave</summary>${html}</details>`;
+  }
+  function bars(groups) {
+    return groups.map((g) => `<figure class="bars" aria-label="Comparación de cifras en ${esc(g.unidad)}"><h4>Comparar: ${esc(g.unidad)}</h4>${g.barras.map((b) => `<div class="bar"><span>${esc(b.texto)}</span><span class="track" role="img" aria-label="${esc(b.texto)}"><span class="fill" style="display:block;width:${Math.max(2, b.proporcion * 100)}%"></span></span></div>`).join("")}</figure>`).join("");
+  }
+
+  function render() {
+    buildIndex();
+    const a = doc.articulo;
+    const h = doc.bloques.find((b) => b.id === "h");
+    const s = doc.bloques.find((b) => b.id === "s");
+    const layout = (LAYOUTS[doc.layout.id] || (() => ""))(doc.layout.data);
+    const v = doc.capas.visuales;
+    const extra = [
+      doc.layout.id !== "timeline" && v.timeline.length ? `<h3>Fechas en el texto</h3><ul class="mini-tl">${v.timeline.map((t) => `<li><span class="anchor">${esc(t.fecha.texto)}</span> ${esc(t.evento.texto)}</li>`).join("")}</ul>` : "",
+      doc.layout.id !== "datos" && v.cifras.length ? bars(v.cifras) : "",
+    ].join("");
+    $("#reader").innerHTML = `
+      <div class="kicker">${esc(a.seccion || "Noticia")}</div>
+      <h2 class="titular">${h ? rich("h") : esc(a.titular)}</h2>
+      ${s ? `<p class="bajada">${rich("s")}</p>` : ""}
+      <div class="badges"><span class="badge">${esc(NAMES[doc.genero])}</span><span class="badge">Diseño: ${esc(doc.layout.nombre)}</span></div>
+      ${doc.layout.id === "piramide" ? "" : fiveW(false)}
+      ${layout}
+      ${extra ? `<section class="vis" aria-label="Para ver mejor">${extra}</section>` : ""}`;
+    renderSide();
+    $("#karaoke").disabled = false;
+  }
+
+  function renderSide() {
+    const ents = doc.capas.entidades.filter((e) => e.tipo !== "numero");
+    const gl = doc.capas.glosario;
+    $("#side").innerHTML = `
+      <section><h3>Protagonistas y datos</h3>${ents.length ? `<div class="chips">${ents.map((e) => `<button type="button" class="chip" data-e="${e.id}" style="--c:var(--${e.tipo})" aria-haspopup="dialog">${esc(e.texto)}</button>`).join("")}</div>` : '<p class="muted">Sin entidades.</p>'}</section>
+      <section><h3>Glosario</h3>${gl.length ? `<dl class="gl">${gl.map((g) => `<dt><button type="button" class="term" data-g="${g.id}" aria-haspopup="dialog">${esc(g.termino)}</button></dt><dd>${esc(g.definicion)}</dd>`).join("")}</dl>` : '<p class="muted">El glosario necesita IA (no hay clave configurada o falló). El resto funciona igual.</p>'}</section>`;
+  }
+
+  // ---------- popover ----------
+  const pop = $("#pop");
+  let popFrom = null;
+  document.addEventListener("click", (ev) => {
+    const t = ev.target.closest("[data-g],[data-e]");
+    if (!t) { if (!pop.contains(ev.target)) closePop(); return; }
+    ev.preventDefault();
+    openPop(t);
+  });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") closePop(true); });
+  function openPop(el) {
+    let html = "";
+    if (el.dataset.g) {
+      const g = idx.glos[el.dataset.g];
+      html = `<h4>¿Qué significa?</h4><strong>${esc(g.termino)}</strong><div>${esc(g.definicion)}</div>${g.ejemplo ? `<div class="ex">Ejemplo: ${esc(g.ejemplo)}</div>` : ""}`;
+    } else {
+      const e = idx.ents[el.dataset.e];
+      html = `<h4>${esc(e.etiqueta)}</h4><strong>${esc(e.texto)}</strong>${e.contexto ? `<div>${esc(e.contexto)}</div>` : ""}<div class="ex">Aparece ${e.apariciones.length} ${e.apariciones.length === 1 ? "vez" : "veces"} en el texto.</div>`;
+    }
+    pop.innerHTML = html + '<button type="button" class="btn" id="popclose" style="margin-top:8px">Cerrar</button>';
+    pop.hidden = false;
+    pop.setAttribute("aria-label", el.textContent.trim());
+    const r = el.getBoundingClientRect();
+    const left = Math.min(window.scrollX + r.left, window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 16);
+    pop.style.left = Math.max(16, left) + "px";
+    pop.style.top = window.scrollY + r.bottom + 6 + "px";
+    popFrom = el;
+    $("#popclose").addEventListener("click", () => closePop(true));
+    $("#popclose").focus();
+  }
+  function closePop(restore) { if (pop.hidden) return; pop.hidden = true; if (restore && popFrom) popFrom.focus(); popFrom = null; }
+
+  // ---------- karaoke ----------
+  let playing = false, timer = null, current = null;
+  $("#karaoke").addEventListener("click", () => (playing ? stopKaraoke() : startKaraoke()));
+  function setPlaying(on) {
+    playing = on;
+    $("#karaoke").setAttribute("aria-pressed", String(on));
+    $("#karaoke").textContent = on ? "■ Detener" : "▶ Leer en voz alta";
+  }
+  function highlight(id) {
+    document.querySelectorAll(".tok.on").forEach((n) => n.classList.remove("on"));
+    const nodes = document.querySelectorAll(`.tok[data-t="${id}"]`);
+    nodes.forEach((n) => n.classList.add("on"));
+    nodes[0]?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+  function readingOrder() {
+    // Only blocks that are on screen, in DOM order.
+    const seen = new Set(); const order = [];
+    document.querySelectorAll("#reader .tok").forEach((n) => { const b = n.dataset.t.replace(/-\d+$/, ""); if (!seen.has(b)) { seen.add(b); order.push(b); } });
+    return order;
+  }
+  function startKaraoke() {
+    if (!doc) return;
+    setPlaying(true);
+    const order = readingOrder();
+    const synth = window.speechSynthesis;
+    if (!synth || typeof SpeechSynthesisUtterance === "undefined") return fixedPace(order, 0, 0);
+    speakBlock(order, 0);
+  }
+  function speakBlock(order, bi) {
+    if (!playing || bi >= order.length) return stopKaraoke();
+    const id = order[bi];
+    const block = idx.blocks[id]; const toks = idx.tokens[id] || [];
+    const u = new SpeechSynthesisUtterance(block.texto);
+    u.lang = "es-PE"; u.rate = 0.95;
+    const voice = speechSynthesis.getVoices().find((v) => v.lang.startsWith("es"));
+    if (voice) u.voice = voice;
+    let gotBoundary = false;
+    u.onboundary = (ev) => {
+      if (ev.name && ev.name !== "word") return;
+      gotBoundary = true;
+      const t = toks.find((x) => ev.charIndex >= x.inicio && ev.charIndex < x.fin) || toks.find((x) => x.inicio >= ev.charIndex);
+      if (t) highlight(t.id);
+    };
+    u.onend = () => { if (playing && current === u) speakBlock(order, bi + 1); };
+    u.onerror = () => { if (playing && current === u) { speechSynthesis.cancel(); fixedPace(order, bi, 0); } };
+    current = u;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+    // Some engines never fire boundary events: fall back to a fixed pace (silent highlight).
+    setTimeout(() => { if (playing && current === u && !gotBoundary) { current = null; speechSynthesis.cancel(); fixedPace(order, bi, 0); } }, 1500);
+  }
+  function fixedPace(order, bi, ti) {
+    if (!playing) return;
+    if (bi >= order.length) return stopKaraoke();
+    const toks = idx.tokens[order[bi]] || [];
+    if (ti >= toks.length) return fixedPace(order, bi + 1, 0);
+    const t = toks[ti];
+    highlight(t.id);
+    const ms = t.startMs != null && t.endMs != null ? Math.max(120, t.endMs - t.startMs) : 320;
+    timer = setTimeout(() => fixedPace(order, bi, ti + 1), ms);
+  }
+  function stopKaraoke() {
+    setPlaying(false);
+    current = null;
+    clearTimeout(timer);
+    try { window.speechSynthesis?.cancel(); } catch {}
+    document.querySelectorAll(".tok.on").forEach((n) => n.classList.remove("on"));
+  }
+})();
+</script>
+</body>
+</html>

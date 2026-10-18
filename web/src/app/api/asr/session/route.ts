@@ -22,15 +22,14 @@ async function readSmallBody(request: Request): Promise<string> {
 /** Grants expire for connection establishment, not as a paid-stream quota. */
 export async function POST(request: Request) {
   if (Number(request.headers.get("content-length") ?? 0) > 2048) return Response.json({ error: "request-too-large" }, { status: 413, headers: HEADERS });
-  let body: unknown;
   try {
     const text = await readSmallBody(request);
-    body = JSON.parse(text);
+    JSON.parse(text);
   } catch (error) {
     const large = error instanceof Error && error.message === "request-too-large";
     return Response.json({ error: large ? "request-too-large" : "invalid-request" }, { status: large ? 413 : 400, headers: HEADERS });
   }
-  const authorization = authorizeVoiceRequest(request, body, "deepgram");
+  const authorization = authorizeVoiceRequest(request, "deepgram");
   if (!authorization.ok) return Response.json({ error: authorization.error }, { status: authorization.status, headers: HEADERS });
   const controller = new AbortController();
   const abort = () => controller.abort();

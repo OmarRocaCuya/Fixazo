@@ -11,7 +11,6 @@ const ERROR_COPY: Record<string, string> = {
   "capture-backpressure": "El servidor tardó más que la grabación. Se pausó la captura para no acumular ni descartar fragmentos sin avisar. Autoriza de nuevo para continuar; el último fragmento no se procesó.",
   "voice-access-required": "El código no fue aceptado. Pide el código vigente al responsable y vuelve a autorizar.",
   "voice-rate-limit": "Se alcanzó el límite de solicitudes. El micrófono está apagado. Espera antes de volver a autorizar.",
-  "adult-demo-only": "Esta prueba solo admite voces adultas o sintéticas. No se activó una sesión infantil.",
   "no-observable-words": "No obtuvimos palabras observables en el fragmento. No se considera un error de lectura. Puedes volver a autorizar y repetirlo.",
   "backend-not-ready": "Los modelos todavía no están preparados. Comprueba su disponibilidad antes de volver a autorizar.",
   "speech-unavailable": "La voz sintética de esta lengua no está disponible. No la sustituiremos por una voz en castellano.",
@@ -42,16 +41,13 @@ export function readingDialoguePresentation(dialogue: ReadingCapabilities["dialo
   };
 }
 
-/** Isolated adult research lane. Never receives a profile/controller/report. */
+/** Isolated research lane. Never receives a profile/controller/report. */
 export function MultilingualReadingSession({ passage, title, onClose }: { passage: string; title: string; onClose: () => void }) {
   const [status, setStatus] = useState<ReadingCapabilities | null>(null);
   const [checking, setChecking] = useState(true);
   const [language, setLanguage] = useState<ReadingLanguage>("quy_Latn");
   const [code, setCode] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [adult, setAdult] = useState(false);
   const [authorized, setAuthorized] = useState(false);
-  const [reviewed, setReviewed] = useState(false);
   const [prepared, setPrepared] = useState<PreparedReading | null>(null);
   const [phase, setPhase] = useState<Phase>("setup");
   const [message, setMessage] = useState("");
@@ -100,7 +96,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     releaseAudio();
   }
   function pauseSession(copy = "Prueba pausada. El micrófono está apagado, se revocó la autorización y se borró el contexto de conversación. Puedes autorizar de nuevo sin perder el texto observado.") {
-    release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setCode(""); setConsent(false); setAdult(false); setPhase("paused"); setMessage(copy);
+    release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setCode(""); setPhase("paused"); setMessage(copy);
   }
   function fail(error: unknown) {
     const name = error instanceof Error ? error.message : "";
@@ -128,7 +124,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     const abort = new AbortController();
     void Promise.resolve().then(() => checkStatus(abort.signal));
     const stop = () => {
-      release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setCode(""); setConsent(false); setAdult(false); setPhase("paused");
+      release(); setChecking(false); setCaptureReady(false); setAuthorized(false); setCode(""); setPhase("paused");
       setMessage("Se pausó la prueba al ocultar o salir de la pestaña. El micrófono está apagado y se borró el contexto de conversación; vuelve a autorizar para continuar.");
     };
     const hide = () => { if (document.hidden) stop(); };
@@ -144,7 +140,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     && status.asr.timingMethod === "ctc-greedy-frames" && status.asr.languages.includes(language)
     && status.translation.enabled && status.translation.ready && status.translation.languages.includes(language)
     && status.speech.enabled && status.speech.languages.includes(language);
-  const canAuthorize = available && code.trim().length >= 16 && consent && adult;
+  const canAuthorize = available && code.trim().length >= 16;
   const supportsCapture = typeof window !== "undefined" && window.isSecureContext && !!navigator.mediaDevices?.getUserMedia && typeof AudioContext !== "undefined";
   const question = reply?.replyText ?? prepared?.opening ?? "";
   const dialogue = readingDialoguePresentation(status?.dialogue, reply);
@@ -154,7 +150,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
     if (!canAuthorize || !status || status.mode === "disabled" || busy) return;
     release();
     const token = epoch.current;
-    const service = new MetaReadingClient({ accessCode: code.trim(), audience: status.mode, consent: true, adultConfirmed: true });
+    const service = new MetaReadingClient({ accessCode: code.trim(), audience: status.mode });
     client.current = service; setCode(""); setAuthorized(true);
     if (preparedRef.current) { setPhase(readingDone.current ? "conversation" : "ready"); setMessage("Autorización renovada. El micrófono solo se activa al pulsar el botón de lectura o respuesta."); return; }
     setPhase("preparing"); setMessage("Preparando el texto de la misión en la lengua elegida… No es una traducción validada por una persona.");
@@ -168,7 +164,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
 
   async function startReading() {
     const service = client.current, text = preparedRef.current;
-    if (!service || !text || !authorized || !reviewed || phase !== "ready" || capture.current || queue.current || !supportsCapture || elapsedRef.current >= 60) return;
+    if (!service || !text || !authorized || phase !== "ready" || capture.current || queue.current || !supportsCapture || elapsedRef.current >= 60) return;
     const token = ++epoch.current;
     const base = elapsedRef.current;
     const pending = new ReadingChunkQueue<Blob>(async (blob) => {
@@ -270,7 +266,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
 
   function changeLanguage(value: ReadingLanguage) {
     release(); setLanguage(value); setPrepared(null); preparedRef.current = null;
-    setAuthorized(false); setReviewed(false); setCode(""); setConsent(false); setAdult(false); setPhase("setup");
+    setAuthorized(false); setCode(""); setPhase("setup");
     setObserved([]); observedRef.current.clear(); cursor.current = 0; setTranscript(""); setReply(null); setHeard(""); setTurn(0);
     setElapsed(0); elapsedRef.current = 0; readingDone.current = false; setMessage("");
   }
@@ -278,19 +274,18 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
   return (
     <div className={styles.session}>
       <header className={styles.header}>
-        <div><h1>Lectura multilingüe</h1><p className="muted">Demo adulta no comercial dentro de tu misión · sin notas ni informes</p></div>
+        <div><h1>Lectura multilingüe</h1><p className="muted">Demo no comercial dentro de tu misión · sin notas ni informes</p></div>
         <button type="button" className="btn ghost" onClick={() => { release(); onClose(); }}>Volver a la misión</button>
       </header>
-      <p className="notice">Solo voz adulta o sintética. Meta reconoce la lectura; NLLB traduce; MMS genera la voz. El modo de conversación se muestra según el modelo realmente habilitado. No infiere emociones ni juzga el acento.</p>
+      <p className="notice">Meta reconoce la lectura; NLLB traduce; MMS genera la voz. El modo de conversación se muestra según el modelo realmente habilitado. No infiere emociones ni juzga el acento.</p>
 
       {!authorized && <section className={styles.authorization} aria-labelledby="reading-access-title">
-        <h2 id="reading-access-title">Autorizar esta prueba</h2>
+        <h2 id="reading-access-title">Preparar esta prueba</h2>
         <div className={styles.fields}>
           <div className="field"><label htmlFor="reading-language">Lengua de la lectura y la conversación</label><select id="reading-language" className="input" value={language} disabled={busy} onChange={(event) => changeLanguage(event.target.value as ReadingLanguage)}>{READING_LANGUAGES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></div>
           <div className="field"><label htmlFor="reading-access-code">Código privado del responsable</label><input id="reading-access-code" className="input" type="password" value={code} minLength={16} maxLength={128} autoComplete="off" onChange={(event) => setCode(event.target.value)} /></div>
         </div>
-        <label className={styles.check}><input type="checkbox" checked={adult} onChange={(event) => setAdult(event.target.checked)} /><span>Confirmo que usaré solo voz adulta o sintética, no la voz de un menor.</span></label>
-        <label className={styles.check}><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /><span>Autorizo enviar el texto de esta misión y los fragmentos de voz al servidor configurado. Entiendo que las transcripciones y traducciones necesitan revisión de una persona hablante.</span></label>
+        <p className="small muted">El texto de esta misión y los fragmentos de voz se envían al servidor configurado. Las transcripciones y traducciones necesitan revisión de una persona hablante.</p>
         <p className="small muted">El código y el contenido de esta prueba solo viven en memoria. Esta vía no adjunta el perfil ni sus informes; evita datos personales en el texto y la voz. El servidor recibe audio para procesarlo; cancelar no retira lo ya recibido.</p>
         <div className="row"><button type="button" className="btn" disabled={!canAuthorize || checking || busy} onClick={() => void authorize()}>{prepared ? "Autorizar y continuar" : "Preparar lectura en esta lengua"}</button><button type="button" className="btn subtle" disabled={checking || busy} onClick={() => void checkStatus()}>{checking ? "Comprobando…" : "Comprobar modelos"}</button></div>
         {!checking && !available && <p className="small" role="status">No están disponibles todos los modelos necesarios para esta lengua. No se activará el micrófono. {status?.reason}</p>}
@@ -305,8 +300,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
         <p className="small muted">Actualización por fragmentos de unos 4 segundos más el tiempo del servidor. Tiempos aproximados de frames CTC, no alineación forzada ni seguimiento instantáneo. Las palabras cortadas entre fragmentos pueden no reconocerse.</p>
         <details><summary>Ver texto original de la misión en castellano</summary><p className={styles.original}>{passage}</p></details>
         {phase === "ready" && authorized && <>
-          <label className={styles.check}><input type="checkbox" checked={reviewed} onChange={(event) => setReviewed(event.target.checked)} /><span>Revisé el texto para esta prueba adulta; entiendo que eso no lo convierte en material validado para niños.</span></label>
-          <button type="button" className="btn kid" disabled={!reviewed || !supportsCapture || elapsed >= 60} onClick={() => void startReading()}>{elapsed > 0 ? "Continuar lectura con micrófono" : "Comenzar lectura con micrófono"}</button>
+          <button type="button" className="btn kid" disabled={!supportsCapture || elapsed >= 60} onClick={() => void startReading()}>{elapsed > 0 ? "Continuar lectura con micrófono" : "Comenzar lectura con micrófono"}</button>
         </>}
         {phase === "reading" && <>
           <p className="small" role="status">{captureReady ? "Micrófono activo. Lee el texto en voz alta; tú decides cuándo terminar." : "Esperando permiso del micrófono…"}</p>
@@ -329,7 +323,7 @@ export function MultilingualReadingSession({ passage, title, onClose }: { passag
         <p className="small muted">Voz: {status?.speech.models[language] ?? "MMS de Meta"}. No se usa una voz en castellano para fingir que habla esta lengua.</p>
       </section>}
 
-      <div className={styles.status} role="status" aria-live="polite">{message || "Elige una lengua y autoriza esta prueba adulta. No se abre el micrófono automáticamente."}</div>
+      <div className={styles.status} role="status" aria-live="polite">{message || "Elige una lengua y prepara esta prueba. No se abre el micrófono automáticamente."}</div>
       {authorized && <button type="button" className="btn ghost" onClick={() => pauseSession()}>Pausar y apagar voz y micrófono</button>}
       {!supportsCapture && <p className="small muted">La captura necesita HTTPS, Web Audio y permiso de micrófono del navegador y del sistema.</p>}
     </div>

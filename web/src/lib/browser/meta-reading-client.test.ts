@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MetaReadingClient, ReadingChunkQueue, boundedReadingHistory, matchObservedWords, referenceWords, type TimedReadingWord } from "./meta-reading-client";
 
-const ACCESS = { accessCode: "test-adult-demo-code-not-real", audience: "adult-demo", consent: true, adultConfirmed: true } as const;
+const ACCESS = { accessCode: "test-demo-code-not-real", audience: "adult-demo" } as const;
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json" } });
 const words = (...tokens: string[]): TimedReadingWord[] => tokens.map((word, index) => ({ word, start: index * 0.2, end: index * 0.2 + 0.15, confidence: null }));
 const transcript = { text: "Mayuqa chakisqam", model: "omniASR_CTC_300M_v2", language: "quy_Latn", durationSeconds: 1, words: words("Mayuqa", "chakisqam"), wordTimestamps: true, timingMethod: "ctc-greedy-frames", requiresHumanReview: true };
@@ -31,13 +31,13 @@ describe("same-origin adult reading client", () => {
   it("rejects malformed readiness instead of inventing support", async () => {
     await expect(MetaReadingClient.capabilities(new AbortController().signal, vi.fn<typeof fetch>().mockResolvedValue(json({ ...capabilities, asr: {} })))).rejects.toThrow("invalid-response");
   });
-  it("prepares the canonical passage with explicit adult consent and header-only access code", async () => {
+  it("prepares the canonical passage with a header-only access code and no consent fields", async () => {
     const request = vi.fn<typeof fetch>().mockResolvedValue(json(prepared));
     expect(await new MetaReadingClient(ACCESS, request).prepare("El río estaba seco.", "quy_Latn")).toEqual(prepared);
     const [url, init] = request.mock.calls[0];
     expect(url).toBe("/api/reading");
     expect(init?.headers).toEqual({ "X-Voice-Access-Code": ACCESS.accessCode, "Content-Type": "application/json" });
-    expect(JSON.parse(init?.body as string)).toEqual({ action: "prepare", passage: "El río estaba seco.", language: "quy_Latn", audience: "adult-demo", consent: true, adultConfirmed: true });
+    expect(JSON.parse(init?.body as string)).toEqual({ action: "prepare", passage: "El río estaba seco.", language: "quy_Latn" });
     expect(init?.body).not.toContain(ACCESS.accessCode);
   });
   it("sends bounded WAV with no profile and accepts real frame-derived words", async () => {
@@ -45,7 +45,7 @@ describe("same-origin adult reading client", () => {
     const result = await new MetaReadingClient(ACCESS, request).transcribe(new Blob([new Uint8Array(100)]), "quy_Latn");
     expect(result.words).toEqual(transcript.words);
     const form = request.mock.calls[0][1]?.body as FormData;
-    expect([...form.keys()].sort()).toEqual(["action", "adultConfirmed", "audience", "consent", "file", "language"]);
+    expect([...form.keys()].sort()).toEqual(["action", "file", "language"]);
     expect(form.get("language")).toBe("quy_Latn");
     expect(request.mock.calls[0][1]?.headers).not.toHaveProperty("Content-Type");
   });

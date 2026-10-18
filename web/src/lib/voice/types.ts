@@ -13,8 +13,6 @@ export interface VoicePolicyStatus {
 export interface CloudVoiceAccess {
   accessCode: string;
   audience: VoiceAudience;
-  consent: true;
-  adultConfirmed?: boolean;
 }
 
 export interface AsrWordTiming {

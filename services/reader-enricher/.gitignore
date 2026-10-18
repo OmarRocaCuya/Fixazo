@@ -1,0 +1,5 @@
+node_modules
+dist
+.env
+# Keep the public template despite the repository-wide .env.* rule.
+!.env.example

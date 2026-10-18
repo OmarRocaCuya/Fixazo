@@ -1,5 +1,5 @@
 // Portada del periódico: ediciones guardadas en data/ediciones, sin programador automático configurado.
-// La app de familia de Ñawinchay sigue disponible en /consentimiento y /chat.
+// La app de familia de Ñawinchay sigue disponible en /chat (/consentimiento redirige ahí).
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
@@ -31,7 +31,7 @@ function Meta({ n }: { n: NoticiaGuardada }) {
       <EstadoNoticia id={n.id} />
       <span>{n.minutos} min</span>
       <span>{preguntas} preguntas</span>
-      <span>Escritura o voz adulta opcional</span>
+      <span>Escritura o voz opcional</span>
     </div>
   );
 }

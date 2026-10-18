@@ -5,6 +5,9 @@
   "engines": { "node": ">=22" },
   "scripts": {
     "dev": "node dev.js",
-    "test": "node --test"
+    "test": "node --test test/*.test.js",
+    "mvp": "npm run dev --prefix web",
+    "test:mvp": "npm test --prefix web",
+    "build:mvp": "npm run build --prefix web"
   }
 }

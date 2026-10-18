@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       let form: FormData;
       try { form = await new Response(bytes as BodyInit, { headers: { "Content-Type": type } }).formData(); }
       catch { return Response.json({ error: "invalid-request" }, { status: 400, headers: HEADERS }); }
-      const authorization = authorizeVoiceRequest(request, { audience: form.get("audience"), consent: form.get("consent") === "true", adultConfirmed: form.get("adultConfirmed") === "true" }, "meta");
+      const authorization = authorizeVoiceRequest(request, "meta");
       if (!authorization.ok) return Response.json({ error: authorization.error }, { status: authorization.status, headers: HEADERS });
       const file = form.get("file");
       const language = form.get("language");
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     let body: Record<string, unknown>;
     try { body = JSON.parse(new TextDecoder().decode(bytes)); }
     catch { return Response.json({ error: "invalid-request" }, { status: 400, headers: HEADERS }); }
-    const authorization = authorizeVoiceRequest(request, body, "meta");
+    const authorization = authorizeVoiceRequest(request, "meta");
     if (!authorization.ok) return Response.json({ error: authorization.error }, { status: authorization.status, headers: HEADERS });
     if (!body || body.action !== "translate" || typeof body.text !== "string" || typeof body.sourceLanguage !== "string" || typeof body.targetLanguage !== "string") {
       return Response.json({ error: "invalid-request" }, { status: 400, headers: HEADERS });

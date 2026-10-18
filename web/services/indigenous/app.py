@@ -75,6 +75,10 @@ def create_app(settings: Settings | None = None, engine: Runtime | None = None) 
 
     @asynccontextmanager
     async def lifespan(_app):
+        if settings.emotion_warmup and not settings.warmup and settings.configured and settings.emotion_enabled:
+            # Independent from the much larger ASR warmup. Downloads and a real
+            # test forward finish before emotion.ready becomes true.
+            engine.start_emotion_warmup()
         if settings.warmup and settings.configured:
             # Explicit opt-in: may download GB of weights. The server remains
             # responsive with loading=true, ready=false until real load ends.
@@ -146,6 +150,15 @@ def create_app(settings: Settings | None = None, engine: Runtime | None = None) 
             raise ServiceError("invalid-json", 400) from None
         audio, language, model = await run_in_threadpool(engine.speak, payload)
         return Response(audio.wav, media_type="audio/wav", headers={"X-Speech-Language": language, "X-Speech-Model": model, "X-Speech-Research-Only": "true", "X-Speech-Duration": str(audio.seconds)})
+
+    @api.post("/v1/emotion")
+    async def emotion(request: Request):
+        # EXPERIMENTAL and opt-in (see emotion.py). Raw WAV body, already bounded
+        # and buffered in RAM by BoundedPrivateRequests; never spooled or logged.
+        if request.headers.get("content-type", "").split(";")[0].strip() not in ("audio/wav", "audio/x-wav", "audio/wave"):
+            raise ServiceError("wav-required", 415)
+        payload = await request.body()
+        return await run_in_threadpool(engine.emotion, payload)
 
     @api.post("/dialogue")
     async def dialogue(request: Request):

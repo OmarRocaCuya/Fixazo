@@ -1,10 +1,10 @@
-// Private, opt-in adult research judge. No student identifiers, answers or
+// Private, opt-in research judge. No student identifiers, answers or
 // educational outcomes are written to disk or logs by this route.
 import { connection } from "next/server";
 import { buscarPreguntaVoz } from "@/lib/periodico/ediciones";
 import { agregarCorridas, guardia, PLANTILLAS, revisarTexto } from "@/lib/periodico/reglas";
 import type { RespuestaVoz } from "@/lib/periodico/tipos";
-import { corridaValida, juzgarVoz } from "@/lib/server/juez-noticia";
+import { corridaValida, juzgarVoz, type ContextoEleccion } from "@/lib/server/juez-noticia";
 import { getPeriodicoPolicy, preflightPeriodicoRequest, reservePeriodicoJudge } from "@/lib/server/periodico-policy";
 
 export const maxDuration = 30;
@@ -40,17 +40,31 @@ async function boundedJson(request: Request): Promise<unknown> {
   return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
 }
 
-type Input = { noticiaId: string; preguntaId: string; texto: string; intento: number; consent: true; adultConfirmed: true; audience?: "adult" };
+type Eleccion = { preguntaId: string; opcion: number };
+type Input = { noticiaId: string; preguntaId: string; texto: string; intento: number; elecciones?: Eleccion[] };
+const validId = (s: unknown): s is string => typeof s === "string" && s.length > 0 && s.length <= 128 && !/[\u0000-\u001f]/.test(s);
+function isElecciones(value: unknown): value is Eleccion[] | undefined {
+  if (value === undefined) return true;
+  if (!Array.isArray(value) || value.length > 12) return false;
+  const seen = new Set<string>();
+  return value.every((raw) => {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return false;
+    const choice = raw as Record<string, unknown>;
+    if (Object.keys(choice).length !== 2 || Object.keys(choice).some((key) => key !== "preguntaId" && key !== "opcion")
+      || !validId(choice.preguntaId) || seen.has(choice.preguntaId) || !Number.isInteger(choice.opcion) || (choice.opcion as number) < 0) return false;
+    seen.add(choice.preguntaId);
+    return true;
+  });
+}
 function isInput(value: unknown): value is Input {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const b = value as Record<string, unknown>;
-  const allowed = new Set(["noticiaId", "preguntaId", "texto", "intento", "consent", "adultConfirmed", "audience"]);
+  const allowed = new Set(["noticiaId", "preguntaId", "texto", "intento", "elecciones"]);
   if (Object.keys(b).some((key) => !allowed.has(key))) return false;
-  const id = (s: unknown) => typeof s === "string" && s.length > 0 && s.length <= 128 && !/[\u0000-\u001f]/.test(s);
-  return id(b.noticiaId) && id(b.preguntaId) && typeof b.texto === "string" && b.texto.length <= MAX_TEXTO
+  return validId(b.noticiaId) && validId(b.preguntaId) && typeof b.texto === "string" && b.texto.length <= MAX_TEXTO
     && !/[\u0000\u202a-\u202e\u2066-\u2069]/.test(b.texto)
     && Number.isInteger(b.intento) && (b.intento as number) >= 1 && (b.intento as number) <= 2
-    && b.consent === true && b.adultConfirmed === true && (b.audience === undefined || b.audience === "adult");
+    && isElecciones(b.elecciones);
 }
 
 export async function GET() {
@@ -72,6 +86,14 @@ export async function POST(request: Request) {
   catch { return noEvaluable(); }
   if (!hit) return noEvaluable("La pregunta no existe. No se ha evaluado tu respuesta.", 404, "question-not-found");
   const { noticia, pregunta } = hit;
+  const elecciones: ContextoEleccion[] = [];
+  for (const choice of value.elecciones ?? []) {
+    const authored = noticia.pasos.find((step) => step.tipo === "opciones" && step.id === choice.preguntaId);
+    if (!authored || authored.tipo !== "opciones" || choice.opcion >= authored.opciones.length) return noEvaluable(UNAVAILABLE, 422, "invalid-request");
+    // Only trusted article content reaches the prompt; no caller-authored questions,
+    // option text, expected answer, rubric or model selection are accepted.
+    elecciones.push({ preguntaId: authored.id, pregunta: authored.titulo, opcionElegida: authored.opciones[choice.opcion], habilidad: authored.habilidad });
+  }
   const k = pregunta.privado;
   const texto = value.texto;
   const previo = revisarTexto(texto);
@@ -83,7 +105,7 @@ export async function POST(request: Request) {
   if (!reservation.ok) return noEvaluable(UNAVAILABLE, 429, reservation.error);
   try {
     const fragmentos = noticia.pasos.flatMap((p) => (p.tipo === "fragmento" ? [`${p.medio}: ${p.texto}`] : []));
-    const received = await juzgarVoz({ fragmentos, pregunta: pregunta.titulo, criterios: k.criterios, respuestaModelo: k.respuestaModelo, texto });
+    const received = await juzgarVoz({ fragmentos, pregunta: pregunta.titulo, criterios: k.criterios, respuestaModelo: k.respuestaModelo, texto, elecciones });
     const corridas = Array.isArray(received) ? received.filter((run) => corridaValida(run, k.criterios)).slice(0, 3) : [];
     // Infrastructure/model-contract failures are NOT evidence of a failed skill.
     // Require two complete independent runs before considering any criteria.

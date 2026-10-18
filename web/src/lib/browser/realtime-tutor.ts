@@ -1,6 +1,6 @@
 /** Independent, ephemeral conversational demo. Never feeds reading assessment. */
 export type TutorState = "idle" | "connecting" | "ready" | "listening" | "thinking" | "speaking" | "error";
-export type TutorAccess = { audience: "adult-demo" | "approved-pilot"; consent: true; adultConfirmed?: true; accessCode: string };
+export type TutorAccess = { audience: "adult-demo" | "approved-pilot"; accessCode: string };
 export type TutorCallbacks = {
   onState: (state: TutorState) => void;
   onError: (message: string) => void;
@@ -82,7 +82,7 @@ export class RealtimeTutor {
       const response = await this.dependencies.fetch("/api/voice/session", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Voice-Access-Code": access.accessCode },
-        body: JSON.stringify({ audience: access.audience, consent: access.consent, ...(access.adultConfirmed ? { adultConfirmed: true } : {}) }),
+        body: JSON.stringify({ audience: access.audience }),
         cache: "no-store",
         signal,
       });
@@ -90,7 +90,7 @@ export class RealtimeTutor {
       if (epoch !== this.epoch) return;
       if (!response.ok) {
         const code = token && typeof token === "object" ? (token as Record<string, unknown>).error : null;
-        throw new Error(typeof code === "string" && API_ERRORS[code] ? API_ERRORS[code] : "No se autorizó la voz. Revisa código, consentimiento y configuración del piloto.");
+        throw new Error(typeof code === "string" && API_ERRORS[code] ? API_ERRORS[code] : "No se autorizó la voz. Revisa el código y la configuración del piloto.");
       }
       if (!token || typeof token !== "object") throw new Error("Respuesta de voz no válida. Vuelve a intentar.");
       const { value, expiresAt } = token as Record<string, unknown>;

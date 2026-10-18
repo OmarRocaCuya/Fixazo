@@ -10,7 +10,7 @@ El código de la cadena está implementado y cuenta con pruebas de contrato, cap
 
 1. Elige una misión en `/chat` y abre `/sesion`. En la introducción, pulsa **«Abrir lectura multilingüe de esta misión»**. El controlador de la misión habitual no se inicia; un borrador anterior no se convierte en datos de esta prueba.
 2. Elige Ayacucho o aimara. El servidor debe anunciar ASR temporizado preparado, traducción preparada y síntesis habilitada para esa lengua. La voz puede requerir carga en la primera solicitud: habilitado no equivale a cargado.
-3. Introduce el código privado del responsable y confirma consentimiento y **voz adulta o sintética**. El código se configura como secreto privado en Vercel y se entrega por un canal privado, nunca en documentación, repositorio o captura de pantalla. No uses nombres, datos escolares identificables ni información sensible.
+3. Introduce el código privado del responsable (el MVP no pide consentimiento ni confirmación adulta). El código se configura como secreto privado en Vercel y se entrega por un canal privado, nunca en documentación, repositorio o captura de pantalla. No uses nombres, datos escolares identificables ni información sensible.
 4. **Prepara y revisa el texto traducido.** Se conserva el pasaje castellano como contexto; la traducción no sustituye la misión guardada. La casilla de revisión es una decisión del adulto para esta prueba, no certificación lingüística o validación infantil.
 5. Pulsa **«Comenzar lectura con micrófono»**. Solo entonces se solicita permiso. La captura dura hasta 60 s y envía fragmentos de unos 4 s. Pulsa **«Terminar lectura y apagar micrófono»** para cerrar; el procesamiento pendiente no cuenta como tiempo de lectura.
 6. Escucha la pregunta en la lengua elegida cuando lo solicites. MMS produce la voz; no se sustituye por una voz castellana. Mientras se sintetiza o reproduce, el micrófono está apagado.
@@ -55,7 +55,7 @@ Devuelve política `enabled/mode/reason`, `adultOnly:true`, ASR (`ready`, modelo
 
 ### POST: acceso común
 
-Requiere Origin del mismo sitio y cabecera **`X-Voice-Access-Code`**, sin poner su valor en URL, ejemplos públicos o almacenamiento local. Cada cuerpo incluye `audience` igual al modo del despliegue, `consent:true`, `adultConfirmed:true`. Esta vía sigue siendo adulta incluso si el servidor tiene modo `approved-pilot`.
+Requiere Origin del mismo sitio y cabecera **`X-Voice-Access-Code`**, sin poner su valor en URL, ejemplos públicos o almacenamiento local. El servidor ya no exige `consent` ni `adultConfirmed` en el cuerpo; el acceso depende del modo configurado, el mismo origen, el código y el límite de solicitudes.
 
 | Acción | Cuerpo y límites | Respuesta |
 |---|---|---|

@@ -18,8 +18,8 @@ function object(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
-/** Reject unauthorized uploads before buffering; full consent and rate-limit
- * authorization still runs against the actual body in the route handler. */
+/** Reject unauthorized uploads before buffering; full access and rate-limit
+ * authorization still runs in the route handler. */
 export function preflightReadingRequest(request: Request): void {
   const policy = getVoicePolicyStatus("meta");
   if (!policy.enabled) throw new ReadingVoiceError(policy.reason ?? "cloud-disabled", 503);
@@ -134,7 +134,7 @@ export async function getReadingCapabilities(signal?: AbortSignal) {
   return {
     ...base, enabled,
     reason: !base.enabled ? base.reason : !base.backendReachable ? "reading-backend-unavailable" : !timedSupported ? "reading-timed-asr-required" : !timedReady ? "reading-backend-not-ready" : !speechEnabled ? "reading-speech-unavailable" : !base.translation.enabled ? "translation-research-mode-required" : !base.translation.ready ? "reading-backend-not-ready" : languages.length === 0 ? "unsupported-language" : !validDialogue ? "reading-dialogue-unavailable" : null,
-    languages, adultOnly: true, dialogueMode: dialogue.enabled ? "local-llm-reading" as const : "guided-reading" as const, dialogue,
+    languages, dialogueMode: dialogue.enabled ? "local-llm-reading" as const : "guided-reading" as const, dialogue,
     asr: { ...base.asr, model: timedSupported ? CTC_MODEL : base.asr.model, languages: asrLanguages, ready: timedReady, wordTimestamps: timedSupported, timingMethod: timedSupported ? TIMING_METHOD : null },
     speech: { enabled: speechEnabled, ready: speechReady, models: speechModels, languages: speechLanguages, researchOnly: true },
     limits: { ...base.limits, audioChunkSeconds: 15, speechTextCharacters: 300, turns: 9 },

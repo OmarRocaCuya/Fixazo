@@ -10,6 +10,7 @@ import { NOT_MEASURED } from "../guardrails";
 import { findProtagonist, splitSentences } from "../mission/builder";
 import { mean } from "../dsp";
 import { cleanTranscriptionProvenance } from "../transcription";
+import { summarizeAffect } from "../signals/affect";
 
 export interface JudgeOutcome {
   level: Level;
@@ -29,6 +30,8 @@ export interface SessionRecord {
   simulated: boolean;
   bargeIns: number;
   judge?: Partial<Record<"infiere" | "reflexiona", JudgeOutcome>>;
+  /** Include the experimental emotion estimate (adult view only, never graded). */
+  experimentalEmotion?: boolean;
 }
 
 const ANSWER_STATES: TurnState[] = ["Q_OBTIENE", "Q_INFIERE", "STANCE", "REVISE"];
@@ -245,5 +248,10 @@ export function buildReport(rec: SessionRecord, { id, now }: { id: string; now?:
     homeQuestion: { es: homeQuestion(mission, levels) },
     notMeasured: [...NOT_MEASURED],
   };
+  // Experimental and isolated: added after scoring, from nothing that scoring reads.
+  if (rec.experimentalEmotion === true) {
+    const entries = rec.turns.filter((t) => ANSWER_STATES.includes(t.state) && t.affect).map((t) => ({ state: t.state, estimate: t.affect! }));
+    report.experimentalAffect = summarizeAffect(entries, permissions.mood ? ctx.moodStart : null, permissions.mood ? ctx.moodEnd : null);
+  }
   return report;
 }

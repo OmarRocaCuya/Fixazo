@@ -5,7 +5,7 @@ vi.mock("next/server", () => ({ connection: vi.fn(async () => {}) }));
 const fetcher = vi.fn();
 const TOKEN = "never-expose-this-backend-secret-123456";
 let serial = 0;
-const auth = { audience: "adult-demo", consent: true, adultConfirmed: true };
+const auth = { audience: "adult-demo" };
 function request(body: unknown = { action: "translate", text: "hola", sourceLanguage: "spa_Latn", targetLanguage: "quy_Latn", ...auth }, headers: Record<string, string> = {}) {
   return new Request("https://education.example/api/indigenous", { method: "POST", headers: { Origin: "https://education.example", "Content-Type": "application/json", "X-Voice-Access-Code": process.env.VOICE_ACCESS_CODE ?? "", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
 }
@@ -31,12 +31,14 @@ describe("indigenous demo route", () => {
     const status = await response.json(); expect(status).toMatchObject({ configured: true, backendReachable: true, asr: { ready: false } });
     expect(JSON.stringify(status)).not.toContain(TOKEN);
   });
-  it("requires private access, same origin, adult attestation, and consent before an inference request", async () => {
+  it("requires private access and same origin, but no adult attestation or consent, before an inference request", async () => {
     expect((await POST(request(undefined, { Origin: "https://evil.example" }))).status).toBe(403);
     expect((await POST(request(undefined, { "X-Voice-Access-Code": "wrong" }))).status).toBe(401);
-    expect((await POST(request({ action: "translate", ...auth, adultConfirmed: false }))).status).toBe(403);
-    expect((await POST(request({ action: "translate", ...auth, consent: false }))).status).toBe(403);
     expect(fetcher).not.toHaveBeenCalled();
+    fetcher.mockResolvedValue(Response.json({ text: "rimay", sourceLanguage: "spa_Latn", targetLanguage: "quy_Latn", model: "facebook/nllb-200-distilled-600M", researchOnly: true }));
+    const response = await POST(request({ action: "translate", text: "hola", sourceLanguage: "spa_Latn", targetLanguage: "quy_Latn" }));
+    expect(response.status).toBe(200);
+    expect(fetcher).toHaveBeenCalledOnce();
   });
   it("fails closed by default without upstream contact", async () => {
     vi.stubEnv("VOICE_CLOUD_MODE", "disabled");
@@ -54,7 +56,7 @@ describe("indigenous demo route", () => {
   it("accepts bounded WAV form data and does not forward the original filename", async () => {
     const form = new FormData(); form.set("action", "transcribe"); form.set("language", "ayr_Latn");
     form.set("file", new Blob([wav() as BlobPart], { type: "audio/wav" }), "child-real-name.wav");
-    form.set("audience", "adult-demo"); form.set("consent", "true"); form.set("adultConfirmed", "true");
+    form.set("audience", "adult-demo");
     fetcher.mockResolvedValue(Response.json({ text: "aruma", language: "ayr_Latn", model: "omniASR_LLM_300M_v2", durationSeconds: 1 }));
     const response = await POST(new Request("https://education.example/api/indigenous", { method: "POST", headers: { Origin: "https://education.example", "X-Voice-Access-Code": process.env.VOICE_ACCESS_CODE ?? "" }, body: form }));
     expect(response.status).toBe(200);
