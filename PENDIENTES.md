@@ -15,7 +15,7 @@ Tareas acordadas que todavía no están hechas. Se tachan al terminarlas.
 
 ## Rachas (para después)
 
-- [ ] **Racha suave de lectura.** Diseño e investigación en `RACHAS-diseno-simple.md` (carpeta de la hack). Reglas:
+- [x] ~~**Racha suave de lectura.**~~ Hecha el 18 oct 2026 (`web/src/lib/periodico/racha.ts` con 7 pruebas, `components/periodico/Racha.tsx`). Diseño e investigación en `RACHAS-diseno-simple.md` (carpeta de la hack). Reglas:
   - el día cuenta si se termina al menos una noticia;
   - hay un día de gracia por semana, en el que la racha queda en gris;
   - nunca se muestra "perdiste tu racha", sino "Empieza otra racha hoy" y la mejor racha;

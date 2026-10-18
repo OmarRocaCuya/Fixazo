@@ -3,6 +3,7 @@
 // Reusa MetricCard y la idea de calibración del informe de Daniel (seguridad declarada frente a lo logrado).
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import { RachaSemana } from "@/components/periodico/Racha";
 import { voiceHistoryLabel } from "@/components/periodico/voz-state";
 import { MetricCard } from "@/components/ui";
 import { leerResultados, suscribirProgreso, type ResultadoNoticia } from "@/lib/periodico/progreso";
@@ -66,6 +67,7 @@ export default function Insights() {
         </div>
       ) : (
         <div className="stack">
+          {lista.length > 0 && <RachaSemana />}
           {/* Solo se muestra lo que ya tiene datos, para no llenar la pantalla de ceros. */}
           {lista.length > 0 && (
             <div className="metric-grid">

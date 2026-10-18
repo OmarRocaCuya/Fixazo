@@ -8,6 +8,7 @@ import { AudioAnalyzer } from "@/lib/browser/audio";
 import { createTranscriber, speechRecognitionSupported, type Transcriber } from "@/lib/browser/transcriber";
 import { voiceErrorMessage } from "@/lib/browser/voice-support";
 import { guardarAvance, guardarResultado, leerAvance, leerResultados, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
+import { calcularRacha, type Racha } from "@/lib/periodico/racha";
 import type { Fragmento, NoticiaPublica, PreguntaOpciones, PreguntaVozPublica, RespuestaVoz } from "@/lib/periodico/tipos";
 import { countFillers, detectLongPauses } from "@/lib/signals/prosody";
 import type { FrameFeature } from "@/lib/types";
@@ -300,6 +301,8 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   const [hasta, setHasta] = useState(inicial?.hasta ?? 0);
   const [elegidas, setElegidas] = useState<Elegidas>(inicial?.elegidas ?? {});
   const [fin, setFin] = useState<ResultadoNoticia | null>(terminada);
+  // Solo al terminar en esta visita: al reabrir una noticia vieja no se dice "sumaste el día".
+  const [racha, setRacha] = useState<Racha | null>(null);
   const ultimo = useRef<HTMLDivElement | null>(null);
   const pasos = noticia.pasos;
   const ultimaRespondida = pasos.reduce((m, p, k) => (p.tipo === "opciones" && elegidas[p.id] !== undefined ? k : m), -1);
@@ -362,6 +365,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
       } : null,
     };
     guardarResultado(r);
+    setRacha(calcularRacha(Object.values(leerResultados()).filter((x) => !x.enCurso).map((x) => x.fecha)));
     setFin(r);
     setTimeout(() => bajar(ultimo.current), 300);
   }
@@ -406,6 +410,9 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         <div className="pd-bloque pd-pregunta" ref={ultimo}>
           <div className="pd-tipo">Terminaste esta noticia</div>
           <h2>Lo que hiciste en esta lectura</h2>
+          {racha?.estado === "hoy" && (
+            <p className="pd-racha-fin">🔥 Sumaste el día {racha.dias} de tu racha{racha.marca ? `. ${racha.marca} días seguidos leyendo con criterio` : ""}</p>
+          )}
           {!fin.voz && <p className="muted">Sin evaluación de voz. Esta respuesta no afecta tus habilidades.</p>}
           <ul className="pd-lista-logros">
             {Object.entries(fin.habilidades).map(([h, ok]) => (
