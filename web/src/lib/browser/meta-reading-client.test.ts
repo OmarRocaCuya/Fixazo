@@ -7,9 +7,19 @@ const words = (...tokens: string[]): TimedReadingWord[] => tokens.map((word, ind
 const transcript = { text: "Mayuqa chakisqam", model: "omniASR_CTC_300M_v2", language: "quy_Latn", durationSeconds: 1, words: words("Mayuqa", "chakisqam"), wordTimestamps: true, timingMethod: "ctc-greedy-frames", requiresHumanReview: true };
 const prepared = { passage: "Mayuqa chakisqam", opening: "Imataq pasarqa?", dialogueMode: "guided-reading", requiresHumanReview: true };
 const capabilities = { enabled: true, mode: "adult-demo", reason: null, asr: { model: "omniASR_CTC_300M_v2", ready: true, languages: ["quy_Latn", "ayr_Latn"], wordTimestamps: true, timingMethod: "ctc-greedy-frames" }, translation: { enabled: true, ready: true, languages: ["spa_Latn", "quy_Latn", "ayr_Latn"] }, speech: { enabled: true, languages: ["quy_Latn", "ayr_Latn"], models: { quy_Latn: "facebook/mms-tts-quy" }, ready: { quy_Latn: false } } };
-afterEach(() => { vi.useRealTimers(); });
+afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 describe("same-origin adult reading client", () => {
+  it.each(["global", "injected"] as const)("calls %s browser fetch without a client receiver", async (source) => {
+    const request = vi.fn<typeof fetch>(function (this: unknown) {
+      expect(this).toBeUndefined();
+      return Promise.resolve(json(prepared));
+    });
+    if (source === "global") vi.stubGlobal("fetch", request);
+    const client = source === "global" ? new MetaReadingClient(ACCESS) : new MetaReadingClient(ACCESS, request);
+    await expect(client.prepare("El río estaba seco.", "quy_Latn")).resolves.toEqual(prepared);
+    expect(request).toHaveBeenCalledOnce();
+  });
   it("checks genuine capabilities without credentials or loading a microphone", async () => {
     const request = vi.fn<typeof fetch>().mockResolvedValue(json(capabilities));
     const status = await MetaReadingClient.capabilities(new AbortController().signal, request);

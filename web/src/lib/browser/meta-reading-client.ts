@@ -96,7 +96,9 @@ export class MetaReadingClient {
     this.requests.add(controller);
     const timeout = setTimeout(() => controller.abort(), 65_000);
     try {
-      const response = await this.request("/api/reading", { method: "POST", credentials: "same-origin", cache: "no-store", signal: controller.signal,
+      // Native browser fetch must not receive this client as its receiver.
+      const request = this.request;
+      const response = await request("/api/reading", { method: "POST", credentials: "same-origin", cache: "no-store", signal: controller.signal,
         headers: { "X-Voice-Access-Code": this.access.accessCode, ...(json ? { "Content-Type": "application/json" } : {}) }, body });
       if (controller.signal.aborted || this.closed) throw new ReadingClientError("cancelled");
       if (!response.ok) {
