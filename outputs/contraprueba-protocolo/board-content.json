@@ -1,0 +1,143 @@
+{
+  "title": "Contraprueba · Del archivo a la evidencia de aprendizaje",
+  "subtitle": "Mapa de producto y protocolo · 1.º de secundaria · Lima · 17 octubre 2026 · Síntesis propuesta, todavía no validada",
+  "panels": [
+    {"id":"proposito","title":"01 · Propósito y foco","subtitle":"No vender más conversación: ayudar a comprender, justificar y resolver sin tutor.","status":"Propuesta","blocks":[
+      {"title":"A quién sirve","body":"Alumno: 11–13 años, primero de secundaria.\nDocente: decide qué enseñar después.\nFamilia: ve evidencia y una acción concreta.","status":"Propuesta"},
+      {"title":"Promesa a probar","body":"Material autorizado del colegio → misión revisada → apoyo pertinente → tarea nueva sin pistas.\nNo prometer inteligencia, notas o PISA.","status":"Por validar"},
+      {"title":"Primero en Lima","body":"Un colegio o centro aliado; padre paga.\nPiloto de seis semanas, no despliegue nacional.\nLengua y acceso se caracterizan, no se presuponen.","status":"Propuesta"},
+      {"title":"Qué queda fuera","body":"Chat libre, vigilancia ambiental, diagnóstico clínico, ranking, compra obligatoria de robots y currículo completo.","status":"Propuesta"}
+    ]},
+    {"id":"curriculo","title":"02 · Por qué primero de secundaria","subtitle":"Elección curricular y operativa; no existe una edad óptima demostrada para esta app.","status":"Evidencia","blocks":[
+      {"title":"Perú · ciclo VI","body":"Primero y segundo comparten ciclo. Primero avanza hacia el estándar final; no se exige todo ese estándar al ingresar.","status":"Evidencia","sourceIds":["S01"]},
+      {"title":"Lectura y cantidad","body":"Integrar e inferir información; sustentar opiniones. Representar cantidades, porcentajes y condiciones; justificar y corregir errores.","status":"Evidencia","sourceIds":["S01"]},
+      {"title":"Singapur","body":"Resolución de problemas con modelación, comunicación y metacognición. Tomar el enfoque, no atribuirle por sí solo los resultados del país.","status":"Evidencia","sourceIds":["S09"]},
+      {"title":"Finlandia e Inglaterra","body":"Competencias dentro de asignaturas; evaluación variada y comunicación familiar. Enseñar a planificar, monitorear y evaluar.","status":"Evidencia","sourceIds":["S10","S08"]},
+      {"title":"No esperar hasta secundaria","body":"Se puede trabajar antes con tareas apropiadas. La entrada 11–13 delimita el piloto; el apoyo responde al desempeño, no solo a la edad.","status":"Propuesta"},
+      {"title":"Lengua ≠ razonamiento","body":"Separar lengua, modalidad y ayuda. Audio de un texto cambia una prueba de lectura. Adaptar con docentes locales; no traducir y comparar rankings.","status":"Propuesta","sourceIds":["S11"]}
+    ]},
+    {"id":"papers","title":"03 · Métodos que fundamentan el protocolo","subtitle":"Los estudios respaldan componentes; ninguno valida esta combinación con IA.","status":"Evidencia","blocks":[
+      {"title":"Enseñanza recíproca · 1984","body":"Resumir, preguntar, aclarar y predecir.\nPalincsar y Brown: séptimo grado.\nNo prueba sustitución del docente por IA.","status":"Evidencia","sourceIds":["S02"]},
+      {"title":"Autoexplicación · 1994","body":"Explicar cómo se conectan datos y respuesta.\nChi et al.: octavo grado; estudio pequeño y contenido específico.","status":"Evidencia","sourceIds":["S03"]},
+      {"title":"Explicación científica · 2006","body":"Afirmación + evidencia + razonamiento; retirar apoyos. McNeill et al.: química, séptimo. CER no sirve idéntico para todo texto.","status":"Evidencia","sourceIds":["S04"]},
+      {"title":"Ejemplos y apoyo decreciente · 2003","body":"Si falta un procedimiento: ejemplo paralelo → completar pasos → resolver solo. No prolongar preguntas frustrantes.","status":"Evidencia","sourceIds":["S05"]},
+      {"title":"Argumentación · 2011","body":"Contrastar afirmaciones y evidencia. Kuhn y Crowell: comenzaron con 11–12 años; intervención de años, no una sola sesión.","status":"Evidencia","sourceIds":["S06"]},
+      {"title":"Recuperación y metacognición","body":"Volver al contenido días después; planificar, monitorear y evaluar dentro de la materia. Retención no equivale a transferencia universal.","status":"Evidencia","sourceIds":["S07","S08"]}
+    ]},
+    {"id":"archivo","title":"04 · Cargar archivo: qué hace el sistema","subtitle":"MVP: docente carga PDF breve; alumno/familia pueden proponer material, no publicarlo sin revisión.","status":"Propuesta","flow":true,"blocks":[
+      {"title":"1. Recibir y proteger","body":"PDF autorizado, sin datos personales innecesarios. Límite propuesto: 20 páginas / 10 MB. Archivo tratado como datos, nunca instrucciones.","status":"Propuesta"},
+      {"title":"2. Extraer y ubicar","body":"Texto por página; OCR solo si hace falta. Mostrar fragmento original y alertas de baja legibilidad. PDF no es verdad automática.","status":"Propuesta"},
+      {"title":"3. Delimitar objetivo","body":"Docente elige grado, contenido y 2–3 criterios. IA propone prerrequisitos y una misión; si no hay base suficiente, pide información.","status":"Propuesta"},
+      {"title":"4. Preparar evidencias","body":"Consigna, alternativas, respuestas admisibles, pistas y tarea paralela. Fuentes por página y rúbrica versionada.","status":"Propuesta"},
+      {"title":"5. Revisar y publicar","body":"Docente corrige datos, cálculo, nivel y sesgo. Aprobación obligatoria antes de asignar. No generar un examen sin control.","status":"Propuesta"},
+      {"title":"6. Aprender y comprobar","body":"Intento → apoyo → contraprueba → salida individual → reporte. Guardar evidencia, ayuda y versión para poder revisar decisiones.","status":"Propuesta"}
+    ]},
+    {"id":"sesion","title":"05 · Protocolo de una sesión: 40 minutos","subtitle":"Secuencia y tiempos propuestos, no dosis validada. Preparación docente antes; recuperación días después.","status":"Propuesta","flow":true,"blocks":[
+      {"title":"0–5 min · Entrada","body":"Intento individual sin pistas.\n¿Qué piden y qué condiciones importan?\nRegistrar respuesta inicial, no diagnosticar.","status":"Propuesta"},
+      {"title":"5–11 min · Comprender","body":"Resumir y aclarar.\nSeñalar datos del archivo y su página.\nSeparar barrera de vocabulario y contenido.","status":"Propuesta","sourceIds":["S02"]},
+      {"title":"11–20 min · Representar","body":"Tabla, esquema o cálculo.\nApoyo graduado; ejemplo paralelo si falta un procedimiento.\nRetirar pasos cuando sea posible.","status":"Propuesta","sourceIds":["S03","S05"]},
+      {"title":"20–25 min · Justificar","body":"Mi respuesta es…\nLa evidencia pertinente es…\nSe conecta porque…\nNo valorar longitud ni buena ortografía como lógica.","status":"Propuesta","sourceIds":["S04"]},
+      {"title":"25–31 min · Contraprueba","body":"Añadir dato o alternativa.\nMantener o cambiar con razones.\nNo premiar cambiar por obedecer a la IA.","status":"Propuesta","sourceIds":["S06"]},
+      {"title":"31–40 min · Salida y cierre","body":"7 min: tarea nueva sin pistas cognitivas.\n2 min: qué revisé y próximo paso.\nDías después: comprobación de 5–8 min.","status":"Propuesta","sourceIds":["S07"]}
+    ]},
+    {"id":"rubricas","title":"06 · Rúbricas y métricas observables","subtitle":"Tres dimensiones separadas, 0–3 + NE. Rúbrica original provisional; ejemplos específicos por tarea.","status":"Propuesta","blocks":[
+      {"title":"Interpretar condiciones","body":"0: objetivo incompatible con el texto.\n1: omite una condición decisiva.\n2: integra condiciones necesarias.\n3: detecta datos insuficientes o irrelevantes y explica consecuencias.","status":"Propuesta"},
+      {"title":"Justificar con evidencia","body":"0: afirmación sin respaldo pertinente.\n1: dato sin vínculo válido.\n2: evidencia + relación + conclusión.\n3: compara alternativa o reconoce límite pertinente.","status":"Propuesta"},
+      {"title":"Contrastar y revisar","body":"0: ignora evidencia contraria relevante.\n1: cambia/mantiene sin razón.\n2: decisión sustentada en evidencia.\n3: explicita supuesto y condición que invalidaría su conclusión.","status":"Propuesta"},
+      {"title":"NE y contexto obligatorio","body":"NE: evidencia insuficiente, no cero.\nCita + tarea/versión + lengua + modalidad + ayuda + fase + revisión humana.\nNo convertir automáticamente a AD/A/B/C.","status":"Propuesta"},
+      {"title":"Qué mostrar","body":"Criterios logrados / tareas independientes comparables; siempre n. Ejemplo ficticio: 2 de 3.\nApoyos por tipo y evidencia antes/después.","status":"Propuesta"},
+      {"title":"Qué no mostrar","body":"IQ, percentiles sin baremos, ranking por acento, rapidez o minutos grabados.\nUna respuesta correcta no demuestra dominio; satisfacción no demuestra aprendizaje.","status":"Propuesta"}
+    ]},
+    {"id":"adaptacion","title":"07 · La IA adapta el apoyo, no etiqueta al niño","subtitle":"Ejemplo original: comprar 24 kits con S/85. A = S/96 −25% + S/18 envío = S/90; B = S/84 total.","status":"Propuesta","blocks":[
+      {"title":"Misma elección A · causa posible 1","body":"«No entiendo si incluye envío».\nCita observable → aclarar la condición.\nPedir nueva decisión, no entregar la solución.","status":"Propuesta"},
+      {"title":"Misma elección A · causa posible 2","body":"«Sé que hay envío, pero descuento siempre conviene».\nCita → separar precio, descuento y coste total.\nSi falta porcentaje: ejemplo resuelto paralelo.","status":"Propuesta"},
+      {"title":"Evidencia suficiente o incierta","body":"Explica B correctamente → contraprueba.\n«No sé» o contradicción → aclaración.\nNo adivinar competencia ni diagnosticar desde una frase.","status":"Propuesta"},
+      {"title":"Contraprueba + salida","body":"Envío de A baja a S/8: total S/80. ¿Revisas?\nDespués: problema nuevo sin pistas.\nNo comparar tareas desiguales como ganancia validada.","status":"Propuesta"},
+      {"title":"Demostración real","body":"Jurado escribe paráfrasis inédita. Misma opción + distinta razón debe cambiar el apoyo. Mostrar cita, hipótesis provisional, acción y versión.","status":"Por validar"},
+      {"title":"Separar tres piezas","body":"LLM interpreta lenguaje abierto.\nReglas autorizan una acción revisada.\nDocente puede corregir.\nSelector de casos preparados ≠ IA en vivo.","status":"Propuesta"}
+    ]},
+    {"id":"docente-familia","title":"08 · Información que se convierte en acción","subtitle":"Docente: bandeja de decisiones. Familia: evidencia comprensible y siguiente paso, no vigilancia.","status":"Propuesta","blocks":[
+      {"title":"Docente · antes de clase","body":"Archivo y página | objetivo | misión | respuesta admisible | rúbrica.\n[Corregir] [Aprobar]\nMeta de preparación a medir: 5–10 min.","status":"Propuesta"},
+      {"title":"Docente · durante","body":"Necesita aclaración / Evidencia por revisar / Puede continuar.\nSin ranking ni alarmas por cada error.\nPriorizar casos inciertos y obstáculos compartidos.","status":"Propuesta"},
+      {"title":"Tarjeta de intervención","body":"Ana: omitió envío.\nCita: «El descuento siempre conviene».\nApoyo: tabla de costes.\n[Confirmar] [Corregir] [Pedir evidencia]\nInterpretación provisional, no rasgo personal.","status":"Propuesta"},
+      {"title":"Familia · al inicio","body":"Propósito, calendario, autorización, datos recogidos y límites.\nPortal privado vinculado al adulto; alternativa sin audio.\nNo es un servicio para hacer la tarea por el alumno.","status":"Propuesta"},
+      {"title":"Familia · semanal","body":"Resumen aprobado: qué logró sin pistas, qué ayuda recibió y muestra de trabajo.\nPregunta de 5 min: «¿Qué dato te haría cambiar?»\nAviso con enlace privado; no audios por grupos.","status":"Propuesta"},
+      {"title":"Final y días después","body":"Tareas comparables + evidencia diferida.\nLímites e incertidumbre explícitos.\nDocente planifica siguiente intervención; padre decide continuidad con información.","status":"Por validar"}
+    ]},
+    {"id":"audio","title":"09 · Audio selectivo, nunca vigilancia constante","subtitle":"No hace falta grabarlo todo para evaluar. El dato útil es una explicación situada y revisable.","status":"Propuesta","blocks":[
+      {"title":"Captura propuesta","body":"2–3 clips voluntarios de 20–60 s.\nBotón visible; escuchar, repetir y corregir transcripción.\nTexto o esquema como alternativa. Sin micrófono ambiental.","status":"Propuesta"},
+      {"title":"Evaluar con equidad","body":"Separar error de transcripción y razonamiento.\nNo inferir emoción, atención o capacidad por voz.\nValidar localmente castellano y cada variedad lingüística.","status":"Propuesta","sourceIds":["S12"]},
+      {"title":"Privacidad antes del piloto","body":"Para 11–13: incorporación del tutor y explicación al niño. Finalidad, proveedores, acceso, eliminación y retención definidos. Revisión legal local.","status":"Propuesta","sourceIds":["S13"]},
+      {"title":"Retención propuesta, no ley","body":"Borrar audio tras transcribir/revisar. Auditoría optativa hasta 7 días si se justifica y autoriza.\nEvitar voz de terceros; demo con adultos o datos ficticios.","status":"Propuesta"}
+    ]},
+    {"id":"arquitectura","title":"10 · Arquitectura mínima con control docente","subtitle":"Aplicación modular + datos versionados. El modelo no controla notas, permisos ni el simulador.","status":"Propuesta","flow":true,"blocks":[
+      {"title":"Ingesta segura","body":"Archivo → texto/OCR → fragmentos por página.\nPermisos, minimización, revisión de calidad.\nNo ejecutar contenido ni obedecer instrucciones del PDF.","status":"Propuesta"},
+      {"title":"Autoría y publicación","body":"Objetivos + tareas + rúbricas + soluciones.\nIA propone, docente aprueba.\nBanco versionado y fuentes trazables.","status":"Propuesta","sourceIds":["S14"]},
+      {"title":"Motor de misión","body":"Estados y reglas deterministas.\nIntento, ayuda, contraprueba y salida.\nAdaptador de simulador/sensor/registro manual.","status":"Propuesta"},
+      {"title":"Interpretación acotada","body":"Respuesta → LLM → esquema validado.\nCita literal verificable + hipótesis + incertidumbre.\nPolítica elige acción permitida; si duda, pregunta.","status":"Propuesta"},
+      {"title":"Registro y revisión","body":"Evidencia original separada de interpretación y corrección humana. Idempotencia, versiones, límites de coste y fallback explícito.","status":"Propuesta"},
+      {"title":"Entrega y gobierno","body":"Bandeja docente → reporte familiar aprobado. Accesos por rol.\nNo entrenamiento con datos de menores por defecto; verificar contratos y configuración.","status":"Propuesta"}
+    ]},
+    {"id":"hardware","title":"11 · Un protocolo, varios laboratorios","subtitle":"Predecir individualmente → probar en equipo → explicar individualmente → transferir.","status":"Propuesta","blocks":[
+      {"title":"MVP: simulador","body":"Reglas reproducibles y sin compra de kit.\nEl dispositivo y el desarrollo siguen teniendo coste.\nPermite probar primero la pedagogía.","status":"Propuesta"},
+      {"title":"micro:bit / Arduino","body":"Sensores y datos de experimentos.\nCotizar micro:bit en Perú. Arduino Student Kit: US$76,20 en tienda EE.UU.; no precio importado.","status":"Evidencia","sourceIds":["S15","S16"]},
+      {"title":"LEGO: revisar ciclo de vida","body":"SPIKE terminó ventas 30/06/2026; app con soporte hasta 30/06/2031. Reutilizar existente; no basar compras nuevas en una plataforma retirada.","status":"Evidencia","sourceIds":["S17"]},
+      {"title":"Otra opción LEGO","body":"Computer Science & AI 6–8: US$529,95 por kit para 4 alumnos, tienda EE.UU. Envío, impuestos y capacitación no incluidos en esta estimación.","status":"Evidencia","sourceIds":["S18"]},
+      {"title":"Contrato de evidencias","body":"Predicción | configuración | medición+unidad | procedencia | incidencia | explicación | salida individual.\nCompatibilidad requiere adaptador y pruebas por equipo.","status":"Propuesta"},
+      {"title":"No confundir causas","body":"Batería o motor fallan → incidencia técnica.\nResultado del equipo ≠ dominio individual.\nRoles rotativos y evidencia individual; sensor ≠ simulación equivalente.","status":"Propuesta"}
+    ]},
+    {"id":"mercado","title":"12 · Referentes actuales: Perú, LatAm y Europa","subtitle":"Patrones observados en productos; no estudio exhaustivo ni evidencia causal de nuestra propuesta.","status":"Evidencia","blocks":[
+      {"title":"Perú · Entiendo AI","body":"Tema/PDF → formatos, actividades y avatar.\nCarga multimodal ya existe; no es diferencial suficiente.\nLa demo pública es preparada.","status":"Evidencia","sourceIds":["S19"]},
+      {"title":"Perú · Cubicol","body":"Referente adyacente de gestión y comunicación escolar.\nIntegrar el reporte al canal existente vale más que otra red social.","status":"Evidencia","sourceIds":["S20"]},
+      {"title":"México · Luca","body":"Currículo, plataforma, libros, manipulativos e IA para colegios.\nLección: producto híbrido y acompañamiento docente.","status":"Evidencia","sourceIds":["S21"]},
+      {"title":"Chile · Lirmi","body":"Evaluación curricular, informes y guías remediales.\nCompetencia en diagnóstico → intervención; el tablero solo no diferencia.","status":"Evidencia","sourceIds":["S22"]},
+      {"title":"España · Smartick Thinking","body":"Pensamiento crítico desde 7 años y sesiones personalizadas para familias.\nNo decir «somos los primeros». Diferenciar con evidencia local.","status":"Evidencia","sourceIds":["S23"]},
+      {"title":"Reino Unido · CENTURY","body":"Adaptación no generativa + reglas; funciones generativas bajo control docente; reportes familiares.\nNuestra ventaja potencial debe demostrarse, no presumirse.","status":"Evidencia","sourceIds":["S24"]}
+    ]},
+    {"id":"costos","title":"13 · Costes y oferta: supuestos explícitos","subtitle":"Ocho sesiones/mes. Tarifas consultadas 17/10/2026; escenarios de consumo, no mediciones del MVP.","status":"Propuesta","blocks":[
+      {"title":"Texto + audio + OCR","body":"Escenarios bajo/alto con 16 min de audio y 40 páginas OCR: US$0,25–1,70 por alumno/mes, incluyendo reserva del 100%.\nCalidad del modelo aún por evaluar.","status":"Propuesta","sourceIds":["S25","S26"]},
+      {"title":"El tamaño del piloto importa","body":"Hosting estimado US$30–80/mes.\n100 alumnos: US$0,30–0,80 cada uno.\n20 alumnos: US$1,50–4.\nEs supuesto, no cotización.","status":"Propuesta"},
+      {"title":"Trabajo pedagógico","body":"10–20 min/alumno/mes a S/30–50/h: S/5–16,67. Contenidos: 4 h×S/40 = S/160/mes.\nTrabajo fundador también tiene coste.","status":"Propuesta"},
+      {"title":"Subtotal parcial a 100 alumnos","body":"≈ S/8,70–27,80 por alumno/mes.\nCambio supuesto: S/3,80 por US$1.\nNo incluye desarrollo, ventas, soporte general, impuestos, pagos ni hardware.","status":"Propuesta"},
+      {"title":"Precio por contrastar","body":"Hipótesis: S/49 software + revisión breve. S/99 con grupo acompañado, previa estimación de horas.\nNo son precios validados ni márgenes garantizados.","status":"Por validar"},
+      {"title":"Audio constante no resuelve","body":"20 min grabados×8 = 160 min, frente a 16 min selectivos. Diez veces más transcripción; además más revisión y exposición de datos.","status":"Propuesta","sourceIds":["S25"]}
+    ]},
+    {"id":"impacto","title":"14 · Impacto, validación y demo honesta","subtitle":"Tres preguntas distintas: ¿evaluamos bien?, ¿ayudamos a aprender?, ¿las familias pagan?",
+      "status":"Por validar","blocks":[
+      {"title":"Evaluación: comprobar primero","body":"Revisión curricular y entrevistas cognitivas. Doble valoración humana; errores de IA por dimensión, lengua y modalidad.\nNo exigir audio para participar.","status":"Por validar"},
+      {"title":"Aprendizaje: evidencia necesaria","body":"Tareas comparables nuevas sin pistas + comprobación diferida. Después, comparación con otra enseñanza y muestra planificada.\nAntes/después solo no prueba causalidad.","status":"Por validar"},
+      {"title":"Operación y economía","body":"Medir minutos reales de revisión, finalización, coste por sesión y continuidad.\nAhorro docente y autonomía son hipótesis, no resultados.","status":"Por validar"},
+      {"title":"Demanda: experimento pequeño","body":"Oferta concreta a 10 familias externas al círculo fundador; umbral exploratorio previo: 3 reservas transparentes.\nNo ejecutado; resultado pendiente.","status":"Por validar"},
+      {"title":"Demo del hackathon","body":"PDF → docente aprueba → alumno explica → IA adapta con entrada inédita → salida sin pistas → reporte.\nMismo error/distinta razón debe cambiar apoyo.","status":"Propuesta"},
+      {"title":"Criterios para no escalar","body":"Si no se puede revisar la evidencia, falla la equidad o la carga docente es excesiva, corregir antes de crecer.\nNo vender mejora educativa que no se midió.","status":"Por validar"}
+    ]}
+  ],
+  "sources": [
+    {"id":"S01","title":"Minedu · Programa curricular secundaria (2016/2017)","url":"https://www.minedu.gob.pe/curriculo/pdf/programa-curricular-educacion-secundaria.pdf"},
+    {"id":"S02","title":"Palincsar y Brown (1984) · Reciprocal Teaching","url":"https://www.tandfonline.com/doi/abs/10.1207/s1532690xci0102_1"},
+    {"id":"S03","title":"Chi et al. (1994) · Eliciting Self-Explanations","url":"https://education.asu.edu/sites/g/files/litvpz656/files/lcl/chideleeuwchiulavancher_3.pdf"},
+    {"id":"S04","title":"McNeill et al. (2006) · Scientific Explanations / Fading Scaffolds","url":"https://public.websites.umich.edu/~krajcik/Papers/McNeill_et_al_JLS_2006.pdf"},
+    {"id":"S05","title":"Renkl y Atkinson (2003) · Worked Examples to Problem Solving","url":"https://doi.org/10.1207/S15326985EP3801_3"},
+    {"id":"S06","title":"Kuhn y Crowell (2011) · Dialogic Argumentation","url":"https://pubmed.ncbi.nlm.nih.gov/21422465/"},
+    {"id":"S07","title":"McDaniel et al. (2011) · Retrieval Practice in the Classroom","url":"https://pdf.retrievalpractice.org/guide/McDaniel_Agarwal_etal_2011_JEP.pdf"},
+    {"id":"S08","title":"EEF (2025) · Metacognition and Self-Regulated Learning","url":"https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/metacognition"},
+    {"id":"S09","title":"Singapur MOE · Mathematics Secondary Syllabus (2020)","url":"https://www.moe.gov.sg/-/media/files/secondary/syllabuses/maths/2020-express_na-maths_syllabuses.pdf"},
+    {"id":"S10","title":"Finnish National Agency for Education · Core Curriculum","url":"https://www.oph.fi/en/education-and-qualifications/national-core-curriculum-primary-and-lower-secondary-basic-education"},
+    {"id":"S11","title":"ITC · Guidelines for Translating and Adapting Tests","url":"https://www.intestcom.org/files/guideline_test_adaptation_2ed.pdf"},
+    {"id":"S12","title":"Bailey et al. (2025 online / 2026) · Bias in Child Language Assessment","url":"https://onlinelibrary.wiley.com/doi/full/10.1111/jedm.12435"},
+    {"id":"S13","title":"Perú · Reglamento Ley 29733, D.S. 016-2024-JUS","url":"https://www.sat.gob.pe/TransparenciaV3/Portals/0/Docs/NormasOtrasEntidades/DecretoSupremo016-2024-JUS_ReglamentoLey29733_LeyProteccionDatosPersonales.pdf"},
+    {"id":"S14","title":"ETS / Hansen (2011) · Evidence-Centered Design for Learning","url":"https://www.ets.org/research/policy_research_reports/publications/report/2011/imbu.html"},
+    {"id":"S15","title":"micro:bit · Data Logging","url":"https://www.microbit.org/get-started/features/data-logging/"},
+    {"id":"S16","title":"Arduino · Student Kit, tienda EE.UU.","url":"https://store-usa.arduino.cc/products/arduino-student-kit"},
+    {"id":"S17","title":"LEGO · SPIKE Portfolio Retirement (2026)","url":"https://www.education.lego.com/en-us/spike-update-2026/"},
+    {"id":"S18","title":"LEGO · Computer Science & AI, 6–8","url":"https://education.lego.com/en-us/products/lego-education-computer-science-and-ai-bundle/5010029/"},
+    {"id":"S19","title":"Entiendo AI · Página compartida por el usuario","url":"https://entiendo.framer.website/"},
+    {"id":"S20","title":"Cubicol · Colegios","url":"https://www.cubicol.pe/colegios"},
+    {"id":"S21","title":"Luca · Plataforma educativa","url":"https://lucaedu.com/"},
+    {"id":"S22","title":"Lirmi · Evaluación académica","url":"https://www.lirmi.com/software-de-evaluacion-academica"},
+    {"id":"S23","title":"Smartick · Thinking","url":"https://www.smartick.es/thinking"},
+    {"id":"S24","title":"CENTURY · Secondary Schools","url":"https://www.century.tech/explore-century/secondary-schools/"},
+    {"id":"S25","title":"OpenAI API · Pricing, consulta 17/10/2026","url":"https://developers.openai.com/api/docs/pricing"},
+    {"id":"S26","title":"Google Document AI · Pricing, consulta 17/10/2026","url":"https://cloud.google.com/products/document-ai/pricing"}
+  ]
+}
