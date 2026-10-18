@@ -25,7 +25,7 @@ const mono = localFont({
 
 export const metadata: Metadata = {
   title: "Fixazo",
-  description: "Escuchamos cómo lee y cómo piensa tu hijo, y te decimos qué hacer en casa.",
+  description: "Periódico para jóvenes con noticias reales del día y preguntas para leerlas con criterio.",
 };
 
 export const viewport: Viewport = {
