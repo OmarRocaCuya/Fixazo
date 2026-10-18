@@ -1,0 +1,24 @@
+{
+  "id": "2026-10-18-0646-chatgpt-podra-leer-y-controlar-pestanas-abiertas-e",
+  "creada": "2026-10-18T11:46:35.413Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "20minutos",
+      "fecha": "16 de octubre de 2026",
+      "titular": "ChatGPT ya puede controlar las pestañas de Google Chrome: así cambia la forma de navegar con IA",
+      "url": "https://computerhoy.20minutos.es/tecnologia/chatgpt-ya-puede-controlar-las-pestanas-google-chrome-asi-cambia-forma-navegar-con-ia_7049927_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.09112,
+    "segundos": 49
+  },
+  "noticia": null
+}

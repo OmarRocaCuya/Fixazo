@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento de Diario Socialista, ¿de qué depende el salto reciente de la IA?",
         "opciones": [
           "De un descubrimiento intelectual repentino",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que la IA depende de capital y datos concentrados en pocas manos?",
         "opciones": [
           "Un investigador independiente sin vínculos con empresas",
@@ -87,12 +87,12 @@
         "correcta": 1,
         "bien": "Es un medio con una mirada política definida, que quiere explicar la IA desde las relaciones de producción; eso influye en qué destaca.",
         "otra": "Pregúntate qué busca el medio al resaltar quién controla los recursos, y si lo dice de forma explícita.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Cuál de estas frases es un hecho comprobable y cuál es una opinión?",
         "opciones": [
           "La expresión IA fue acuñada por John McCarthy en 1955 (hecho)",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que la IA debería estar en manos de empresas privadas o de instituciones públicas?",
         "opciones": [
           "Principalmente de empresas privadas, porque innovan más rápido",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

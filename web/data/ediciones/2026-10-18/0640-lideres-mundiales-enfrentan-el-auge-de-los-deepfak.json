@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿qué hizo la primera ministra italiana Giorgia Meloni?",
         "opciones": [
           "Registró su propia voz ante la oficina de patentes de la Unión Europea.",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que hay que enseñarle a la ciudadanía a validar información?",
         "opciones": [
           "Juan Carlos Luján, comunicador peruano y divulgador sobre IA.",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Luján es comunicador y divulgador sobre IA, por eso habla de cómo consumir y verificar contenidos.",
         "otra": "Fíjate en quién aparece antes de la frase citada para identificar al experto.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "Si ves un video que parece real, ¿qué harías para comprobarlo?",
         "opciones": [
           "Buscar herramientas como SynthID Detector o verificar el origen del contenido.",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que las leyes son suficientes para frenar los deepfakes?",
         "opciones": [
           "Sí, las leyes estrictas son la mejor protección.",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0640-lideres-mundiales-enfrentan-el-auge-de-los-deepfak-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

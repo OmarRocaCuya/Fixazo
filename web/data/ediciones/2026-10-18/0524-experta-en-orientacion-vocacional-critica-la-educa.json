@@ -66,7 +66,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento de El País, ¿qué dice la experta sobre España y la IA?",
         "opciones": [
           "Que España solo pone límites a la IA y no enseña cómo usarla",
@@ -81,7 +81,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en la nota de El País sobre la IA en la escuela?",
         "opciones": [
           "Una orientadora vocacional y CEO de una empresa de orientación",
@@ -91,12 +91,12 @@
         "correcta": 0,
         "bien": "Elena Ibáñez es CEO de Singularity Experts y se dedica a orientar vocaciones; su empresa tiene interés en que se hable del futuro laboral.",
         "otra": "Revisa quién aparece en la cita y qué cargo tiene en el texto.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "En la cita de El País, ¿qué palabra te hace pensar que la experta tiene una postura clara?",
         "opciones": [
           "noes",
@@ -111,7 +111,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "Después de leer las dos notas, ¿qué crees que debería hacer la escuela con la IA?",
         "opciones": [
           "Enseñar a usarla de forma guiada desde temprano",
@@ -150,7 +150,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

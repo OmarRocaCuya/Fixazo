@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento A, ¿qué sostiene la exviceministra sobre el acceso a la tecnología?",
         "opciones": [
           "Que basta con tener acceso a la tecnología para aprender",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién dice que la inteligencia artificial puede profundizar las brechas sociales?",
         "opciones": [
           "Una exviceministra de Educación Básica y miembro de una junta directiva",
@@ -87,12 +87,12 @@
         "correcta": 0,
         "bien": "Es la Dra. María del Carmen Giménez, exviceministra y miembro de la Junta Directiva del IDPPS, y su interés es promover las propuestas de ese instituto.",
         "otra": "Fíjate en el cargo que se menciona al presentar a la persona que habla.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Cuál de estas frases es una opinión y no un hecho?",
         "opciones": [
           "La IA puede profundizar las brechas de desigualdad existentes.",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué crees que debería priorizar el país frente a la inteligencia artificial?",
         "opciones": [
           "Enseñar a pensar críticamente antes que usar herramientas",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

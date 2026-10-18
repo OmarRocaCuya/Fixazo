@@ -64,6 +64,7 @@ async function Edicion() {
         <span className="pd-hoy">{ultima ? `Edición del ${fechaEdicion(ultima)}` : ""}</span>
         <div className="pd-top-der">
           <RachaChip />
+          <Link className="pd-insights pd-plus" href="/plus">Plus</Link>
           <NavPeriodico actual="/" />
         </div>
       </div>

@@ -5,7 +5,7 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { armarNoticia, dominio, esNota, filtrarCandidatas, limpiarTexto, MEDIOS, medioDe, mismoHecho, trataDeIA, validarGeneracion } from './pasos.mjs';
+import { armarNoticia, dominio, esNota, filtrarCandidatas, limpiarTexto, MEDIOS, medioDe, mencionesIA, mismoHecho, trataDeIA, validarGeneracion } from './pasos.mjs';
 
 try {
   process.loadEnvFile(/* turbopackIgnore: true */ '.env.local');
@@ -246,10 +246,14 @@ export async function unaNoticia({ alPaso } = {}) {
     let g = await generar(notaA, notaB?.texto ? notaB : null);
     const fuenteBTexto = () => (g.fuente_b?.misma_nota || !notaB?.texto ? notaA.texto : notaB.texto);
     let errores = validarGeneracion(g, notaA.texto, fuenteBTexto());
+    // Lo que lee el joven tiene que hablar de IA, no solo el artículo completo.
+    const sobreIA = () => mencionesIA(`${g.titular} ${principal.title}`) > 0 || mencionesIA([...(g.fragmento_a?.citas ?? []), ...(g.fragmento_b?.citas ?? [])].join(' ')) >= 2;
+    if (g.apta && !sobreIA()) errores.push('Los fragmentos y el titular no mencionan la IA: elige fragmentos donde se hable de inteligencia artificial');
     if (errores.length && g.apta) {
       log(`6 · ${errores.length} problemas, se pide corrección: ${errores.slice(0, 3).join(' | ')}`, 'validar', `El código encontró ${errores.length} ${errores.length === 1 ? 'problema' : 'problemas'} (${errores[0]}) y pide una corrección`);
       g = await generar(notaA, notaB?.texto ? notaB : null, errores);
       errores = validarGeneracion(g, notaA.texto, fuenteBTexto());
+      if (g.apta && !sobreIA()) errores.push('Los fragmentos y el titular no mencionan la IA');
     }
     usadas.add(principal.url);
     usadasEnMemoria.add(principal.url);

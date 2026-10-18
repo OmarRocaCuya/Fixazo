@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿qué hizo Roberto Serrano?",
         "opciones": [
           "Prohibió el uso de internet en sus clases",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién hace la denuncia sobre el uso de la IA en los exámenes?",
         "opciones": [
           "Un catedrático español que da clases en Brown",
@@ -87,12 +87,12 @@
         "correcta": 0,
         "bien": "Es un catedrático que vivió el caso en su propia universidad, por lo que conoce de cerca el problema.",
         "otra": "Fíjate en el primer fragmento: ahí se nombra a la persona que denuncia y el lugar donde ocurrió.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "Si quisieras comprobar si un alumno usó IA en un examen, ¿qué buscarías?",
         "opciones": [
           "Que las respuestas sean muy largas",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué forma de evaluar te parece mejor en la universidad?",
         "opciones": [
           "Exámenes orales y trabajos que el alumno defiende",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0635-la-ia-obliga-a-repensar-como-se-toman-los-examenes-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

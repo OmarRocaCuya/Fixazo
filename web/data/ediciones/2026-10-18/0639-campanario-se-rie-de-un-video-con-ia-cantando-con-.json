@@ -66,7 +66,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿quién hizo la versión del vídeo?",
         "opciones": [
           "La propia María José Campanario",
@@ -81,7 +81,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién cuenta que el vídeo se volvió viral y que Belén Esteban no ha reaccionado?",
         "opciones": [
           "El propio medio, en su redacción",
@@ -91,12 +91,12 @@
         "correcta": 0,
         "bien": "Es el propio medio quien informa; sus periodistas deciden qué datos mostrar y cómo enmarcarlos.",
         "otra": "Piensa en quién escribe la nota y qué quiere contar con ella.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Cuál de estas frases es un hecho que podrías comprobar?",
         "opciones": [
           "El vídeo se volvió viral y recibió miles de 'me gusta'",
@@ -111,7 +111,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que este tipo de bromas con IA sobre famosos está bien?",
         "opciones": [
           "Sí, son parte del humor y ambas lo toman con gracia",
@@ -150,7 +150,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-campanario-se-rie-de-un-video-con-ia-cantando-con--contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

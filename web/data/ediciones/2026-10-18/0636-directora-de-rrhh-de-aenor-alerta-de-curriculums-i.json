@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿qué dice la directora sobre el primer empleo?",
         "opciones": [
           "Que las empresas deberían dejar de contratar jóvenes",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla en la noticia y qué papel tiene?",
         "opciones": [
           "Una periodista independiente que investiga el empleo",
@@ -85,12 +85,12 @@
         "correcta": 1,
         "bien": "Es la directora de Personas de AENOR, una empresa que certifica sistemas de IA, así que tiene interés en cómo se usa la tecnología en las empresas.",
         "otra": "Aunque la entrevista la hace ABC, quien opina es una profesional de una empresa concreta. Fíjate en su cargo.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Cuál de estas frases es un hecho y cuál una opinión?",
         "opciones": [
           "Susana Pedrero cree que los currículums genéricos son un problema",
@@ -104,7 +104,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que la IA hace que los jóvenes tengan más difícil entrar al trabajo?",
         "opciones": [
           "Sí, porque las empresas prefieren la IA a contratar jóvenes",
@@ -143,7 +143,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0636-directora-de-rrhh-de-aenor-alerta-de-curriculums-i-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

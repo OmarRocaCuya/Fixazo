@@ -571,3 +571,10 @@ a.pd-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px;
 .pd-progreso-pista { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
 .pd-progreso-barra { height: 100%; background: var(--accent); transition: width 0.5s ease; }
 @media (prefers-reduced-motion: reduce) { .pd-progreso-barra { transition: none; } }
+.pd-plus { background: var(--maize-soft); border-color: transparent; }
+.pd-plus-precio { font-size: 1.1rem; margin: 6px 0 10px; }
+.pd-plus-precio b { font-family: var(--f-serif); font-size: 2.4rem; color: var(--accent); }
+.pd-plus-lista { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.pd-plus-item h3 { margin: 0; font-size: 1.1rem; }
+.pd-plus-item p { margin: 6px 0 0; }
+.pd-plus-cta { margin: 24px 0 8px; display: grid; gap: 8px; justify-items: start; }

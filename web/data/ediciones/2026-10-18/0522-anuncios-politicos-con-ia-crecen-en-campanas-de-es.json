@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el texto, ¿por qué la IA permite producir anuncios más baratos?",
         "opciones": [
           "Porque evita los altos costos de un rodaje tradicional",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién aporta los datos sobre la cantidad de anuncios con IA?",
         "opciones": [
           "Travis Ridout, codirector del Wesleyan Media Project",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Ridout dirige un laboratorio universitario que hace seguimiento del gasto publicitario político, lo que le da interés en contar bien los datos.",
         "otra": "Paxton es quien difundió un anuncio, pero no es quien hace el conteo de anuncios.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "La nota dice que hay más de 200 anuncios con IA. ¿Qué buscarías para comprobarlo?",
         "opciones": [
           "Revisar la base de datos del Wesleyan Media Project y cómo cuentan los anuncios",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Qué crees que deberían hacer las leyes sobre anuncios con IA?",
         "opciones": [
           "Exigir un aviso claro cuando un anuncio usa IA",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0522-anuncios-politicos-con-ia-crecen-en-campanas-de-es-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

@@ -43,7 +43,7 @@ function missionSummary(m: Mission, alias: string, warnings: string[] = []): str
     "1. Elige una carita: cómo llega.",
     "2. Lee en voz alta, hasta 1 minuto.",
     "3. Tres preguntas: qué dice, por qué pasó y qué opina.",
-    "4. Un dato nuevo para pensar (contraprueba) y cierre.",
+    "4. Un dato nuevo para pensar y cierre.",
     "No le daré las respuestas: le haré preguntas para que piense.",
     ...warnings,
   ].join("\n");

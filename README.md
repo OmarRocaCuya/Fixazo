@@ -1,10 +1,10 @@
 # Fixazo
 
-Un periódico web para jóvenes de secundaria (12 a 16 años) que entrena el **pensamiento crítico con noticias reales del día**. Cada noticia viene con unas pocas preguntas que se desbloquean una por una: predecir qué dirá el medio, leer un fragmento, ver **quién habla y qué gana**, comparar con cómo lo cuenta otro medio y, al final, **explicar con la propia voz por qué** se piensa lo que se piensa. La IA nunca da la respuesta: revisa si el joven dio razones sacadas de la noticia y, si le falta algo, le hace una pregunta para que lo encuentre solo.
+Un periódico web para jóvenes de secundaria (12 a 16 años) que entrena el **pensamiento crítico con noticias reales del día**. Cada noticia viene con unas pocas preguntas que se desbloquean una por una: predecir qué dirá el medio, leer un fragmento, ver **quién habla y por qué lo cuenta así**, comparar con cómo lo cuenta otro medio y, al final, **explicar con la propia voz por qué** se piensa lo que se piensa. La IA nunca da la respuesta: revisa si el joven dio razones sacadas de la noticia y, si le falta algo, le hace una pregunta para que lo encuentre solo.
 
 Hack the Andes 2026 · track Educación Escolar · equipo Fixazo (Mateo Rodríguez, Omar Roca y Daniel Marron).
 
-- **Demo:** https://nawinchay-voice-mvp.vercel.app/ (la portada es el periódico).
+- **Demo:** https://fixazo-voice-mvp.vercel.app/ (la portada es el periódico). Presentación: https://fixazo-pitch.vercel.app
 - **La app está en `web/`** (Next.js). **El pipeline de noticias está en `web/pipeline/`**, y también se puede correr en vivo desde la página `/generar` (botón "Buscar una noticia nueva").
 
 ## Por qué
@@ -36,7 +36,7 @@ app (web/, Next.js)
 1. **Predicción:** antes de leer, ¿cómo crees que lo contará este medio?
 2. **Fragmento A** del primer medio.
 3. **Comprensión:** qué dice el texto.
-4. **Procedencia:** quién habla y qué interés tiene.
+4. **Procedencia:** quién habla y por qué lo cuenta así.
 5. **Una pregunta variable**, según lo que tenga la nota: dato o afirmación sin fuente, palabra que convence, hecho u opinión, o cómo comprobarlo.
 6. **Postura y seguridad:** qué opinas y qué tan seguro estás.
 7. **Contraprueba:** fragmento B (otro medio u otra voz) y "¿mantienes o cambias tu idea?".

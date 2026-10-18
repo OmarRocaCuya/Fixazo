@@ -62,7 +62,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento, ¿qué ha pasado con la contratación de jóvenes de 22 a 25 años en ocupaciones muy expuestas a la IA?",
         "opciones": [
           "Ha subido un 14% desde 2022",
@@ -77,7 +77,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién hace las afirmaciones centrales sobre el impacto de la IA en el empleo?",
         "opciones": [
           "Un sindicato de trabajadores de la industria",
@@ -87,12 +87,12 @@
         "correcta": 1,
         "bien": "Los estudios citados los hacen investigadores de Anthropic, empresa que vende IA y tiene interés en mostrar sus herramientas.",
         "otra": "Piensa en quién publica el estudio y si tiene algún interés en el resultado.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Qué dato de la nota deberías comprobar antes de creerlo?",
         "opciones": [
           "El 94% de tareas que la IA podría cubrir teóricamente",
@@ -107,7 +107,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "Según lo que lees, ¿la IA va a quitar muchos empleos en los próximos años?",
         "opciones": [
           "Sí, en gran parte de los sectores",
@@ -146,7 +146,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",

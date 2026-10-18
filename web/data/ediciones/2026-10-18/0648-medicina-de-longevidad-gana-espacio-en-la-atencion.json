@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion",
+  "creada": "2026-10-18T11:48:44.606Z",
+  "estado": "retirada",
+  "motivo": [
+    "Casi no habla de IA"
+  ],
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "16 de octubre de 2026",
+      "titular": "La medicina de longevidad se extiende en la atención médica privada",
+      "url": "https://cincodias.elpais.com/extras/ciencia-salud/2026-10-17/la-medicina-de-longevidad-se-extiende-en-la-atencion-medica-privada.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.09126,
+    "segundos": 69
+  },
+  "noticia": {
+    "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion",
+    "seccion": "Ciencia",
+    "titular": "Medicina de longevidad gana espacio en la atención privada",
+    "bajada": "Compara lo que promete esta medicina con lo que dicen los expertos sobre el envejecimiento y el acceso.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El País",
+        "texto": "Tenemos marcadores que revelan nuestra edad real"
+      },
+      {
+        "medio": "El País",
+        "texto": "Estudiamos la biología de cada persona"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio si la medicina de longevidad frena el envejecimiento?",
+        "opciones": [
+          "Como una forma segura de vivir más años",
+          "Como una práctica que no evita el envejecimiento, solo influye en él",
+          "Como un tratamiento que ya está en el sistema público"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El País",
+        "fecha": "16 de octubre de 2026",
+        "titular": "La medicina de longevidad se extiende en la atención médica privada",
+        "texto": "Tenemos marcadores que revelan nuestra edad real, que muchas veces no se corresponde con la cronológica, la que marca nuestra fecha de nacimiento, y que miden la velocidad con la que estamos envejeciendo. (…) Más que sumar años, el objetivo es vivir los que tengamos que vivir con buena salud",
+        "url": "https://cincodias.elpais.com/extras/ciencia-salud/2026-10-17/la-medicina-de-longevidad-se-extiende-en-la-atencion-medica-privada.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-comprension",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿qué busca la medicina de longevidad?",
+        "opciones": [
+          "Sumar años de vida sin importar la salud",
+          "Vivir los años que tengamos con buena salud",
+          "Eliminar por completo el envejecimiento"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que el objetivo es vivir con buena salud, más que sumar años.",
+        "otra": "Revisa la frase que habla de vivir los años con buena salud.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-procedencia",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "¿Quién explica que la medicina de longevidad no evita el envejecimiento?",
+        "opciones": [
+          "Un médico experto en fisiología y profesor de universidad",
+          "Un directivo de una aseguradora privada",
+          "Una paciente que ya se hizo los estudios"
+        ],
+        "correcta": 0,
+        "bien": "Es un experto en fisiología médica; su rol le da autoridad sobre el tema, pero conviene saber que trabaja en el área.",
+        "otra": "Fíjate en el cargo que tiene la persona que habla en el texto.",
+        "habilidad": "Ver quién habla y por qué"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-variable",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Qué palabra de la nota intenta convencerte de que estos estudios sirven mucho?",
+        "opciones": [
+          "Estudiamos",
+          "Vital",
+          "Recomendaciones"
+        ],
+        "correcta": 1,
+        "bien": "\"Vital\" es una palabra cargada que da mucha fuerza a la idea de que la masa muscular importa.",
+        "otra": "Busca la palabra que muestra qué tan importante es algo según quien habla.",
+        "habilidad": "Ver qué palabras buscan convencer"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-postura",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
+        "titulo": "¿Crees que la medicina de longevidad debería estar disponible para todos por igual?",
+        "opciones": [
+          "Sí, debería ser parte del sistema público",
+          "No, es mejor que siga siendo un servicio privado",
+          "Depende de cuánto cueste y qué incluya"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El País",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Estudiamos la biología de cada persona (…) uso de la inteligencia artificialy la realidad aumentada para detectar riesgos en el cerebro, como el alzhéimer",
+        "url": "https://cincodias.elpais.com/extras/ciencia-salud/2026-10-17/la-medicina-de-longevidad-se-extiende-en-la-atencion-medica-privada.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0648-medicina-de-longevidad-gana-espacio-en-la-atencion-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que la medicina de longevidad sigue siendo privada, según lo que dice la nota?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en lo que cuesta la terapia según la nota.",
+          "Revisa qué dice el texto sobre el sistema público español."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona un dato, una frase o quién lo dice en la nota.",
+              "ejemploCumple": "El texto dice que el coste de membresía es desde 10.000 euros al año, así que solo puede pagarlo quien tenga ese dinero.",
+              "ejemploNoCumple": "Creo que es mejor que sea privada.",
+              "repregunta": "¿Qué parte de la nota te hace pensar eso? Busca un dato o una frase."
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué ocurre, no solo lo describe.",
+              "ejemploCumple": "Como cuesta caro, mucha gente no puede acceder, y el sistema público no la tiene todavía.",
+              "ejemploNoCumple": "Porque sí, es privada.",
+              "repregunta": "¿Por qué crees que pasa eso? Intenta explicar la causa."
+            }
+          ],
+          "respuestaModelo": "Según la nota, la membresía cuesta desde 10.000 euros al año y no está extendida en el sistema público, por eso el acceso es limitado.",
+          "prohibido": [
+            "10.000 euros al año",
+            "no está extendida en el sistema público",
+            "el acceso es limitado"
+          ]
+        }
+      }
+    ]
+  }
+}

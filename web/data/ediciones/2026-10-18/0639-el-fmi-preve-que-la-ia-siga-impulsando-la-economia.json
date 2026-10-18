@@ -60,7 +60,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-comprension",
-        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "etiqueta": "Paso 2 de 8 · toca una opción",
         "titulo": "Según el fragmento de swissinfo, ¿qué dijo el director del FMI sobre las inversiones en centros de datos?",
         "opciones": [
           "Que probablemente fracasarán en un par de años",
@@ -75,7 +75,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-procedencia",
-        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
         "titulo": "¿Quién habla de que la inversión apenas ha comenzado?",
         "opciones": [
           "Choi Ji-young, director ejecutivo del FMI para Asia y el Pacífico",
@@ -85,12 +85,12 @@
         "correcta": 0,
         "bien": "Choi Ji-young es director ejecutivo del FMI para Asia y el Pacífico. Su cargo le permite opinar sobre la economía de la región, y el FMI tiene interés en que la región confíe en su análisis.",
         "otra": "Revisa quién aparece como director ejecutivo en el fragmento de la nota A.",
-        "habilidad": "Ver quién habla y qué gana"
+        "habilidad": "Ver quién habla y por qué"
       },
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-variable",
-        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
         "titulo": "¿Cuál de estas frases es un hecho y no una opinión?",
         "opciones": [
           "Corea del Sur podría afrontar una corrección bursátil",
@@ -105,7 +105,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-postura",
-        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "etiqueta": "Paso 5 de 8 · tu opinión",
         "titulo": "¿Crees que el crecimiento impulsado por la IA es una buena apuesta para un país?",
         "opciones": [
           "Sí, porque genera crecimiento y empleo",
@@ -144,7 +144,7 @@
       {
         "tipo": "opciones",
         "id": "2026-10-18-0639-el-fmi-preve-que-la-ia-siga-impulsando-la-economia-contraprueba",
-        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "etiqueta": "Paso 7 de 8 · otro medio",
         "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
         "opciones": [
           "Mantengo mi idea",
