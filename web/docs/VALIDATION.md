@@ -1,6 +1,60 @@
 # Verificación de la demo
 
-## Despliegue Meta/NLLB — 18 de octubre de 2026
+## Estado más reciente: lectura con tiempos, voz MMS y diálogo local — 18 de octubre de 2026
+
+**Publicado y comprobado en producción, además del backend aislado y el preview.** Los apartados históricos de abajo describen versiones anteriores, no las capacidades actuales de esta entrega.
+
+### Fuentes, build y capacidades
+
+- Frontend: `18939454ad570c5426bf388565bdc05ffa6496cf`; backend: `aa2fcb1967227a02c0feed8050293631e3b672c4`, en la rama `codex/nawinchay-voice-mvp`.
+- Preview Vercel `dpl_6Hr9qp7oZ4nmGjc9TEMFH6Ru335Q`: estado `READY`; build Next/TypeScript correcto, **19 entradas**. El proyecto sigue usando **`web`** como raíz.
+- Producción final: `dpl_HkiUh3s4N2xcz7oLrvZADYR9XJXm`, estado `READY`, alias https://nawinchay-voice-mvp.vercel.app. Proyecto exclusivo `nawinchay-voice-mvp`, raíz **`web`**, build Turbopack/TypeScript correcto y **19 entradas**. No se cambió el proyecto Vercel de Fixazo.
+- Build real Docker Linux/CPU de `nawinchay-meta:aa2fcb1` correcto: `pip check` e importaciones offline de ASR nativo, VITS y Llama. Contenedor saludable con límite de **7 GiB/2 CPU**; no se cambió Fixazo ni el proxy global.
+- **557 pruebas web**, ESLint, build local de producción y TypeScript correctos sobre el snapshot Git aislado; **125 pruebas Python con dobles de modelos** correctas. Las inferencias reales se enumeran por separado más abajo: no se presentan los dobles como pruebas de pesos reales. Los cambios ajenos en curso del checkout no se incluyeron en este despliegue.
+- El `GET /api/reading` del preview devolvió `enabled=true`, timestamps disponibles y diálogo `local-llm-reading` listo. La caché MMS conserva una sola voz cargada: que solo una variante figure como `ready` es esperado, no prueba de disponibilidad simultánea de ambas voces.
+- Auditoría npm de producción (`--omit=dev`): **0 avisos**. Se mantienen los cinco avisos altos de la cadena de desarrollo ESLint/braces, sin aplicar `--force`; no son cinco vulnerabilidades del runtime desplegado.
+
+### Inferencia real del backend, con pesos reales
+
+Se ejecutaron ASR CTC `omniASR_CTC_300M_v2`, NLLB `facebook/nllb-200-distilled-600M`, MMS `facebook/mms-tts-quy` y `facebook/mms-tts-ayr`, y el diálogo CPU cuantizado `Qwen/Qwen2.5-1.5B-Instruct-GGUF`. La siguiente evidencia corresponde a solicitudes individuales contra el backend del contenedor, con pesos ya en caché; **no es un benchmark ni una garantía de latencia extremo a extremo en Vercel**.
+
+| Operación | Resultado observado | Tiempo de solicitud |
+| --- | --- | --- |
+| Qwen, primera carga del modelo con pesos en caché | `¿Qué encontró Ana?` → `Ana encontró una semilla roja.` | 7,872 s |
+| Qwen, continuación con historial | `¿Dónde la sembró?` → `Ana la sembró en el jardín.` | 6,358 s |
+| NLLB, castellano → Ayacucho | `Anaqa huk puka sementata tarirqan.` | 1,969 s |
+| MMS Ayacucho | WAV de **3,008 s**, 96.300 bytes | 2,001 s |
+| ASR sobre ese WAV sintético | 5 palabras con tiempos CTC | 1,376 s |
+| NLLB, castellano → aimara central | `Anax mä wila jatha jikxatäna.` | 2,038 s |
+| MMS aimara central | WAV de **2,752 s**, 88.108 bytes | 1,631 s |
+| ASR sobre ese WAV sintético | 5 palabras con tiempos CTC | 0,947 s |
+
+El audio lo generó MMS: **no se usó voz infantil ni un micrófono físico**. Los resultados completos de esta prueba local están en el artefacto de trabajo no publicado `outputs/reading-native-all.json`.
+
+La prueba descubrió y permitió corregir un error real del decodificador CTC: en `RawSentencePieceTokenizer`, el padding es **1** y el blank es **0**; no deben confundirse. Aun corregido, el ASR devolvió `naqa huk puka cimientata tarirqan` frente al texto sintetizado `Anaqa huk puka sementata tarirqan.`, y `nax mä wila jatha jikhatän` frente a `Anax mä wila jatha jikxatäna.`. Esto demuestra ejecución y timestamps, **no precisión lingüística ni calidad educativa**.
+
+Al finalizar la secuencia, el cgroup registró **4.375.310.336 bytes** de memoria actual (aprox. 4,08 GiB), pico **4.431.704.064 bytes** (aprox. 4,13 GiB) y límite **7.516.192.768 bytes** (7 GiB). El desglose final fue 3.665.948.672 bytes anónimos y 679.034.880 bytes de caché de archivos. Los contadores `oom` y `oom_kill` permanecieron en **0**. Es una observación de esta secuencia, no una prueba de carga concurrente.
+
+### Prueba de extremo a extremo y de interfaz pública
+
+- En preview y después en la URL pública se completaron **ambas** cadenas `prepare → MMS → transcribe CTC temporizado → Qwen → traducción → MMS de respuesta`, con HTTP 200 y las identidades de modelo verificadas. Solo se usaron textos ficticios y audio sintético generado por MMS.
+- En producción, el audio Ayacucho duró **8,384 s**, devolvió **12 palabras** con tiempos y el turno de diálogo tardó **15,042 s**. El audio aimara duró **9,312 s**, devolvió **11 palabras** con tiempos y su turno tardó **16,053 s**. Son mediciones individuales, no SLA ni precisión de reconocimiento. La cadena completa se probó en `f305d2b`; las rutas API no cambiaron en el arreglo posterior del cliente `18939454`.
+- La prueba visual descubrió otro bug que los mocks permisivos no cubrían: `this.request(...)` entregaba `this=MetaReadingClient` a la función nativa `fetch`. El cliente fallaba antes de enviar la preparación aunque la API funcionara. Se desacopló la llamada y se añadieron dos regresiones **rojo → verde**, incluidas en las 557 pruebas.
+- Tras publicar `18939454`, en la **UI pública de `/sesion`** se abrió «Lectura multilingüe» desde la misión «Rosa y el puquio», se autorizó la prueba de texto ficticio y se recibió el pasaje traducido en Ayacucho. La UI mostró **0 de 40 coincidencias observadas**, sin inventar resaltados; el micrófono permaneció apagado y no se confirmó una revisión humana inexistente. Se dejó la sesión pausada, revocando la autorización para que el usuario otorgue la suya.
+- La comprobación final tras las pruebas públicas y de interfaz mantuvo ASR/tiempos/Qwen listos: memoria actual **4.718.972.928 bytes** (aprox. 4,40 GiB), pico **4.871.749.632 bytes** (aprox. 4,54 GiB), límite 7 GiB/2 CPU y **0** eventos OOM/oom_kill. No se aumentó la asignación de recursos ni se modificaron los otros servicios.
+- Evidencias visuales locales no versionadas: `outputs/reading-session-live.png` y `outputs/reading-models-live.png`. El endpoint público rechazó una petición sin código con **401**; `/health` del backend también devolvió **401** sin bearer, con TLS validado.
+- La rama `periodico` se revisó por separado: [hallazgos y alcance](PERIODICO-REVIEW.md). No hubo merge ni cambios en esa rama o en `main`.
+
+### Alcance y límites todavía no validados
+
+- Los tiempos de palabras proceden de frames del decodificador CTC (`ctc-greedy-frames`), **no de alineación forzada con el pasaje** ni de una comparación validada para puntuar lectura. La variante elegida no condiciona este modelo CTC ni confirma la lengua detectada; no se inventan confidencias.
+- El diálogo local es generativo y puede alucinar; no se confunde con el modo guiado determinista ni se presenta como evaluación de respuestas. Traducciones, respuestas y síntesis requieren revisión humana.
+- Sigue siendo una demo de investigación **no comercial**, para voz adulta/sintética, con código privado y consentimiento explícito. No infiere emociones, salud, identidad o calidad del acento; no existe validación con niños, comunidades o docentes, ni métricas WER/CER o evaluación humana de traducción/TTS.
+- **Pendiente:** captura con micrófono físico de Opera, conversación hablada completa desde un dispositivo real, rendimiento móvil y validación con hablantes de las variedades locales. Las pruebas API con audio sintético y la preparación visual no sustituyen esas comprobaciones. La actualización de lectura llega por fragmentos de unos **4 segundos más procesamiento/red**, no palabra a palabra instantáneamente.
+
+## Historial: despliegue Meta/NLLB anterior — 18 de octubre de 2026
+
+> Estado histórico de `228fe98`: su producción pública y sus limitaciones no acreditan la promoción ni describen las nuevas capacidades de lectura/voz/diálogo del preview indicado arriba.
 
 - Fuente ejecutable: `228fe98bf9f1b1bc50c2b11b312ea2c73ca5d3d5`, rama `codex/nawinchay-voice-mvp`.
 - Producción Vercel: `dpl_vw9VoE6EX2YaQv3TpEHYoBFYo4Uu`, estado `READY`, proyecto exclusivo `nawinchay-voice-mvp`, raíz **`web`**, Node 24.x. Demo: https://nawinchay-voice-mvp.vercel.app/lenguas.
@@ -24,7 +78,9 @@ Solo demo no comercial con voz adulta/sintética, código privado y consentimien
 
 CTC no condiciona el reconocimiento con la variante elegida y no aporta timestamps de palabras: la variante es declarada, no una detección confirmada. Este laboratorio funciona por turnos de hasta 30 s, **no es seguimiento alineado del texto ni un agente conversacional/TTS indígena**. No infiere emociones, salud, identidad o calidad del acento. Las limitaciones de la verificación inicial que siguen se refieren al estado anterior al despliegue, no al estado actual del backend.
 
-## Verificación inicial — 17 de octubre de 2026
+## Historial: verificación inicial — 17 de octubre de 2026
+
+> Estado anterior a los despliegues e inferencias reales posteriores. Los apartados «No ejecutado / no validado» siguientes se conservan como registro de aquella verificación, no como estado actual.
 
 ## Ejecutado
 
