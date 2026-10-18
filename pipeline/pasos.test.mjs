@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { armarNoticia, citaLiteral, filtrarCandidatas, limpiarTexto, mismoHecho, validarGeneracion } from './pasos.mjs';
+import { armarNoticia, citaLiteral, esNota, filtrarCandidatas, limpiarTexto, medioDe, mismoHecho, validarGeneracion } from './pasos.mjs';
 
 const textoA = 'Más del 50% de las empresas prevé reducir sus ofertas para perfiles junior, aunque sin recurrir a despidos directos. «La inteligencia artificial no está echando a nadie, pero sí está estrechando la puerta de entrada», explica Gloria Martínez.';
 const textoB = 'El estudio del Observatorio del Talento Digital reunió 207 respuestas válidas de 19 sectores entre el 13 de julio y el 21 de septiembre.';
@@ -48,6 +48,19 @@ test('filtra redes, repetidas y temas sensibles para menores', () => {
     new Set(),
   );
   assert.deepEqual(r.map((x) => x.url), ['https://diario.com/a']);
+});
+
+test('solo acepta notas de la lista cerrada de medios', () => {
+  assert.deepEqual(medioDe('https://www.bbc.com/mundo/articles/c64g12190082o'), { medio: 'BBC News Mundo', lista: 'A' });
+  assert.equal(medioDe('https://www.bbc.com/news/articles/c64g12190082o'), null); // BBC en inglés
+  assert.deepEqual(medioDe('https://computerhoy.20minutos.es/tecnologia/x'), { medio: '20minutos', lista: 'A' });
+  assert.equal(medioDe('https://www.infobae.com/tecno/2026/10/17/x/').lista, 'B');
+  assert.equal(medioDe('https://diariosocialista.net/x'), null);
+  assert.equal(medioDe('https://notelpais.com/x'), null);
+  assert.ok(esNota('https://elpais.com/tecnologia/2026-10-13/asi-es-homeview.html'));
+  assert.ok(!esNota('https://www.eltiempo.com/opinion/columnistas/colombia-frente-a-la-ia-3594354'));
+  assert.ok(!esNota('https://efecomunica.efe.com/axi-lanza-una-integracion'));
+  assert.ok(!esNota('https://www.dw.com/es/inteligencia-artificial-ia/t-63771882/page-1'));
 });
 
 test('detecta si dos titulares hablan del mismo hecho', () => {

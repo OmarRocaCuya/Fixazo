@@ -1,0 +1,204 @@
+{
+  "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa",
+  "creada": "2026-10-18T10:24:21.682Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Elena Ibáñez, orientadora vocacional: “La educación en España está poniendo los noes a la IA, pero no los síes”  | Economía | EL PAÍS",
+      "url": "https://elpais.com/economia/2026-10-18/elena-ibanez-orientadora-vocacional-la-educacion-en-espana-esta-poniendo-noes-a-la-ia-pero-no-sies.html"
+    },
+    {
+      "medio": "Europa Press",
+      "fecha": "13 de octubre de 2026",
+      "titular": "Compromiso por la Educación Tecnológica en España de Amazon forma a más de 280.000 alumnos en competencias digitales",
+      "url": "https://www.europapress.es/epsocial/responsables/noticia-compromiso-educacion-tecnologica-espana-amazon-forma-mas-280000-alumnos-competencias-digitales-20261014180948.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 6,
+    "usd": 0.08878,
+    "segundos": 78
+  },
+  "noticia": {
+    "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa",
+    "seccion": "Educación",
+    "titular": "Experta en orientación vocacional critica la educación española sobre inteligencia artificial",
+    "bajada": "Compara qué dice la experta y qué dice el comunicado de Amazon sobre formar en tecnología.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El País",
+        "texto": "se están poniendo los noes, pero no se están desarrollando los síes"
+      },
+      {
+        "medio": "Europa Press",
+        "texto": "formar gratuitamente a 500.000 estudiantes"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio la noticia sobre formar en tecnología?",
+        "opciones": [
+          "Como un logro que hay que celebrar",
+          "Como un problema que aún no se resuelve",
+          "Como una noticia sin ninguna opinión"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Elena Ibáñez, orientadora vocacional: “La educación en España está poniendo los noes a la IA, pero no los síes”  | Economía | EL PAÍS",
+        "texto": "La educación en España está poniendo los noes a la IA, pero no los síes (…) Creo que en España, efectivamente, se están poniendo los noes, pero no se están desarrollando los síes a la IA.",
+        "url": "https://elpais.com/economia/2026-10-18/elena-ibanez-orientadora-vocacional-la-educacion-en-espana-esta-poniendo-noes-a-la-ia-pero-no-sies.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento de El País, ¿qué dice la experta sobre España y la IA?",
+        "opciones": [
+          "Que España solo pone límites a la IA y no enseña cómo usarla",
+          "Que España ya enseña IA desde primaria",
+          "Que la IA no tiene nada que ver con la educación"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que en España se están poniendo los noes, pero no los síes a la IA.",
+        "otra": "Fíjate en la frase 'se están poniendo los noes, pero no se están desarrollando los síes'.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla en la nota de El País sobre la IA en la escuela?",
+        "opciones": [
+          "Una orientadora vocacional y CEO de una empresa de orientación",
+          "Un profesor de matemáticas de un instituto público",
+          "Un ministro de Educación"
+        ],
+        "correcta": 0,
+        "bien": "Elena Ibáñez es CEO de Singularity Experts y se dedica a orientar vocaciones; su empresa tiene interés en que se hable del futuro laboral.",
+        "otra": "Revisa quién aparece en la cita y qué cargo tiene en el texto.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "En la cita de El País, ¿qué palabra te hace pensar que la experta tiene una postura clara?",
+        "opciones": [
+          "noes",
+          "síes",
+          "España"
+        ],
+        "correcta": 0,
+        "bien": "Las palabras 'noes' y 'síes' presentan la situación como un juego de cerrar o abrir puertas.",
+        "otra": "Piensa qué palabras se repiten en la frase para expresar una idea fuerte.",
+        "habilidad": "Ver qué palabras buscan convencer"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "Después de leer las dos notas, ¿qué crees que debería hacer la escuela con la IA?",
+        "opciones": [
+          "Enseñar a usarla de forma guiada desde temprano",
+          "Prohibirla casi por completo en las aulas",
+          "No es un tema que la escuela deba tratar"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "Europa Press",
+        "fecha": "13 de octubre de 2026",
+        "titular": "Compromiso por la Educación Tecnológica en España de Amazon forma a más de 280.000 alumnos en competencias digitales",
+        "texto": "Compromiso por la Educación Tecnológica en España de Amazon forma a más de 280.000 alumnos en competencias digitales (…) Así se ha puesto de manifiesto en el evento 'El Futuro de la Educación en la era de la Tecnología'",
+        "url": "https://www.europapress.es/epsocial/responsables/noticia-compromiso-educacion-tecnologica-espana-amazon-forma-mas-280000-alumnos-competencias-digitales-20261014180948.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0524-experta-en-orientacion-vocacional-critica-la-educa-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué la nota de Amazon y la de El País dan imágenes tan distintas de la educación tecnológica?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en quién firma cada cita y qué busca con su mensaje.",
+          "Compara los verbos y cifras de cada nota: uno habla de lo que falta y el otro de lo logrado."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa un dato concreto de la noticia",
+              "descripcion": "Menciona al menos una cifra o hecho de alguna de las dos notas.",
+              "ejemploCumple": "Amazon habla de 280.000 beneficiarios, mientras la experta critica que solo se ponen noes.",
+              "ejemploNoCumple": "Las dos notas hablan de tecnología y ya.",
+              "repregunta": "¿Qué número o frase concreta de alguna nota podrías usar para apoyar tu idea?"
+            },
+            {
+              "id": "da_razon",
+              "nombre": "Da una razón para la diferencia",
+              "descripcion": "Explica por qué cada medio o voz presenta el tema de forma distinta, con una razón.",
+              "ejemploCumple": "Amazon es una empresa que quiere mostrar sus resultados, por eso destaca logros.",
+              "ejemploNoCumple": "Una dice una cosa y la otra dice otra.",
+              "repregunta": "¿Quién habla en cada nota y qué interés podría tener al contar el tema así?"
+            }
+          ],
+          "respuestaModelo": "Las notas dan imágenes distintas porque la experta se enfoca en lo que falta, mientras Amazon destaca lo que ya ha hecho. Cada voz tiene un interés al contar el tema.",
+          "prohibido": [
+            "interés por mostrar resultados",
+            "la experta critica lo que falta",
+            "Amazon destaca sus logros",
+            "cada una tiene un punto de vista"
+          ]
+        }
+      }
+    ]
+  }
+}

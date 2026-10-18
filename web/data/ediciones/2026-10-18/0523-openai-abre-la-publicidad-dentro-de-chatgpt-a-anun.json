@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun",
+  "creada": "2026-10-18T10:23:03.651Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "ABC",
+      "fecha": "18 de octubre de 2026",
+      "titular": "La publicidad comienza su desembarco en ChatGPT envuelta en un mar de dudas",
+      "url": "https://www.abc.es/economia/publicidad-comienza-desembarco-chatgpt-envuelta-mar-dudas-20261018111422-nt.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05247,
+    "segundos": 21
+  },
+  "noticia": {
+    "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun",
+    "seccion": "Tecnología",
+    "titular": "OpenAI abre la publicidad dentro de ChatGPT a anunciantes",
+    "bajada": "Compara lo que promete la publicidad en ChatGPT con las dudas que plantean los expertos entrevistados.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "ABC",
+        "texto": "Va a generar una mayor empatía"
+      },
+      {
+        "medio": "ABC",
+        "texto": "Me preocupa el potencial sesgo"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la llegada de anuncios a ChatGPT?",
+        "opciones": [
+          "Como una gran oportunidad para las empresas",
+          "Como algo que genera dudas y preocupaciones",
+          "Como una noticia sin importancia para los usuarios"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "ABC",
+        "fecha": "18 de octubre de 2026",
+        "titular": "La publicidad comienza su desembarco en ChatGPT envuelta en un mar de dudas",
+        "texto": "El último día del pasado mes de agosto, OpenAI abrió en Europa el servicio Ads Manager, que permite a los anunciantes activar campañas en ChatGPT directamente desde la plataforma. (…) Cuando un usuario interacciona con ChatGPT, le aparece un anuncio que tiene que ver con el contexto de esa conversación.",
+        "url": "https://www.abc.es/economia/publicidad-comienza-desembarco-chatgpt-envuelta-mar-dudas-20261018111422-nt.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿a quiénes se muestran los anuncios en ChatGPT?",
+        "opciones": [
+          "A todas las cuentas, sin excepción",
+          "Solo a las cuentas con planes Free y Go",
+          "Solo a los menores de 18 años"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que la publicidad se visualiza en las cuentas con planes Free y Go, y no en Plus, Pro, Business, Enterprise y Edu.",
+        "otra": "Fíjate en la frase que menciona qué planes sí reciben anuncios. No todas las cuentas los ven.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién explica que la publicidad puede influir en las respuestas de la IA?",
+        "opciones": [
+          "Un economista y profesor universitario",
+          "Un directivo de una consultora de medios",
+          "Un portavoz de OpenAI"
+        ],
+        "correcta": 0,
+        "bien": "Es Rafael del Río, economista y profesor de la Universidad Complutense. Su interés es analizar el impacto social y regulatorio de la IA.",
+        "otra": "Fíjate en el cargo que aparece junto al nombre de quien habla. Así sabrás qué perspectiva aporta.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Cuál de estas frases es un hecho y cuál una opinión?",
+        "opciones": [
+          "OpenAI abrió en Europa el servicio Ads Manager el último día de agosto",
+          "La publicidad en ChatGPT es un gran acierto para el futuro",
+          "Los anunciantes deberían invertir siempre en IA"
+        ],
+        "correcta": 0,
+        "bien": "La primera frase se puede comprobar con una fecha y un hecho concreto. Las otras dos expresan una valoración personal.",
+        "otra": "Pregúntate si se puede comprobar con datos o si refleja lo que alguien piensa.",
+        "habilidad": "Separar hechos de opiniones"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que la publicidad dentro de ChatGPT debería estar regulada?",
+        "opciones": [
+          "Sí, para proteger la privacidad y la neutralidad de las respuestas",
+          "No, cada empresa debe decidir libremente",
+          "No tengo una opinión clara todavía"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "ABC",
+        "fecha": "18 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "«Me preocupa el potencial sesgo en las respuestas, porque además del sesgo propio de cualquier algoritmo influyen los intereses de la gente que quiere promocionar determinados productos». (…) «Casi todas las opciones que no son de pago entrenan al propio modelo con las charlas, por lo que la expectativa de privacidad debería ser baja.»",
+        "url": "https://www.abc.es/economia/publicidad-comienza-desembarco-chatgpt-envuelta-mar-dudas-20261018111422-nt.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0523-openai-abre-la-publicidad-dentro-de-chatgpt-a-anun-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que los expertos ven riesgos en la publicidad en ChatGPT? Justifica comparando las dos voces de la nota.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en quién aparece en el fragmento de la otra voz.",
+          "Pregúntate qué tipo de usuario recibe más publicidad según el texto."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona un dato, una persona que lo dice o una idea concreta del texto.",
+              "ejemploCumple": "Rafael del Río dice que los intereses de quien quiere promocionar productos pueden sesgar las respuestas.",
+              "ejemploNoCumple": "Es peligroso porque no es bueno para la gente.",
+              "repregunta": "¿Qué dice exactamente la noticia sobre quién habla o qué riesgo menciona?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué ese riesgo preocupa, conectando la idea con sus consecuencias.",
+              "ejemploCumple": "Preocupa porque quienes tienen menos capacidad de pago reciben respuestas más condicionadas por anuncios.",
+              "ejemploNoCumple": "Porque sí, y ya.",
+              "repregunta": "¿Qué pasaría con los usuarios si esa situación ocurriera? ¿Por qué sería un problema?"
+            }
+          ],
+          "respuestaModelo": "Rafael del Río advierte que los intereses de quien quiere promocionar productos pueden sesgar las respuestas, y que el riesgo es mayor para quienes usan la versión gratuita, porque suelen tener menos capacidad de pago.",
+          "prohibido": [
+            "intereses de quien quiere promocionar",
+            "sesgo en las respuestas",
+            "versión gratuita",
+            "menos capacidad de pago",
+            "vulnerables"
+          ]
+        }
+      }
+    ]
+  }
+}

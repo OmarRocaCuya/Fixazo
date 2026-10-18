@@ -30,7 +30,7 @@ export function FamilyShell({ children }: { children: React.ReactNode }) {
       <header className="topbar">
         <Link href="/chat" className="brand">
           <span className="brand-mark" aria-hidden="true">Ñ</span>
-          <span>Ñawinchay</span>
+          <span>Fixazo</span>
         </Link>
         <button type="button" className="icon-btn" aria-label="Abrir menú" aria-expanded={open} onClick={() => setOpen(true)}>
           <Icon name="menu" />
@@ -40,7 +40,7 @@ export function FamilyShell({ children }: { children: React.ReactNode }) {
       <aside className={`sidebar${open ? " open" : ""}`} aria-label="Navegación de la familia">
         <Link href="/chat" className="brand" onClick={() => setOpen(false)}>
           <span className="brand-mark" aria-hidden="true">Ñ</span>
-          <span>Ñawinchay</span>
+          <span>Fixazo</span>
         </Link>
         <div className="child-pill">
           <small>Niño activo</small>

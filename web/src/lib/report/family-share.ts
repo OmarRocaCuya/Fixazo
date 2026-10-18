@@ -16,10 +16,10 @@ export function buildVoiceFamilySummary(report: Report): FamilySummary {
     return `- ${label}: ${value}`;
   });
   return {
-    title: "Resumen de lectura · Ñawinchay",
+    title: "Resumen de lectura · Fixazo",
     filename: "nawinchay-resumen-lectura.txt",
     text: [
-      "Ñawinchay · Resumen de lectura",
+      "Fixazo · Resumen de lectura",
       report.review?.status === "revisado" ? "Evidencia revisada por una persona." : "Informe provisional: pendiente de revisión humana.",
       ...lines,
       "Los resultados corresponden a esta actividad; no son un diagnóstico ni una medida de emociones.",

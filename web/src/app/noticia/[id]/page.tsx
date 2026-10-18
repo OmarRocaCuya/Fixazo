@@ -23,9 +23,8 @@ async function Contenido({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div className="pd-wrap">
       <div className="pd-top">
-        <Link className="pd-marca" href="/">Ñawinchay · Periódico</Link>
-        <Link className="pd-insights" href="/chat">Lectura por voz</Link>
-        <Link className="pd-insights" href="/insights">Mis insights</Link>
+        <Link className="pd-marca" href="/">Fixazo</Link>
+        <Link className="pd-insights" href="/insights" target="_blank">Mis insights ↗</Link>
       </div>
       <LecturaNoticia noticia={noticiaPublica(noticia)} documento={documento} />
     </div>

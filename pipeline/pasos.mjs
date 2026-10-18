@@ -61,6 +61,48 @@ export const dominio = (url) => {
   }
 };
 
+// Lista cerrada de medios (INVESTIGACION-medios-confiables.md, 18 oct 2026).
+// A: con señal externa de confianza (Trust Project, JTI, ranking del Digital News Report o servicio público/agencia).
+// B: reconocidos y legibles, sin señal verificada; solo sirven como segundo medio de una noticia.
+export const MEDIOS = {
+  A: {
+    'efe.com': 'EFE', 'apnews.com': 'AP', 'bbc.com/mundo': 'BBC News Mundo', 'dw.com/es': 'DW', 'france24.com/es': 'France 24',
+    'rfi.fr/es': 'RFI', 'swissinfo.ch/spa': 'Swissinfo', 'elpais.com': 'El País', 'rtve.es': 'RTVE', 'elmundo.es': 'El Mundo',
+    'abc.es': 'ABC', '20minutos.es': '20minutos', 'eldiario.es': 'elDiario.es', 'lanacion.com.ar': 'La Nación',
+    'eltiempo.com': 'El Tiempo', 'elespectador.com': 'El Espectador', 'elcomercio.pe': 'El Comercio', 'rpp.pe': 'RPP',
+    'biobiochile.cl': 'BioBioChile',
+  },
+  B: {
+    'infobae.com': 'Infobae', 'clarin.com': 'Clarín', 'cnnespanol.cnn.com': 'CNN en Español', 'es.euronews.com': 'Euronews',
+    'lavanguardia.com': 'La Vanguardia', 'elconfidencial.com': 'El Confidencial', 'europapress.es': 'Europa Press',
+    'eluniversal.com.mx': 'El Universal', 'animalpolitico.com': 'Animal Político', 'latercera.com': 'La Tercera',
+    'eluniverso.com': 'El Universo', 'elobservador.com.uy': 'El Observador',
+  },
+};
+
+/** ¿De qué medio de la lista es esta URL? Acepta subdominios y respeta la ruta del servicio en español. */
+export function medioDe(url) {
+  let u;
+  try {
+    u = new URL(url);
+  } catch {
+    return null;
+  }
+  const host = u.hostname.replace(/^www\./, '');
+  for (const lista of ['A', 'B']) {
+    for (const [clave, medio] of Object.entries(MEDIOS[lista])) {
+      const [d, ...ruta] = clave.split('/');
+      const prefijo = ruta.length ? `/${ruta.join('/')}/` : '/';
+      if ((host === d || host.endsWith(`.${d}`)) && `${u.pathname}/`.startsWith(prefijo)) return { medio, lista };
+    }
+  }
+  return null;
+}
+
+// Rutas que no son una nota del día: opinión, etiquetas, programas de video o comunicados de empresas.
+const NO_ES_NOTA = /(\/opinion\/|\/columnistas?\/|\/tribuna|\/blogs?\/|\/tags?\/|\/temas\/|\/programas\/|\/comunicados\/|\/autor\/|\/t-\d+|efecomunica\.)/i;
+export const esNota = (url) => Boolean(medioDe(url)) && !NO_ES_NOTA.test(url);
+
 /** Cada segmento de una cita tiene que estar literal (normalizado) en el texto fuente. */
 export function citaLiteral(cita, fuente) {
   const f = normalizar(fuente);

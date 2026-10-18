@@ -60,9 +60,9 @@ export function SessionScreen() {
   return (
     <div className="session">
       <header className="s-top">
-        <Link href="/chat" className="brand" aria-label="Ñawinchay, volver al chat">
+        <Link href="/chat" className="brand" aria-label="Fixazo, volver al chat">
           <span className="brand-mark" aria-hidden="true">Ñ</span>
-          <span>Ñawinchay</span>
+          <span>Fixazo</span>
         </Link>
         {snap.phase === "running" || snap.phase === "saving" || snap.phase === "finished" ? (
           <>
@@ -169,7 +169,7 @@ function Orb({ snap }: { snap: Snapshot }) {
   const paused = snap.ctx?.state === "PAUSED";
   const mode = snap.micError ? "error" : paused ? "paused" : snap.agentSpeaking ? "speaking" : snap.listening && !snap.simulation ? "listening" : "";
   const title = snap.agentSpeaking
-    ? "Ñawinchay está hablando…"
+    ? "Fixazo está hablando…"
     : snap.listening
       ? snap.simulation
         ? `Turno de ${alias}`
@@ -206,7 +206,7 @@ function AgentLine({ show, showEs }: { show: string; showEs?: string }) {
   return (
     <div className="agent-bubble">
       <span className="eyebrow" style={{ color: "var(--accent)" }}>
-        Ñawinchay
+        Fixazo
       </span>
       <span>{show}</span>
       {showEs && <span className="es">{showEs}</span>}

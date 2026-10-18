@@ -47,14 +47,13 @@ export default function Insights() {
   return (
     <div className="pd-wrap pd-angosto">
       <div className="pd-top">
-        <Link className="pd-marca" href="/">Ñawinchay · Periódico</Link>
+        <Link className="pd-marca" href="/">Fixazo</Link>
         <Link className="pd-insights" href="/">Volver al periódico</Link>
-        <Link className="pd-insights" href="/chat">Lectura por voz</Link>
       </div>
       <header className="pd-noticia-cabeza">
         <div className="eyebrow">Mis insights</div>
         <h1>Cómo vas leyendo las noticias</h1>
-        <p className="muted">Se guarda solo en este navegador. No es una nota: muestra las respuestas observables. Las respuestas sin evaluación de voz no cuentan como fallos.</p>
+        <p className="muted">No es una nota: muestra qué ya haces y qué practicar. Se guarda solo en este navegador.</p>
       </header>
 
       {enCurso.length > 0 && (
@@ -67,12 +66,15 @@ export default function Insights() {
         </div>
       ) : (
         <div className="stack">
-          <div className="metric-grid">
-            <MetricCard title="Noticias leídas" value={lista.length} caption="Terminadas de principio a fin" />
-            <MetricCard title="Porqués bien explicados" value={pct(explicadas, conVoz.length)} caption={`${explicadas} de ${conVoz.length} con razones de la noticia`} />
-            <MetricCard title="Respondiste con tu voz" value={pct(porVoz, conVoz.length)} caption="Solo entre respuestas de voz evaluadas" />
-            <MetricCard title="Cambiaste de idea" value={cambios} caption="Cambiar con una buena razón vale igual que mantener" />
-          </div>
+          {/* Solo se muestra lo que ya tiene datos, para no llenar la pantalla de ceros. */}
+          {lista.length > 0 && (
+            <div className="metric-grid">
+              <MetricCard title="Noticias leídas" value={lista.length} caption="De principio a fin" />
+              {conVoz.length > 0 && <MetricCard title="Porqués bien explicados" value={pct(explicadas, conVoz.length)} caption={`${explicadas} de ${conVoz.length}`} />}
+              {conVoz.length > 0 && <MetricCard title="Respondiste con tu voz" value={pct(porVoz, conVoz.length)} caption="El resto, escribiendo" />}
+              <MetricCard title="Cambiaste de idea" value={cambios} caption="Cambiar con una buena razón vale igual que mantener" />
+            </div>
+          )}
 
           <section className="pd-card">
             <h2>Tus habilidades</h2>
@@ -86,9 +88,9 @@ export default function Insights() {
             </ul>
           </section>
 
-          <section className="pd-card">
+          {conVoz.length > 0 && <section className="pd-card">
             <h2>Cómo explicas cuando hablas</h2>
-            <p className="muted small">Palabras y pausas observadas en el navegador, solo para respuestas evaluadas. No medimos emociones; estas señales no se usan como nota.</p>
+            <p className="muted small">Palabras y pausas de tus respuestas. No medimos emociones.</p>
             <ul className="pd-senales">
               <li><span>Palabras de duda que usas</span><span>{dudas.length ? dudas.map(([w, n]) => `«${w}» ×${n}`).join(", ") : "Ninguna"}</span></li>
               <li><span>Muletillas</span><span>{muletillas.length ? muletillas.map(([w, n]) => `«${w}» ×${n}`).join(", ") : "Ninguna"}</span></li>
@@ -100,9 +102,9 @@ export default function Insights() {
                 {dudosos.length > 0 && <>Cuando dijiste estar <b>poco seguro</b>, igual lo lograste {dudosos.filter((r) => r.voz?.listo).length} de {dudosos.length} veces{dudosos.some((r) => r.voz?.listo) ? ": puedes confiar más en lo que piensas." : "."}</>}
               </p>
             )}
-          </section>
+          </section>}
 
-          <section className="pd-card">
+          {lista.length > 0 && <section className="pd-card">
             <h2>Noticias que leíste</h2>
             <ul className="pd-historial">
               {lista.map((r) => (
@@ -112,7 +114,7 @@ export default function Insights() {
                 </li>
               ))}
             </ul>
-          </section>
+          </section>}
 
           <p className="pd-pie">Lo que no medimos: tus emociones, tu inteligencia ni cómo te comparas con otros.</p>
         </div>

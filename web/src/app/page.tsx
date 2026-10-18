@@ -1,5 +1,5 @@
 // Portada del periódico: ediciones guardadas en data/ediciones, sin programador automático configurado.
-// La app de familia de Ñawinchay sigue disponible en /chat (/consentimiento redirige ahí).
+// La app de familia de Fixazo sigue disponible en /chat (/consentimiento redirige ahí).
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
@@ -25,13 +25,10 @@ function Miradas({ n }: { n: NoticiaGuardada }) {
 }
 
 function Meta({ n }: { n: NoticiaGuardada }) {
-  const preguntas = n.pasos.filter((p) => p.tipo !== "fragmento").length;
   return (
     <div className="pd-meta">
       <EstadoNoticia id={n.id} />
       <span>{n.minutos} min</span>
-      <span>{preguntas} preguntas</span>
-      <span>Escritura o voz opcional</span>
     </div>
   );
 }
@@ -54,25 +51,20 @@ async function Edicion() {
   return (
     <div className="pd-wrap">
       <div className="pd-top">
-        <span className="pd-hoy">Periódico · archivo de lectura</span>
-        <Link className="pd-insights" href="/chat">Lectura por voz</Link>
+        <span className="pd-hoy">{ultima ? `Edición del ${fechaEdicion(ultima)}` : ""}</span>
         <Link className="pd-insights" href="/insights">Mis insights</Link>
       </div>
       <header className="pd-masthead">
-        <h1>Ñawinchay</h1>
+        <h1>Fixazo</h1>
         <div className="pd-lema">Periódico para leer con criterio</div>
       </header>
-      <div className="pd-barra">
-        <span>{ultima ? <>Última edición guardada: <b>{fechaEdicion(ultima)}</b></> : "Sin ediciones guardadas"}</span>
-        <span>Publicación manual · sin actualización automática configurada</span>
-      </div>
 
       {!principal ? (
-        <p className="pd-vacio">Todavía no hay ediciones guardadas. Puedes usar la lectura por voz mientras se publica una edición manualmente.</p>
+        <p className="pd-vacio">Todavía no hay noticias publicadas.</p>
       ) : (
         <main className="pd-grid">
           <Link className="pd-card pd-principal" href={`/noticia/${principal.id}`}>
-            <div className="eyebrow">{principal.seccion} · {fechaEdicion(principal.creada)}</div>
+            <div className="eyebrow">{principal.seccion}</div>
             <h2>{principal.titular}</h2>
             <p className="pd-bajada">{principal.bajada}</p>
             <Miradas n={principal} />
@@ -84,9 +76,8 @@ async function Edicion() {
               <p className="eyebrow">Más noticias</p>
               {resto.map((n) => (
                 <Link key={n.id} className="pd-card pd-item" href={`/noticia/${n.id}`}>
-                  <div className="eyebrow">{n.seccion} · {fechaEdicion(n.creada)}</div>
+                  <div className="eyebrow">{n.seccion}</div>
                   <h3>{n.titular}</h3>
-                  <Miradas n={n} />
                   <Meta n={n} />
                 </Link>
               ))}
@@ -94,9 +85,7 @@ async function Edicion() {
           )}
         </main>
       )}
-      <p className="pd-pie">
-        Ediciones de archivo: las fechas corresponden al material guardado, no a noticias en tiempo real. Fragmentos citados de sus medios con enlace al original. Las preguntas no te dan la respuesta: te ayudan a encontrarla.
-      </p>
+      <p className="pd-pie">Fragmentos citados de cada medio, con enlace al original.</p>
     </div>
   );
 }

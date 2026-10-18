@@ -291,17 +291,26 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   return (
     <div className="pd-flujo">
       <header className="pd-noticia-cabeza">
-        <div className="eyebrow">{noticia.seccion} · archivo de lectura</div>
-        <h1>{noticia.titular}</h1><p className="pd-bajada">{noticia.bajada}</p>
-        <p className="muted small">{noticia.minutos} min · {pasos.filter((p) => p.tipo !== "fragmento").length} preguntas · texto, elección y explicación</p>
-        <p className="muted small">Predice → comprende y busca evidencia → revisa tu postura con otra fuente → explica. El apoyo cambia con tus elecciones; no es un diagnóstico ni demuestra transferencia a tareas nuevas.</p>
+        <div className="eyebrow">{noticia.seccion}</div>
+        <h1>{noticia.titular}</h1>
+        <p className="pd-bajada">{noticia.bajada}</p>
+        <p className="muted small">{noticia.minutos} min</p>
       </header>
       {!fin && <QuizAudioPanel ref={audio} stepId={activeId} paused={judgeBusy || capturePaused} onTranscript={recibirTranscripcion} onAccessChange={setAccess} />}
       {avisoAudio && !fin && <p role="status" className="pd-aviso">{avisoAudio}</p>}
       {pasos.slice(0, visibles + 1).map((p, k) => (
         <div key={"id" in p ? p.id : `frag-${k}`} ref={k === visibles ? ultimo : undefined}>
           {p.tipo === "fragmento" && <BloqueFragmento f={p} />}
-          {p.tipo === "opciones" && <BloqueOpciones p={p} intentos={intentosOpciones[p.id] ?? []} activa={!fin && k === visibles}
+          {/* Una idea a la vez: las preguntas ya cerradas quedan plegadas en una línea. */}
+          {p.tipo === "opciones" && elegidas[p.id] !== undefined && k < visibles && (
+            <details className="pd-cerrado">
+              <summary><span className="pd-tipo">{p.etiqueta.split(" · ")[0]}</span><span>{p.opciones[elegidas[p.id]]}</span></summary>
+              <BloqueOpciones p={p} intentos={intentosOpciones[p.id] ?? []} activa={false}
+                apoyo={apoyoAdaptativo(pasos, p, intentosOpciones, elegidas)} borrador={null}
+                onElegir={() => undefined} onContinuar={() => undefined} />
+            </details>
+          )}
+          {p.tipo === "opciones" && !(elegidas[p.id] !== undefined && k < visibles) && <BloqueOpciones p={p} intentos={intentosOpciones[p.id] ?? []} activa={!fin && k === visibles}
             apoyo={apoyoAdaptativo(pasos, p, intentosOpciones, elegidas)} borrador={borradorOpcion}
             onElegir={(opcion) => elegir(p, opcion)}
             onContinuar={() => { if (!fin && k === visibles && puedeContinuar(p, intentosOpciones)) { setBorradorOpcion(null); setHasta(k + 1); } }} />}

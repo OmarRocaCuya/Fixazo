@@ -1,5 +1,5 @@
 import type { AffectEstimate, ExperimentalAffectReport } from "./signals/affect";
-// Shared domain types for Ñawinchay. Pure data, no browser APIs.
+// Shared domain types for Fixazo. Pure data, no browser APIs.
 
 export type Lang = "es" | "qu";
 export type Grade = 3 | 4 | 5 | 6;

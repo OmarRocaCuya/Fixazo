@@ -37,10 +37,10 @@ export function buildPeriodicoReport(result: ResultadoNoticia): PeriodicoReport 
     voiceCriteria,
     nextStep,
     share: {
-      title: "Resumen del quiz · Ñawinchay",
+      title: "Resumen del quiz · Fixazo",
       filename: "nawinchay-resumen-quiz.txt",
       text: [
-        "Ñawinchay · Resumen del quiz de lectura",
+        "Fixazo · Resumen del quiz de lectura",
         "Observaciones de esta actividad, no una nota global ni un diagnóstico.",
         ...protocolLines,
         `Resultados finales de habilidades en esta actividad: ${achieved} de ${skills.length} con respuesta esperada.`,
