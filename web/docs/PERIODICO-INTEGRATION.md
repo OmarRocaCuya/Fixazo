@@ -7,7 +7,7 @@
 - `/` ofrece el periódico con seis noticias publicadas del archivo importado. `/noticia/[id]` conserva la práctica por pasos y `/insights` el avance local. Los enlaces de navegación llevan de vuelta a `/chat`, `/sesion` y el laboratorio de lenguas.
 - Las noticias son material de archivo de la rama importada, no información cuya actualidad o veracidad se haya comprobado durante esta integración. El pipeline raíz se conserva, pero **no se ejecutó ni se programó** una publicación automática.
 
-## Correcciones incluidas
+## Correcciones incluidas en la fusión inicial
 
 - El juez de OpenRouter está **apagado por defecto**. No se habilitó ni se configuró una clave pagada en esta entrega. Leer, responder por escrito y continuar sin evaluación siguen disponibles.
 - Una configuración futura exige `PERIODICO_JUDGE_ENABLED=true`, `OPENROUTER_API_KEY` y el código privado `VOICE_ACCESS_CODE`, además de autorización adulta explícita y mismo origen. El código se mantiene en memoria, no se incluye en el cuerpo ni en una URL.
@@ -53,3 +53,11 @@ El build y los dobles de los tests no acreditan llamadas reales de OpenRouter ni
 - Next.js usa `localhost` como origen canónico en este arranque local: el origen `127.0.0.1` fue rechazado con 403 y la repetición con el origen canónico pasó. No se debilitó la comprobación del origen para admitir la prueba.
 - Las claves sensibles no se devuelven mediante `vercel env run`; se verificó su presencia en los metadatos de Vercel sin intentar extraerlas ni rotar el código privado existente. Por ello la prueba real del juez se hizo contra el build local equivalente, no como una evaluación autenticada en producción.
 - Solo se usó texto sintético adulto. No se probaron micrófonos físicos ni voces infantiles; no se ejecutó el pipeline de noticias.
+
+### Publicación de Haiku comprobada
+
+- Código ejecutable: `40ac887fa4e4213fb88ea376bbf8c692bd8b49f4`, publicado en `codex/nawinchay-voice-mvp`. El registro posterior de esta comprobación es solo documentación.
+- Despliegue de producción `dpl_1TsV29WsvniuungsNYscURVKZqUh`, estado Ready, promovido al dominio https://nawinchay-voice-mvp.vercel.app/. El proyecto verificado es `prj_0BwKEJ6aNPufMRvZHtKZzcKTzkLN` y conserva la raíz `web`.
+- GET público de `/api/periodico/responder`: `enabled: true`, `reason: null`, `adultOnly: true`. POST desde el mismo origen sin código: HTTP 401, `voice-access-required`, `no_evaluable`, `cuenta: false`. No se hizo una evaluación autenticada en producción ni se extrajeron sus secretos.
+- `/api/reading` sigue respondiendo HTTP 200: ASR listo con tiempos de palabra, NLLB listo y diálogo Qwen local listo. El estado puntual de TTS fue aimara listo y quechua no cargado/listo; no se atribuye a esta comprobación una nueva prueba de audio. Haiku se usa para el juez del periódico, no reemplaza ASR, traducción ni el LLM local de la sesión de voz.
+- No se modificaron el backend de Dokploy, el despliegue de Fixazo, `main`, `periodico` ni los cambios pendientes del checkout principal. La clave compartida en la conversación debe rotarse y sustituirse en el secreto de Vercel; no se publica su valor en este registro.
