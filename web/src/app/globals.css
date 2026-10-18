@@ -486,6 +486,13 @@ a.pd-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px;
 .pd-candado { border: 1px dashed var(--line); border-radius: 14px; padding: 16px; text-align: center; color: var(--muted); }
 .pd-candado span { display: block; height: 10px; border-radius: 6px; background: var(--line); margin: 8px 0; filter: blur(3px); opacity: 0.6; }
 .pd-candado span:nth-child(2) { width: 80%; } .pd-candado span:nth-child(3) { width: 60%; }
+.pd-cerrado { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.pd-cerrado > summary { list-style: none; cursor: pointer; display: flex; gap: 10px; align-items: baseline; padding: 10px 14px; font-size: 0.92rem; color: var(--muted); }
+.pd-cerrado > summary::-webkit-details-marker { display: none; }
+.pd-cerrado > summary .pd-tipo { margin: 0; white-space: nowrap; }
+.pd-cerrado > summary span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pd-cerrado[open] > summary { border-bottom: 1px solid var(--line); }
+.pd-cerrado .pd-pregunta { border: 0; }
 .pd-lista-logros, .pd-habilidades, .pd-senales, .pd-historial { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 10px; }
 .pd-lista-logros li, .pd-senales li, .pd-historial li { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .pd-barra-nivel { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; margin-top: 6px; }

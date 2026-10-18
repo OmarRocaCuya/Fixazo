@@ -245,7 +245,7 @@ export function BloqueVoz({ p, noticiaId, onFin }: { p: PreguntaVozPublica; noti
         <div className="pd-tipo">{p.etiqueta}</div>
         <h2>{p.titulo}</h2>
         <p className="muted small">Puedes responder por escrito y terminar la lectura sin evaluación. La evaluación por IA es una demo solo para adultos; puede equivocarse.</p>
-        <p className="pd-aviso" role="status">{capacidad.reason}</p>
+        {!capacidad.enabled && <p className="pd-aviso" role="status">{capacidad.reason}</p>}
         {(puedeHablar || capacidad.enabled) && (
           <label className="pd-aviso">
             <input type="checkbox" checked={autorizado} disabled={estado !== "quieto"} onChange={(e) => setAutorizado(e.target.checked)} />{" "}
@@ -302,6 +302,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
   const [fin, setFin] = useState<ResultadoNoticia | null>(terminada);
   const ultimo = useRef<HTMLDivElement | null>(null);
   const pasos = noticia.pasos;
+  const ultimaRespondida = pasos.reduce((m, p, k) => (p.tipo === "opciones" && elegidas[p.id] !== undefined ? k : m), -1);
 
   // Los fragmentos no esperan respuesta: muestran también el paso siguiente.
   const visibles = (() => {
@@ -370,15 +371,22 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
       <div className="pd-luz halo" aria-hidden="true"><i /></div>
       <div className="pd-luz linea" aria-hidden="true" />
       <header className="pd-noticia-cabeza">
-        <div className="eyebrow">{noticia.seccion} · archivo de lectura</div>
+        <div className="eyebrow">{noticia.seccion}</div>
         <h1>{noticia.titular}</h1>
         <p className="pd-bajada">{noticia.bajada}</p>
-        <p className="muted small">{noticia.minutos} min · {pasos.filter((p) => p.tipo !== "fragmento").length} preguntas · respuesta escrita o voz adulta opcional</p>
+        <p className="muted small">{noticia.minutos} min</p>
       </header>
       {pasos.slice(0, visibles + 1).map((p, k) => (
         <div key={"id" in p ? p.id : `frag-${k}`} ref={k === visibles ? ultimo : undefined}>
           {p.tipo === "fragmento" && <BloqueFragmento f={p} />}
-          {p.tipo === "opciones" && (
+          {/* Una idea a la vez: las preguntas ya respondidas (menos la última, que muestra su explicación) quedan en una línea. */}
+          {p.tipo === "opciones" && elegidas[p.id] !== undefined && k < ultimaRespondida && (
+            <details className="pd-cerrado">
+              <summary><span className="pd-tipo">{p.etiqueta.split(" · ")[0]}</span><span>{p.opciones[elegidas[p.id]]}</span></summary>
+              <BloqueOpciones p={p} elegida={elegidas[p.id]} onElegir={() => undefined} />
+            </details>
+          )}
+          {p.tipo === "opciones" && !(elegidas[p.id] !== undefined && k < ultimaRespondida) && (
             <BloqueOpciones
               p={p}
               elegida={elegidas[p.id]}
