@@ -28,3 +28,7 @@ Sin clave o cuando fallan las tres corridas, `responder/route.ts:41` usa `[]`. `
 - El caso de corridas vacías está cubierto por esas pruebas, pero su expectativa actual (`cumple:false`) no distingue disponibilidad técnica de capacidad educativa.
 - Revisión estática de la ruta, juez, flujo, reglas y persistencia; no constituye aprobación de despliegue ni auditoría completa del pipeline editorial.
 - No se mezclaron cambios de `periodico` en `codex/nawinchay-voice-mvp`.
+
+## Estado posterior de integración
+
+Los tres hallazgos anteriores se corrigieron al integrar la rama en el MVP: admisión privada con juez apagado por defecto, indisponibilidad sin evaluación negativa y conservación de la transcripción acumulada. También se integraron privacidad, navegación y empaquetado. El informe original se conserva como evidencia histórica; consulta [la integración y sus límites](PERIODICO-INTEGRATION.md). No se activaron llamadas pagadas ni se cambió la rama periodico.

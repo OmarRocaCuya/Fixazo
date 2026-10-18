@@ -20,20 +20,22 @@ interface Registro {
   noticia: Noticia | null;
 }
 
+// Dynamic operator paths opt out of automatic broad tracing; next.config.ts
+// explicitly includes only data/ediciones/**/*.json for deployed functions.
 /** Noticias publicadas, de la más nueva a la más antigua. */
 export async function noticiasPublicadas(): Promise<NoticiaGuardada[]> {
   let dias: string[] = [];
   try {
-    dias = (await readdir(DIR, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
+    dias = (await readdir(/* turbopackIgnore: true */ DIR, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
   } catch {
     return [];
   }
   const registros: Registro[] = [];
   for (const dia of dias) {
-    for (const f of await readdir(join(DIR, dia))) {
+    for (const f of await readdir(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, dia))) {
       if (!f.endsWith(".json")) continue;
       try {
-        registros.push(JSON.parse(await readFile(join(DIR, dia, f), "utf8")));
+        registros.push(JSON.parse(await readFile(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, dia, f), "utf8")));
       } catch {
         /* un archivo a medio escribir no tumba la portada */
       }

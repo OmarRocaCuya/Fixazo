@@ -6,7 +6,8 @@ import { Icon } from "./ui";
 import { useStore } from "@/lib/useStore";
 
 const NAV = [
-  { href: "/chat", label: "Chat", icon: "chat" as const },
+  { href: "/", label: "Periódico", icon: "report" as const },
+  { href: "/chat", label: "Lectura por voz", icon: "chat" as const },
   { href: "/informe", label: "Sesiones", icon: "report" as const },
   { href: "/progreso", label: "Progreso", icon: "progress" as const },
   { href: "/voz", label: "Voz (demo)", icon: "sound" as const },

@@ -1,4 +1,4 @@
-// Portada del periódico. Lee lo que el pipeline publicó (data/ediciones) en cada visita.
+// Portada del periódico: ediciones guardadas en data/ediciones, sin programador automático configurado.
 // La app de familia de Ñawinchay sigue disponible en /consentimiento y /chat.
 import Link from "next/link";
 import { connection } from "next/server";
@@ -7,15 +7,7 @@ import EstadoNoticia from "@/components/periodico/EstadoNoticia";
 import { noticiasPublicadas, type NoticiaGuardada } from "@/lib/periodico/ediciones";
 
 const LIMA = { timeZone: "America/Lima" } as const;
-const hora = (iso: string) => new Date(iso).toLocaleTimeString("es-PE", { ...LIMA, hour: "2-digit", minute: "2-digit", hour12: false });
-const hace = (iso: string) => {
-  const min = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
-  if (min < 60) return `hace ${min} min`;
-  const h = Math.floor(min / 60);
-  return `hace ${h} h${min % 60 ? ` ${min % 60} min` : ""}`;
-};
-// ponytail: cadencia fija de la demo; en producción, una edición diaria a una hora fija.
-const CADA_MIN = 30;
+const fechaEdicion = (iso: string) => new Date(iso).toLocaleDateString("es-PE", { ...LIMA, day: "numeric", month: "long", year: "numeric" });
 
 function Miradas({ n }: { n: NoticiaGuardada }) {
   const m = n.miradas ?? [];
@@ -39,7 +31,7 @@ function Meta({ n }: { n: NoticiaGuardada }) {
       <EstadoNoticia id={n.id} />
       <span>{n.minutos} min</span>
       <span>{preguntas} preguntas</span>
-      <span>🎤 1 con tu voz</span>
+      <span>Escritura o voz adulta opcional</span>
     </div>
   );
 }
@@ -52,37 +44,35 @@ export default function Portada() {
   );
 }
 
-// Se lee en cada visita: el pipeline agrega noticias mientras la app corre.
+// Lee las ediciones guardadas; publicar nuevas ediciones requiere ejecutar el pipeline aparte.
 async function Edicion() {
   await connection();
   const noticias = await noticiasPublicadas();
   const [principal, ...resto] = noticias;
   const ultima = principal?.creada;
-  const proxima = ultima ? new Date(new Date(ultima).getTime() + CADA_MIN * 60000).toISOString() : null;
-  const hoy = new Date().toLocaleDateString("es-PE", { ...LIMA, weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
   return (
     <div className="pd-wrap">
       <div className="pd-top">
-        <span className="pd-hoy">{hoy}</span>
+        <span className="pd-hoy">Periódico · archivo de lectura</span>
+        <Link className="pd-insights" href="/chat">Lectura por voz</Link>
         <Link className="pd-insights" href="/insights">Mis insights</Link>
       </div>
       <header className="pd-masthead">
-        <h1>Fixazo</h1>
-        <div className="pd-lema">Noticias del día para leer con criterio</div>
+        <h1>Ñawinchay</h1>
+        <div className="pd-lema">Periódico para leer con criterio</div>
       </header>
       <div className="pd-barra">
-        <span className="pd-vivo">{ultima ? <>Edición de las <b>{hora(ultima)}</b></> : "Preparando la primera edición"}</span>
-        <span>Tema de hoy: <b>Inteligencia artificial</b></span>
-        {proxima && <span>Próxima noticia: <b>{hora(proxima)}</b></span>}
+        <span>{ultima ? <>Última edición guardada: <b>{fechaEdicion(ultima)}</b></> : "Sin ediciones guardadas"}</span>
+        <span>Publicación manual · sin actualización automática configurada</span>
       </div>
 
       {!principal ? (
-        <p className="pd-vacio">Todavía no hay noticias publicadas. El pipeline agrega una cada {CADA_MIN} minutos.</p>
+        <p className="pd-vacio">Todavía no hay ediciones guardadas. Puedes usar la lectura por voz mientras se publica una edición manualmente.</p>
       ) : (
         <main className="pd-grid">
           <Link className="pd-card pd-principal" href={`/noticia/${principal.id}`}>
-            <div className="eyebrow">{principal.seccion} · {hace(principal.creada)}</div>
+            <div className="eyebrow">{principal.seccion} · {fechaEdicion(principal.creada)}</div>
             <h2>{principal.titular}</h2>
             <p className="pd-bajada">{principal.bajada}</p>
             <Miradas n={principal} />
@@ -94,7 +84,7 @@ async function Edicion() {
               <p className="eyebrow">Más noticias</p>
               {resto.map((n) => (
                 <Link key={n.id} className="pd-card pd-item" href={`/noticia/${n.id}`}>
-                  <div className="eyebrow">{n.seccion} · {hace(n.creada)}</div>
+                  <div className="eyebrow">{n.seccion} · {fechaEdicion(n.creada)}</div>
                   <h3>{n.titular}</h3>
                   <Miradas n={n} />
                   <Meta n={n} />
@@ -105,7 +95,7 @@ async function Edicion() {
         </main>
       )}
       <p className="pd-pie">
-        Fragmentos citados de sus medios con enlace al original. Las preguntas no te dan la respuesta: te ayudan a encontrarla.
+        Ediciones de archivo: las fechas corresponden al material guardado, no a noticias en tiempo real. Fragmentos citados de sus medios con enlace al original. Las preguntas no te dan la respuesta: te ayudan a encontrarla.
       </p>
     </div>
   );
