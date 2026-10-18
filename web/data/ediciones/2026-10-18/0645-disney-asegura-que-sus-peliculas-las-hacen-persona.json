@@ -1,0 +1,205 @@
+{
+  "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona",
+  "creada": "2026-10-18T11:45:20.504Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "elDiario.es",
+      "fecha": "18 de octubre de 2026",
+      "titular": "¿Utiliza Disney inteligencia artificial para crear sus películas? Uno de sus productores explica cómo trabajan",
+      "url": "https://www.eldiario.es/spin/utiliza-disney-inteligencia-artificial-crear-peliculas-productores-explica-pm_1_13589995.html"
+    },
+    {
+      "medio": "20minutos",
+      "fecha": "16 de octubre de 2026",
+      "titular": "\"Teman a las personas que crean la IA, no a las máquinas\" Joseph Gordon-Levitt, actor y director de cine, sobre el verdadero peligro de la inteligencia artificial",
+      "url": "https://computerhoy.20minutos.es/tecnologia/teman-las-personas-que-crean-ia-no-las-maquinas-joseph-gordon-levitt-actor-director-cine-sobre-verdadero-peligro-inteligencia-artificial_7049599_0.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.07426,
+    "segundos": 38
+  },
+  "noticia": {
+    "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona",
+    "seccion": "Tecnología",
+    "titular": "Disney asegura que sus películas las hacen personas, con IA en edición",
+    "bajada": "Compara cómo presentan ambos medios el papel de la inteligencia artificial en el cine y la tecnología.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "elDiario.es",
+        "texto": "cada fotograma es obra de artistas humanos"
+      },
+      {
+        "medio": "20minutos",
+        "texto": "Teman a las personas que crean la IA"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la relación entre Disney y la inteligencia artificial?",
+        "opciones": [
+          "Como una amenaza que quita trabajo a los artistas",
+          "Como una herramienta que el estudio usa con cuidado",
+          "Como un tema que no tiene nada que ver con el cine"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "elDiario.es",
+        "fecha": "18 de octubre de 2026",
+        "titular": "¿Utiliza Disney inteligencia artificial para crear sus películas? Uno de sus productores explica cómo trabajan",
+        "texto": "Roy Conli, productor de la nueva película de Disney, explica que cada fotograma es obra de artistas humanos, aunque reconoce la posible utilización de IA en herramientas de edición (…) \"Cada uno de los fotogramas lo realiza un artista, y creo que eso es importante\", ha asegurado Conli (…) \"Es posible que utilicemos algo de IA en algunas de las herramientas de edición con las que contamos, pero en lo que respecta al arte que se ve en pantalla, es obra de personas\", ha explicado.",
+        "url": "https://www.eldiario.es/spin/utiliza-disney-inteligencia-artificial-crear-peliculas-productores-explica-pm_1_13589995.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el productor Roy Conli, ¿quién crea lo que se ve en pantalla?",
+        "opciones": [
+          "Solo programas de inteligencia artificial",
+          "Personas, aunque puede haber IA en la edición",
+          "Ninguna de las dos cosas"
+        ],
+        "correcta": 1,
+        "bien": "Conli dice que lo que se ve en pantalla es obra de personas, y que la IA podría usarse solo en algunas herramientas de edición.",
+        "otra": "Fíjate en la frase: \"en lo que respecta al arte que se ve en pantalla, es obra de personas\".",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que las películas de Disney se hacen con personas?",
+        "opciones": [
+          "Un productor de la película, Roy Conli",
+          "Un programa de inteligencia artificial",
+          "Un vecino de Madrid que vio el estreno"
+        ],
+        "correcta": 0,
+        "bien": "Conli es productor de la película, así que conoce el proceso. Como trabaja para el estudio, podría querer dar una imagen positiva de Disney.",
+        "otra": "Piensa quién conoce de cerca cómo se hace la película y quién tiene un interés en explicarlo.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "Si quisieras comprobar que cada fotograma lo hace una persona, ¿qué buscarías?",
+        "opciones": [
+          "Los créditos de la película y los equipos de animación",
+          "El número de likes de la noticia",
+          "El precio de las entradas del cine"
+        ],
+        "correcta": 0,
+        "bien": "Los créditos y los equipos muestran quién trabajó en cada parte, lo que ayuda a verificar la afirmación.",
+        "otra": "Piensa en qué información muestra quién participó en la película, no en la popularidad de la noticia.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que las empresas deberían avisar cuando usan IA para crear contenidos?",
+        "opciones": [
+          "Sí, siempre",
+          "Solo cuando la IA crea la imagen final",
+          "No es necesario avisar"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "20minutos",
+        "fecha": "16 de octubre de 2026",
+        "titular": "\"Teman a las personas que crean la IA, no a las máquinas\" Joseph Gordon-Levitt, actor y director de cine, sobre el verdadero peligro de la inteligencia artificial",
+        "texto": "Joseph Gordon-Levitt pide supervisar a las empresas de IA, defender los derechos de autor de los artistas y regular la tecnología antes de que sea demasiado tarde. (…) Su crítica más contundente estuvo dirigida a la forma en que algunas empresas diseñan y entrenan sus modelos de inteligencia artificial. (…) Gordon-Levitt afirmó que estos sistemas están siendo desarrollados para fomentar vínculos emocionales con los usuarios",
+        "url": "https://computerhoy.20minutos.es/tecnologia/teman-las-personas-que-crean-ia-no-las-maquinas-joseph-gordon-levitt-actor-director-cine-sobre-verdadero-peligro-inteligencia-artificial_7049599_0.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0645-disney-asegura-que-sus-peliculas-las-hacen-persona-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que los dos textos ven la inteligencia artificial de forma distinta? Justifica con algo concreto de la noticia.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Piensa en quién habla en cada texto y en qué le preocupa.",
+          "Compara qué se dice sobre el uso de la IA: en el estudio o en las empresas que la diseñan."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_de_la_noticia",
+              "nombre": "Usa algo concreto",
+              "descripcion": "La respuesta menciona un dato, una persona o una frase concreta de los fragmentos.",
+              "ejemploCumple": "Conli dice que cada fotograma lo hace un artista, mientras Gordon-Levitt habla de empresas que entrenan la IA.",
+              "ejemploNoCumple": "Las dos noticias hablan de la IA y es un tema importante.",
+              "repregunta": "¿Qué dice exactamente cada persona? Busca una frase o un dato en los fragmentos."
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué las diferencias importan, no solo las nombra.",
+              "ejemploCumple": "Como Conli trabaja para Disney, puede dar una imagen positiva del estudio, y Gordon-Levitt se centra en el control de las empresas.",
+              "ejemploNoCumple": "Una dice una cosa y la otra dice otra.",
+              "repregunta": "¿Qué interés o punto de vista puede explicar esa diferencia?"
+            }
+          ],
+          "respuestaModelo": "Conli habla de su propio trabajo en Disney y defiende que son artistas quienes crean lo que se ve, mientras Gordon-Levitt se fija en las empresas que entrenan la IA y en los derechos de los creadores.",
+          "prohibido": [
+            "trabaja para Disney",
+            "se centra en las empresas",
+            "defiende que son artistas",
+            "derechos de los creadores"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 8
+}

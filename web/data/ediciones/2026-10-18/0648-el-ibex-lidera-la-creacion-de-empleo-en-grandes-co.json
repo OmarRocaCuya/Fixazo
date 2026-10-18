@@ -1,0 +1,30 @@
+{
+  "id": "2026-10-18-0648-el-ibex-lidera-la-creacion-de-empleo-en-grandes-co",
+  "creada": "2026-10-18T11:48:11.566Z",
+  "estado": "rechazada",
+  "motivo": [
+    "comprension: la respuesta usa «0,9», que no está en los fragmentos",
+    "variable: la respuesta usa «11.600», que no está en los fragmentos",
+    "variable: la respuesta usa «2025», que no está en los fragmentos"
+  ],
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "16 de octubre de 2026",
+      "titular": "Las empresas del Ibex lideran la creación de empleo entre las grandes cotizadas europeas | Economía | EL PAÍS",
+      "url": "https://elpais.com/economia/2026-10-17/las-empresas-del-ibex-lideran-la-creacion-de-empleo-entre-las-grandes-cotizadas-europeas.html"
+    },
+    {
+      "medio": "elDiario.es",
+      "fecha": "14 de octubre de 2026",
+      "titular": "Silicon Valley acapara el crédito para sus centros de datos de IA y ahoga a las empresas europeas",
+      "url": "https://www.eldiario.es/tecnologia/silicon-valley-acapara-credito-centros-datos-ia-ahoga-empresas-europeas_1_13582669.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.07404,
+    "segundos": 36
+  },
+  "noticia": null
+}

@@ -1,0 +1,24 @@
+{
+  "id": "2026-10-18-0646-el-fmi-destaca-el-crecimiento-por-la-ia-y-pide-ges",
+  "creada": "2026-10-18T11:46:12.675Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "ABC",
+      "fecha": "16 de octubre de 2026",
+      "titular": "El FMI alaba el crecimiento económico por la IA y llama a \"gestionar sus riesgos\"",
+      "url": "https://www.abc.es/economia/fmi-alaba-crecimiento-economico-ia-llama-gestionar-20261017121919-nt.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.07363,
+    "segundos": 27
+  },
+  "noticia": null
+}

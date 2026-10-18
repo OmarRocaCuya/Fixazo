@@ -1,0 +1,199 @@
+{
+  "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa",
+  "creada": "2026-10-18T11:49:54.370Z",
+  "estado": "reservada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El Comercio",
+      "fecha": "16 de octubre de 2026",
+      "titular": "La IA ayuda a los historiadores a descifrar mensajes napoleónicos y papiros carbonizados | Back in Time | Francia | OpenAI | ChatGPT | EL COMERCIO PERÚ",
+      "url": "https://elcomercio.pe/tecnologia/inteligencia-artificial/la-ia-ayuda-a-los-historiadores-a-descifrar-mensajes-napoleonicos-y-papiros-carbonizados-back-in-time-francia-openai-chatgpt-noticia/"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 4,
+    "usd": 0.08782,
+    "segundos": 46
+  },
+  "noticia": {
+    "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa",
+    "seccion": "Ciencia",
+    "titular": "La IA ayuda a descifrar mensajes napoleónicos y papiros carbonizados",
+    "bajada": "Compara cómo cuentan ambos medios el mismo avance y qué dicen los expertos.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El Comercio",
+        "texto": "Mensajes secretos de más de 200 años"
+      },
+      {
+        "medio": "El Comercio",
+        "texto": "Lo que aporta sobre todo la IA es perseverancia"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que lo contará este medio?",
+        "opciones": [
+          "Como un avance que cambia la forma de estudiar la historia",
+          "Como un peligro que podría reemplazar a los historiadores",
+          "Como una curiosidad sin mayor importancia"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El Comercio",
+        "fecha": "16 de octubre de 2026",
+        "titular": "La IA ayuda a los historiadores a descifrar mensajes napoleónicos y papiros carbonizados | Back in Time | Francia | OpenAI | ChatGPT | EL COMERCIO PERÚ",
+        "texto": "Mensajes secretos de más de 200 años fueron descifrados en un proyecto llamado “Back in time”, de Francia, que reúne a historiadores, criptógrafos y especialistas en inteligencia artificial (…) Sin herramientas digitales, el descifrado podría haber llevado semanas, pero un modelo de IA desarrollado por OpenAI, el creador de ChatGPT, la realizó en solo seis horas, explica el ingeniero.",
+        "url": "https://elcomercio.pe/tecnologia/inteligencia-artificial/la-ia-ayuda-a-los-historiadores-a-descifrar-mensajes-napoleonicos-y-papiros-carbonizados-back-in-time-francia-openai-chatgpt-noticia/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto de El Comercio, ¿qué tardó seis horas?",
+        "opciones": [
+          "Descifrar el mensaje de la carta de Napoleón con IA",
+          "Escanear los papiros carbonizados con rayos X",
+          "Publicar la carta en un archivo universitario en línea"
+        ],
+        "correcta": 0,
+        "bien": "Lo dice el texto: un modelo de IA hizo en seis horas un descifrado que sin herramientas digitales habría tomado semanas.",
+        "otra": "Los rayos X y la publicación en línea aparecen en el texto, pero no se mencionan como el trabajo de seis horas.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que la IA aporta sobre todo perseverancia?",
+        "opciones": [
+          "Carter Church, ingeniero en IA",
+          "Cécile Pierrot, criptógrafa del proyecto francés",
+          "Un historiador de la Universidad de Nápoles"
+        ],
+        "correcta": 0,
+        "bien": "Es el ingeniero en IA que hizo el descifrado, así que conoce el proceso desde adentro y tiene interés en destacar la tecnología.",
+        "otra": "Pierrot aparece en la nota, pero la frase de perseverancia es de quien logró descifrar la carta.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué dato de la nota podrías comprobar antes de creerlo?",
+        "opciones": [
+          "Que la IA hizo el descifrado en solo seis horas",
+          "Que el proyecto se llama “Back in time”",
+          "Que los papiros fueron carbonizados por el Vesubio"
+        ],
+        "correcta": 0,
+        "bien": "Es una cifra de tiempo que depende de quien la afirma; buscarías la fuente del ingeniero o una prueba del experimento.",
+        "otra": "Los otros datos son nombres o hechos históricos que se pueden verificar con archivos y fuentes conocidas.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que la IA debería usarse para estudiar la historia?",
+        "opciones": [
+          "Sí, porque permite analizar más documentos",
+          "No, porque puede equivocarse al interpretar textos",
+          "Depende de cómo se revisen sus resultados"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El Comercio",
+        "fecha": "16 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Sin herramientas digitales, el descifrado podría haber llevado semanas, pero un modelo de IA desarrollado por OpenAI, el creador de ChatGPT, la realizó en solo seis horas, explica el ingeniero. (…) \"Lo que aporta sobre todo la IA es perseverancia\", dice a AFP.",
+        "url": "https://elcomercio.pe/tecnologia/inteligencia-artificial/la-ia-ayuda-a-los-historiadores-a-descifrar-mensajes-napoleonicos-y-papiros-carbonizados-back-in-time-francia-openai-chatgpt-noticia/"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0649-la-ia-ayuda-a-descifrar-mensajes-napoleonicos-y-pa-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que el avance de la IA en historia es importante o no?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en el tiempo que tardó el descifrado con y sin IA.",
+          "Piensa en qué tanto documento puede revisar un historiador solo."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "uso_de_la_nota",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona un dato, quién lo dice o una frase con tus palabras.",
+              "ejemploCumple": "Dice que la IA hizo en seis horas lo que tomaba semanas.",
+              "ejemploNoCumple": "Dice solo que la IA es buena o mala.",
+              "repregunta": "¿Qué dato de la nota te hace pensar eso?"
+            },
+            {
+              "id": "razon_propia",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué, no solo qué opina.",
+              "ejemploCumple": "Porque analizar millones de páginas sería imposible sin ella.",
+              "ejemploNoCumple": "Me parece importante.",
+              "repregunta": "¿Por qué eso hace que el avance sea importante o no?"
+            }
+          ],
+          "respuestaModelo": "Es importante porque la IA hizo en seis horas un trabajo que tomaba semanas, y permite analizar millones de páginas que ningún humano podría leer.",
+          "prohibido": [
+            "seis horas",
+            "semanas",
+            "millones de páginas",
+            "imposible sin esta tecnología"
+          ]
+        }
+      }
+    ]
+  },
+  "orden": 10
+}

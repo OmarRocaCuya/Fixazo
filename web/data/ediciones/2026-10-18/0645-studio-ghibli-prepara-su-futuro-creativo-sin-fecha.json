@@ -1,0 +1,200 @@
+{
+  "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha",
+  "creada": "2026-10-18T11:45:46.094Z",
+  "estado": "retirada",
+  "motivo": [
+    "Los fragmentos no hablan de IA"
+  ],
+  "fuentes": [
+    {
+      "medio": "El País",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Viaje al Studio Ghibli: el presente lento y el futuro misterioso de la animación eterna | Cine: estrenos y críticas | EL PAÍS",
+      "url": "https://elpais.com/cultura/cine/2026-10-18/viaje-al-studio-ghibli-el-presente-lento-y-el-futuro-misterioso-de-la-animacion-eterna.html"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 6,
+    "usd": 0.09987,
+    "segundos": 26
+  },
+  "noticia": {
+    "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha",
+    "seccion": "Ciencia",
+    "titular": "Studio Ghibli prepara su futuro creativo sin fechas límite",
+    "bajada": "Compara cómo presenta esta nota al estudio y a su visión del arte. ¿Qué te deja con más dudas?",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El País",
+        "texto": "El gran secreto de Ghibli es qué viene ahora"
+      },
+      {
+        "medio": "El País",
+        "texto": "me gustaría ver obras creadas por seres humanos"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la noticia del estudio Ghibli?",
+        "opciones": [
+          "Como una noticia sobre el futuro incierto de la productora",
+          "Como un reportaje sobre la historia de sus películas",
+          "Como una crítica de la última película del estudio"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Viaje al Studio Ghibli: el presente lento y el futuro misterioso de la animación eterna | Cine: estrenos y críticas | EL PAÍS",
+        "texto": "La respuesta de Ghibli es que todavía no se ha definido nada, siempre se piensa que estamos ocultando algo, pero la realidad es que todavía no hemos tomado una decisión (…) Nosotros no trabajamos con fechas límite, no nos ponemos ese tipo de objetivos. (…) Ghibli no es solo una empresa que debe generar beneficios; es sobre todo un estudio para crear arte.",
+        "url": "https://elpais.com/cultura/cine/2026-10-18/viaje-al-studio-ghibli-el-presente-lento-y-el-futuro-misterioso-de-la-animacion-eterna.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿qué dice el presidente de Ghibli sobre sus proyectos?",
+        "opciones": [
+          "Que ya tienen una película anunciada para el próximo año",
+          "Que todavía no han tomado una decisión sobre lo que sigue",
+          "Que el estudio va a cerrar en los próximos meses"
+        ],
+        "correcta": 1,
+        "bien": "El fragmento dice que todavía no han tomado una decisión, aunque el estudio sigue creando.",
+        "otra": "Fíjate en la frase en la que el presidente explica que todavía no se ha definido nada.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla en estos fragmentos y qué interés puede tener?",
+        "opciones": [
+          "El presidente de la productora Studio Ghibli",
+          "Un periodista independiente sin relación con el estudio",
+          "Un espectador que vio las películas en el cine"
+        ],
+        "correcta": 0,
+        "bien": "Es el presidente de la compañía, así que quiere mostrar cómo trabaja su estudio y cuidar su imagen.",
+        "otra": "Recuerda que quien habla de su propio trabajo suele destacar lo que le conviene que se sepa.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué palabra o frase intenta convencerte de que el estudio no tiene problemas?",
+        "opciones": [
+          "Ghibli no es solo una empresa que debe generar beneficios",
+          "Nosotros no trabajamos con fechas límite",
+          "Miyazaki dibuja cada día"
+        ],
+        "correcta": 2,
+        "bien": "Esa frase transmite que el estudio sigue activo y creando, lo que da tranquilidad al lector.",
+        "otra": "Fíjate en qué frase da una imagen de actividad constante, sin necesidad de dar datos.",
+        "habilidad": "Ver qué palabras buscan convencer"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué opinas sobre que la animación se haga sin fechas límite?",
+        "opciones": [
+          "Me parece bien que se tome el tiempo que necesite",
+          "Creo que sin fechas el trabajo puede quedar estancado",
+          "Depende del tipo de proyecto y de quién lo financie"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El País",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Para una secuencia de tres segundos, en la que aparecen multitud de personajes, hemos llegado a invertir seis meses. (…) En mi opinión personal, me gustaría ver obras creadas por seres humanos.",
+        "url": "https://elpais.com/cultura/cine/2026-10-18/viaje-al-studio-ghibli-el-presente-lento-y-el-futuro-misterioso-de-la-animacion-eterna.html"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0645-studio-ghibli-prepara-su-futuro-creativo-sin-fecha-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que el estudio prefiere el tiempo a la eficiencia? Justifica con algo de la noticia.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca lo que el presidente dice sobre la empresa y sobre el arte.",
+          "Fíjate en el tiempo que tardaron en una secuencia concreta."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "La respuesta menciona un dato, una cifra o una frase concreta del texto.",
+              "ejemploCumple": "Porque para una secuencia de tres segundos han llegado a invertir seis meses.",
+              "ejemploNoCumple": "Porque los estudios de animación suelen ser lentos.",
+              "repregunta": "¿Qué dato de la noticia te ayuda a explicar su forma de trabajar?"
+            },
+            {
+              "id": "da_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué ocurre, no solo qué ocurre.",
+              "ejemploCumple": "Creo que lo hacen porque el arte necesita tiempo para pensar, no solo para generar beneficios.",
+              "ejemploNoCumple": "Trabajan así y ya.",
+              "repregunta": "¿Qué dice el texto sobre para qué existe el estudio, además de ganar dinero?"
+            }
+          ],
+          "respuestaModelo": "Prefieren el tiempo porque, según el texto, Ghibli es un estudio para crear arte y no trabaja con fechas límite. Por ejemplo, una secuencia de tres segundos les llevó seis meses.",
+          "prohibido": [
+            "estudio para crear arte",
+            "no trabajan con fechas límite",
+            "seis meses por tres segundos",
+            "el tiempo es esencial para pensar"
+          ]
+        }
+      }
+    ]
+  }
+}
