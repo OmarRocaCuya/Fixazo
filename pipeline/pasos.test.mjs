@@ -69,6 +69,9 @@ test('valida la generación y rechaza citas inventadas', () => {
   const errores = validarGeneracion(mala, textoA, textoB);
   assert.ok(errores.some((x) => x.includes('fragmento_b.citas[0]')));
   assert.ok(errores.some((x) => x.includes('comprension')));
+  const fuera = generacionValida();
+  fuera.variable = { tipo: 'dato_o_afirmacion', titulo: '¿Qué dato comprobarías?', opciones: ['El 94% de tareas', 'La fecha'], correcta: 0 };
+  assert.ok(validarGeneracion(fuera, textoA, textoB).some((x) => x.includes('«94»')));
   assert.deepEqual(validarGeneracion({ apta: false, motivo_no_apta: 'tema violento' }, textoA, textoB), ['No apta: tema violento']);
 });
 

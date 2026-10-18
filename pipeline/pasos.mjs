@@ -90,6 +90,14 @@ export function validarGeneracion(g, textoA, textoB) {
     if (!q?.titulo || !Array.isArray(q.opciones) || q.opciones.length < 2) e.push(`${k}: faltan título u opciones`);
     else if (!Number.isInteger(q.correcta) || !q.opciones[q.correcta]) e.push(`${k}: la opción correcta no existe`);
   }
+  // Las respuestas correctas no pueden depender de datos que el joven no leyó.
+  const visibleFragmentos = normalizar([...(g.fragmento_a?.citas ?? []), ...(g.fragmento_b?.citas ?? [])].join(' '));
+  for (const k of ['comprension', 'procedencia', 'variable']) {
+    const correcta = g[k]?.opciones?.[g[k]?.correcta];
+    for (const num of String(correcta ?? '').match(/\d+(?:[.,]\d+)?/g) ?? []) {
+      if (!visibleFragmentos.includes(normalizar(num))) e.push(`${k}: la respuesta usa «${num}», que no está en los fragmentos`);
+    }
+  }
   if (!['dato_o_afirmacion', 'palabra_que_convence', 'hecho_u_opinion', 'como_comprobarlo'].includes(g.variable?.tipo)) e.push('variable: tipo desconocido');
   if (!g.prediccion?.opciones?.length || !g.postura?.opciones?.length) e.push('Faltan predicción o postura');
   const v = g.voz;

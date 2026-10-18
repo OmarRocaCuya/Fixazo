@@ -22,7 +22,7 @@ async function Contenido({ params }: { params: Promise<{ id: string }> }) {
     <div className="pd-wrap pd-angosto">
       <div className="pd-top">
         <Link className="pd-marca" href="/">Fixazo</Link>
-        <Link className="pd-insights" href="/insights">Mis insights</Link>
+        <Link className="pd-insights" href="/insights" target="_blank">Mis insights ↗</Link>
       </div>
       <NoticiaFlow noticia={noticiaPublica(noticia)} />
     </div>

@@ -68,6 +68,7 @@ Reglas:
 4. mirada_a y mirada_b: frase TEXTUAL corta (3 a 10 palabras) de cada nota o voz que muestre cómo ve el hecho.
 5. titular: neutro, de 4 a 10 palabras. Describe lo que la NOTA A informa, sin exagerar ni contradecirla y sin tomar partido. bajada: hasta 14 palabras, invita a comparar.
 5b. fuente_a.medio y fuente_b.medio: el nombre del medio como lo conoce la gente (por ejemplo, Infobae o El País), nunca el dominio.
+5c. TODAS las preguntas se tienen que poder responder SOLO con fragmento_a y fragmento_b, que es lo único que lee el joven. No uses datos, cifras ni nombres que no estén en esos fragmentos.
 6. prediccion: antes de leer, "¿cómo crees que lo contará este medio?", 3 opciones.
 7. comprension: pregunta literal sobre lo que dice fragmento_a; 3 opciones; una correcta según el texto.
 8. procedencia: ¿quién habla o quién dice algo? Incluye el rol real (cargo, empresa, institución) y distractores plausibles. "bien" explica qué interés tiene, sin juzgar.

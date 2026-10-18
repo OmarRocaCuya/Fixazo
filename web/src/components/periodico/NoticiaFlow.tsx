@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AudioAnalyzer } from "@/lib/browser/audio";
 import { createTranscriber, speechRecognitionSupported, type Transcriber } from "@/lib/browser/transcriber";
 import { voiceErrorMessage } from "@/lib/browser/voice-support";
-import { guardarResultado, idAlumno, type ResultadoNoticia } from "@/lib/periodico/progreso";
+import { guardarAvance, guardarResultado, idAlumno, leerAvance, leerResultados, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
 import type { Fragmento, NoticiaPublica, PreguntaOpciones, PreguntaVozPublica, RespuestaVoz } from "@/lib/periodico/tipos";
 import { countFillers, detectLongPauses } from "@/lib/signals/prosody";
 import type { FrameFeature } from "@/lib/types";
@@ -244,10 +244,18 @@ function BloqueVoz({ p, noticiaId, onFin }: { p: PreguntaVozPublica; noticiaId: 
   );
 }
 
+// En el servidor no hay localStorage: se espera al navegador y se monta con el avance guardado.
 export default function NoticiaFlow({ noticia }: { noticia: NoticiaPublica }) {
-  const [hasta, setHasta] = useState(0);
-  const [elegidas, setElegidas] = useState<Elegidas>({});
-  const [fin, setFin] = useState<ResultadoNoticia | null>(null);
+  const enNavegador = useSyncExternalStore(() => () => undefined, () => true, () => false);
+  if (!enNavegador) return <div className="pd-flujo"><p className="pd-vacio">Cargando…</p></div>;
+  const r = leerResultados()[noticia.id];
+  return <Flujo key={noticia.id} noticia={noticia} inicial={leerAvance(noticia.id)} terminada={r && !r.enCurso ? r : null} />;
+}
+
+function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inicial: Avance | null; terminada: ResultadoNoticia | null }) {
+  const [hasta, setHasta] = useState(inicial?.hasta ?? 0);
+  const [elegidas, setElegidas] = useState<Elegidas>(inicial?.elegidas ?? {});
+  const [fin, setFin] = useState<ResultadoNoticia | null>(terminada);
   const ultimo = useRef<HTMLDivElement | null>(null);
   const pasos = noticia.pasos;
 
@@ -260,10 +268,18 @@ export default function NoticiaFlow({ noticia }: { noticia: NoticiaPublica }) {
 
   useEffect(() => {
     if (hasta > 0) bajar(ultimo.current);
-  }, [hasta]);
+    guardarAvance(noticia.id, { hasta, elegidas });
+  }, [hasta, elegidas, noticia.id]);
 
   function avanzar(desde: number) {
     setTimeout(() => setHasta((h) => Math.max(h, desde + 1)), 650);
+  }
+
+  // Progreso en vivo para Mis insights mientras la noticia está a medio responder.
+  function guardarParcial(e: Elegidas) {
+    const habilidades: Record<string, boolean> = {};
+    for (const p of pasos) if (p.tipo === "opciones" && p.habilidad && p.correcta !== null && e[p.id] !== undefined) habilidades[p.habilidad] = e[p.id] === p.correcta;
+    guardarResultado({ noticiaId: noticia.id, enCurso: true, titular: noticia.titular, fecha: new Date().toISOString(), habilidades, postura: null, seguridad: null, decision: null, voz: null });
   }
 
   function terminar(v: FinVoz) {
@@ -323,7 +339,9 @@ export default function NoticiaFlow({ noticia }: { noticia: NoticiaPublica }) {
               p={p}
               elegida={elegidas[p.id]}
               onElegir={(o) => {
-                setElegidas((e) => ({ ...e, [p.id]: o }));
+                const nuevas = { ...elegidas, [p.id]: o };
+                setElegidas(nuevas);
+                guardarParcial(nuevas);
                 avanzar(k);
               }}
             />
@@ -342,7 +360,7 @@ export default function NoticiaFlow({ noticia }: { noticia: NoticiaPublica }) {
             ))}
           </ul>
           <div className="row">
-            <Link className="btn primary" href="/insights">Ver mis insights</Link>
+            <Link className="btn primary" href="/insights" target="_blank">Ver mis insights</Link>
             <Link className="btn ghost" href="/">Volver a la portada</Link>
           </div>
         </div>

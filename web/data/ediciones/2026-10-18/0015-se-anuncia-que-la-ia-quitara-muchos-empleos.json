@@ -1,8 +1,10 @@
 {
   "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos",
   "creada": "2026-10-18T05:15:51.644Z",
-  "estado": "publicada",
-  "motivo": null,
+  "estado": "retirada",
+  "motivo": [
+    "Titular no neutro: contradice la nota (prompt anterior). Retirada a mano."
+  ],
   "fuentes": [
     {
       "medio": "diariosocialista.net",

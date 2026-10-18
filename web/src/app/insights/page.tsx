@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { MetricCard } from "@/components/ui";
-import { leerResultados, type ResultadoNoticia } from "@/lib/periodico/progreso";
+import { leerResultados, suscribirProgreso, type ResultadoNoticia } from "@/lib/periodico/progreso";
 
 const vacio: ResultadoNoticia[] = [];
 let cache: { raw: string; lista: ResultadoNoticia[] } = { raw: "", lista: vacio };
@@ -23,10 +23,13 @@ const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "�
 const contar = (xs: string[]) => Object.entries(xs.reduce<Record<string, number>>((m, x) => ({ ...m, [x]: (m[x] ?? 0) + 1 }), {})).sort((a, b) => b[1] - a[1]);
 
 export default function Insights() {
-  const lista = useSyncExternalStore(() => () => undefined, leer, () => vacio);
+  // Se actualiza en vivo si la noticia está abierta en otra pestaña.
+  const todas = useSyncExternalStore(suscribirProgreso, leer, () => vacio);
+  const lista = todas.filter((r) => !r.enCurso);
+  const enCurso = todas.filter((r) => r.enCurso);
 
   const habilidades = new Map<string, { si: number; total: number }>();
-  for (const r of lista) for (const [h, ok] of Object.entries(r.habilidades)) {
+  for (const r of todas) for (const [h, ok] of Object.entries(r.habilidades)) {
     const v = habilidades.get(h) ?? { si: 0, total: 0 };
     habilidades.set(h, { si: v.si + (ok ? 1 : 0), total: v.total + 1 });
   }
@@ -52,7 +55,10 @@ export default function Insights() {
         <p className="muted">Se guarda solo en este navegador. No es una nota: muestra qué ya haces y qué practicar.</p>
       </header>
 
-      {lista.length === 0 ? (
+      {enCurso.length > 0 && (
+        <p className="pd-calibracion">En curso: {enCurso.map((r) => r.titular).join(" · ")}. Tus habilidades se actualizan mientras respondes.</p>
+      )}
+      {todas.length === 0 ? (
         <div className="pd-card">
           <p>Todavía no terminaste ninguna noticia. Cuando termines una, aquí vas a ver tus habilidades y cómo explicas con tu voz.</p>
           <Link className="btn" href="/">Ir a la portada</Link>

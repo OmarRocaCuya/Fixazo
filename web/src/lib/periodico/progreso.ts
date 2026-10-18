@@ -4,6 +4,8 @@
 
 export interface ResultadoNoticia {
   noticiaId: string;
+  /** true mientras la noticia está a medio responder. */
+  enCurso?: boolean;
   titular: string;
   fecha: string;
   /** Habilidad → acertó o no (preguntas con respuesta esperada). */
@@ -53,4 +55,33 @@ export function idAlumno(): string {
   } catch {
     return "sin-id";
   }
+}
+
+/** Avance a medio camino: dónde se quedó y qué eligió, para volver al mismo lugar. */
+export interface Avance {
+  hasta: number;
+  elegidas: Record<string, number>;
+}
+
+export function leerAvance(id: string): Avance | null {
+  try {
+    return JSON.parse(localStorage.getItem(`fixazo:avance:${id}`) ?? "null");
+  } catch {
+    return null;
+  }
+}
+
+export function guardarAvance(id: string, a: Avance) {
+  try {
+    localStorage.setItem(`fixazo:avance:${id}`, JSON.stringify(a));
+  } catch {
+    /* sin almacenamiento no se recuerda el lugar */
+  }
+}
+
+/** Avisa a otras pestañas (Mis insights) que cambió el progreso. */
+export function suscribirProgreso(cb: () => void): () => void {
+  const f = (e: StorageEvent) => e.key?.startsWith("fixazo:") && cb();
+  window.addEventListener("storage", f);
+  return () => window.removeEventListener("storage", f);
 }

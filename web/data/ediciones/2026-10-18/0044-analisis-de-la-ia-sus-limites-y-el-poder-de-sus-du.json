@@ -1,0 +1,197 @@
+{
+  "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du",
+  "creada": "2026-10-18T05:44:12.148Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "Diario Socialista",
+      "fecha": "18 de octubre de 2026",
+      "titular": "La IA no nos va a matar; sus dueños, puede que sí",
+      "url": "https://diariosocialista.net/2026/10/18/la-ia-no-nos-va-a-matar-sus-duenos-puede-que-si"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 16,
+    "usd": 0.00377,
+    "segundos": 33
+  },
+  "noticia": {
+    "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du",
+    "seccion": "Tecnología",
+    "titular": "Análisis de la IA: sus límites y el poder de sus dueños",
+    "bajada": "Lee el fragmento de la IA y compara con la otra voz para ver qué dice cada una.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "Diario Socialista",
+        "texto": "la IA no nos va a matar"
+      },
+      {
+        "medio": "Diario Socialista",
+        "texto": "sus dueños, puede que sí"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "Antes de leer: ¿cómo crees que contará este medio la IA?",
+        "opciones": [
+          "Como una herramienta neutral que todos podemos usar igual",
+          "Como algo que depende de quién la controla y con qué fines",
+          "Como una amenaza que ya nos está quitando el control"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "Diario Socialista",
+        "fecha": "18 de octubre de 2026",
+        "titular": "La IA no nos va a matar; sus dueños, puede que sí",
+        "texto": "La expresión Inteligencia Artificial nació como una etiqueta acuñada por John McCarthy en 1955 para pedir financiación para el seminario de Dartmouth (…) Lo que hoy se denomina inteligencia artificial no es una máquina única, sino un conjunto heterogéneo de técnicas estadísticas",
+        "url": "https://diariosocialista.net/2026/10/18/la-ia-no-nos-va-a-matar-sus-duenos-puede-que-si"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento de Diario Socialista, ¿de qué depende el salto reciente de la IA?",
+        "opciones": [
+          "De un descubrimiento intelectual repentino",
+          "De la disponibilidad de capital, datos y cómputo concentrados en pocas manos",
+          "De que los videojuegos inventaron la inteligencia artificial"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que el salto depende de capital, datos y cómputo concentrados en muy pocas manos, no de una idea nueva.",
+        "otra": "Fíjate en la última frase del fragmento: habla de dónde están el dinero y los datos, no de una gran idea.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que la IA depende de capital y datos concentrados en pocas manos?",
+        "opciones": [
+          "Un investigador independiente sin vínculos con empresas",
+          "Un medio que se presenta como análisis desde una mirada socialista",
+          "Una empresa tecnológica que vende sus propios chips"
+        ],
+        "correcta": 1,
+        "bien": "Es un medio con una mirada política definida, que quiere explicar la IA desde las relaciones de producción; eso influye en qué destaca.",
+        "otra": "Pregúntate qué busca el medio al resaltar quién controla los recursos, y si lo dice de forma explícita.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Cuál de estas frases es un hecho comprobable y cuál es una opinión?",
+        "opciones": [
+          "La expresión IA fue acuñada por John McCarthy en 1955 (hecho)",
+          "Los dueños de la IA son peligrosos para la humanidad (opinión)",
+          "Ambas: la primera se puede verificar, la segunda expresa un juicio"
+        ],
+        "correcta": 2,
+        "bien": "La fecha de 1955 se puede comprobar en registros históricos; la idea de peligro es un juicio de valor.",
+        "otra": "Compara qué frase puedes verificar buscando una fuente y cuál depende de cómo mira el autor el tema.",
+        "habilidad": "Separar hechos de opiniones"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que la IA debería estar en manos de empresas privadas o de instituciones públicas?",
+        "opciones": [
+          "Principalmente de empresas privadas, porque innovan más rápido",
+          "Principalmente de instituciones públicas, para que sirva a todos",
+          "Depende del uso, y conviene regularla en ambos casos"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "Diario Socialista",
+        "fecha": "18 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Lo que cambió hacia 2012 no fue la idea, sino su base material: las enormes bases de datos de las plataformas digitales y los chips o procesadores gráficos (GPU) diseñados para los videojuegos permitieron entrenar redes mucho más profundas. (…) El salto reciente depende, así, menos de un descubrimiento intelectual que de la disponibilidad de capital, datos y cómputo concentrados en muy pocas manos.",
+        "url": "https://diariosocialista.net/2026/10/18/la-ia-no-nos-va-a-matar-sus-duenos-puede-que-si"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0044-analisis-de-la-ia-sus-limites-y-el-poder-de-sus-du-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué el texto dice que el riesgo está en los dueños de la IA y no en la máquina?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca en el fragmento de Diario Socialista la frase sobre dónde está el dinero y los datos.",
+          "Piensa en qué cambia si esos recursos los tiene una sola empresa o muchas personas."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa un dato concreto de la noticia",
+              "descripcion": "Menciona algo específico del texto, como la cita sobre capital, datos y cómputo, o el origen en 1955.",
+              "ejemploCumple": "El texto dice que el salto depende de capital, datos y cómputo concentrados en pocas manos.",
+              "ejemploNoCumple": "Creo que las empresas son malas.",
+              "repregunta": "¿Qué frase del fragmento te hace pensar en quién controla la IA?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón para su respuesta",
+              "descripcion": "Explica por qué lo que dice el texto lleva a esa conclusión, no solo la repite.",
+              "ejemploCumple": "Como el avance depende de recursos que tienen pocas empresas, lo que decidan esas empresas pesa más que la técnica.",
+              "ejemploNoCumple": "Es lo que dice el texto y ya.",
+              "repregunta": "¿Qué pasaría con la IA si esos recursos estuvieran repartidos entre muchos?"
+            }
+          ],
+          "respuestaModelo": "El texto dice que el avance depende de capital, datos y cómputo concentrados en pocas manos, así que quien controla esos recursos decide para qué se usa la IA.",
+          "prohibido": [
+            "capital, datos y cómputo concentrados en pocas manos",
+            "depende de quién la controla",
+            "no es la máquina, son los dueños"
+          ]
+        }
+      }
+    ]
+  }
+}

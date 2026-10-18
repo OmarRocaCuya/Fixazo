@@ -1,0 +1,205 @@
+{
+  "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no-",
+  "creada": "2026-10-18T05:43:39.003Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "Diario Socialista",
+      "fecha": "18 de octubre de 2026",
+      "titular": "La factura financiera pendiente de la Inteligencia Artificial",
+      "url": "https://diariosocialista.net/2026/10/18/la-factura-financiera-pendiente-de-la-inteligencia-artificial"
+    },
+    {
+      "medio": "Infobae",
+      "fecha": "15 de octubre de 2026",
+      "titular": "El mundo no puede permitirse fallar con la Inteligencia Artificial - Infobae",
+      "url": "https://www.infobae.com/america/opinion/2026/10/16/el-mundo-no-puede-permitirse-fallar-con-la-inteligencia-artificial"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 22,
+    "usd": 0.00602,
+    "segundos": 55
+  },
+  "noticia": {
+    "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no-",
+    "seccion": "Tecnología",
+    "titular": "La inversión en inteligencia artificial podría no rendir lo previsto",
+    "bajada": "Compara cómo presentan estas dos notas el riesgo económico de la inteligencia artificial y qué datos eligen.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "Diario Socialista",
+        "texto": "asimetría financiera que apenas aparece en el relato público"
+      },
+      {
+        "medio": "Infobae",
+        "texto": "La IA promete un mundo más productivo"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la inversión en IA?",
+        "opciones": [
+          "Como una gran oportunidad, sin riesgos importantes",
+          "Como una inversión enorme que quizá no dé ganancias",
+          "Como un tema que no le interesa al público"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "Diario Socialista",
+        "fecha": "18 de octubre de 2026",
+        "titular": "La factura financiera pendiente de la Inteligencia Artificial",
+        "texto": "Rentabilizar los casi nueve billones de dólares invertidos en centros de datos en EEUU exigiría generar 3,5 billones anuales en ingresos: 35 veces más que los que hoy suman OpenAI y Anthropic. (…) La expansión de la inteligencia artificial descansa sobre esta asimetría financiera que apenas aparece en el relato público de la industria",
+        "url": "https://diariosocialista.net/2026/10/18/la-factura-financiera-pendiente-de-la-inteligencia-artificial"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el primer fragmento, ¿qué problema señala la nota A?",
+        "opciones": [
+          "Que la inversión en centros de datos es mucho mayor que los ingresos que generan",
+          "Que los modelos de IA no funcionan bien",
+          "Que faltan trabajadores en el sector tecnológico"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que rentabilizar esa inversión exigiría ingresos 35 veces mayores que los actuales.",
+        "otra": "Fíjate en la cifra del fragmento: habla de cuánto dinero hace falta ganar frente a lo que se gana hoy.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién hace la advertencia sobre el riesgo de decepción en la nota B?",
+        "opciones": [
+          "Un periodista deportivo",
+          "El Fondo Monetario Internacional, en un análisis del organismo",
+          "Una empresa de ropa"
+        ],
+        "correcta": 1,
+        "bien": "La nota B es de un análisis del Fondo Monetario Internacional, que tiene interés en que los países gestionen bien la transición.",
+        "otra": "Revisa de qué organismo viene el texto y qué papel cumple en la economía mundial.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "La cifra de 35 veces más, ¿cómo comprobarías que es correcta?",
+        "opciones": [
+          "Buscando de dónde sale el cálculo y quién lo hizo",
+          "Confiando en que el medio siempre dice la verdad",
+          "Preguntando a un amigo que use mucho internet"
+        ],
+        "correcta": 0,
+        "bien": "Buscar el origen del cálculo y su autor permite revisar si los datos son confiables.",
+        "otra": "Pensar en cómo se obtiene un dato te ayuda a no creerlo solo porque aparece en una nota.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Crees que la inversión en IA es una burbuja o una oportunidad?",
+        "opciones": [
+          "Es sobre todo una oportunidad a largo plazo",
+          "Hay señales de burbuja, pero también beneficios reales",
+          "No tengo suficiente información para opinar"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "Infobae",
+        "fecha": "15 de octubre de 2026",
+        "titular": "El mundo no puede permitirse fallar con la Inteligencia Artificial - Infobae",
+        "texto": "La IA promete un mundo más productivo, pero debemos gestionar los riesgos durante la transición (…) El riesgo radica en que las expectativas podrían superar rápidamente a los avances reales en productividad, preparando el terreno para una decepción a corto plazo.",
+        "url": "https://www.infobae.com/america/opinion/2026/10/16/el-mundo-no-puede-permitirse-fallar-con-la-inteligencia-artificial"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0043-la-inversion-en-inteligencia-artificial-podria-no--voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué la nota A y la nota B llegan a conclusiones distintas sobre la IA?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Piensa en qué número o palabra de cada nota llama más la atención.",
+          "Pregúntate qué quiere destacar cada medio al hablar de la IA."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa un dato concreto",
+              "descripcion": "La respuesta menciona al menos una cifra o un hecho de la noticia.",
+              "ejemploCumple": "La nota A dice que hacen falta 35 veces más ingresos de los que hay hoy.",
+              "ejemploNoCumple": "Las dos notas hablan de cosas distintas.",
+              "repregunta": "¿Qué cifra o dato de la nota A podrías mencionar?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué la diferencia de enfoque importa, no solo la describe.",
+              "ejemploCumple": "Porque la nota A se fija en el dinero y la nota B en los beneficios para la sociedad.",
+              "ejemploNoCumple": "Una nota dice una cosa y la otra dice otra.",
+              "repregunta": "¿Qué crees que hace que una nota se fije más en el dinero y otra en la sociedad?"
+            }
+          ],
+          "respuestaModelo": "La nota A se fija en la diferencia entre lo invertido y lo que se gana, mientras la nota B destaca el potencial de productividad y los riesgos de la transición.",
+          "prohibido": [
+            "35 veces más",
+            "asimetría financiera",
+            "promete un mundo más productivo",
+            "decepción a corto plazo",
+            "riesgos durante la transición"
+          ]
+        }
+      }
+    ]
+  }
+}
