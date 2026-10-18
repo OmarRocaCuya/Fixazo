@@ -20,6 +20,11 @@ class BoundedPrivateRequests:
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
+        # Platform liveness checks carry no app credential. This exact public
+        # route discloses no configuration or model state; all useful APIs stay
+        # private, including /health. Never load a model from a health probe.
+        if scope.get("path") == "/" and scope.get("method") in ("GET", "HEAD"):
+            return await self.app(scope, receive, send)
         headers = {key.decode("latin-1"): value.decode("latin-1") for key, value in scope.get("headers", [])}
         try:
             authorize(self.settings, headers.get("authorization", ""))
@@ -78,6 +83,10 @@ def create_app(settings: Settings | None = None, engine: Runtime | None = None) 
 
     api = FastAPI(title="Ñawinchay · servicio privado Meta", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     api.add_middleware(BoundedPrivateRequests, settings=settings)
+
+    @api.api_route("/", methods=["GET", "HEAD"])
+    async def liveness():
+        return JSONResponse({"service": "nawinchay-indigenous", "process": "running", "modelReadiness": "authentication-required"}, headers={"Cache-Control": "no-store, private"})
 
     @api.exception_handler(ServiceError)
     async def known_error(_request, error):

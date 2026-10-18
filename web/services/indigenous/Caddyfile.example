@@ -1,0 +1,9 @@
+# FRAGMENT ONLY: review and merge into an EXISTING host-based Caddy config.
+# This file does not start Caddy, open ports or modify any existing site.
+# Replace the reserved example domain after DNS/ownership checks.
+meta.example.invalid {
+    request_body {
+        max_size 1010000
+    }
+    reverse_proxy 127.0.0.1:18080
+}

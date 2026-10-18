@@ -9,3 +9,4 @@ models/
 *.pth
 *.safetensors
 *.bin
+build/

@@ -62,8 +62,27 @@ describe("ASR grant route", () => {
     expect(await response.json()).toEqual({ error: "asr-unavailable" });
     expect(vi.getTimerCount()).toBe(0);
   });
-  it("does not expose upstream authentication failure payloads", async () => {
-    mockedFetch.mockResolvedValue(Response.json({ error: "private-deepgram-key details" }, { status: 401 }));
+  it.each([401, 403])("distinguishes upstream credential/permission rejection %s without reading its payload", async (status) => {
+    const upstream = Response.json({ error: "private-deepgram-key details", token: "permanent-key-must-not-be-forwarded" }, { status });
+    const readBody = vi.spyOn(upstream, "json");
+    mockedFetch.mockResolvedValue(upstream);
+    const response = await POST(request());
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: "asr-credentials-rejected" });
+    expect(readBody).not.toHaveBeenCalled();
+    expect(mockedFetch).toHaveBeenCalledOnce();
+    expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+  it("distinguishes provider rate limiting without exposing its body or retrying", async () => {
+    mockedFetch.mockResolvedValue(Response.json({ error: "private-deepgram-key details" }, { status: 429 }));
+    const response = await POST(request());
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({ error: "asr-provider-rate-limit" });
+    expect(mockedFetch).toHaveBeenCalledOnce();
+    expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+  it.each([500, 503])("keeps upstream %s failures generic and redacted", async (status) => {
+    mockedFetch.mockResolvedValue(Response.json({ error: "private-deepgram-key details" }, { status }));
     const response = await POST(request());
     expect(response.status).toBe(502);
     expect(await response.json()).toEqual({ error: "asr-unavailable" });

@@ -7,6 +7,7 @@ import sys
 import threading
 import unittest
 import wave
+import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -14,7 +15,8 @@ HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE / ".test-deps"))
 sys.path.insert(0, str(HERE))
 
-from core import Audio, Runtime, ServiceError, Settings, authorize, validate_translation, validate_wav
+from core import Audio, Runtime, ServiceError, Settings, authorize, configured_api_key, validate_translation, validate_wav
+from healthcheck import check, is_ready
 
 
 KEY = "a-long-private-server-key-for-tests-only"
@@ -164,6 +166,60 @@ class CoreTests(unittest.TestCase):
         with patch.dict(os.environ, {"ENABLE_RESEARCH_TRANSLATION": "false", "NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED": "true", "INDIGENOUS_ASR_MODEL": "omniASR_LLM_300M_v2", "INDIGENOUS_DEVICE": "cpu"}):
             self.assertFalse(Settings.from_env().translation_enabled)
 
+    def test_secret_file_is_supported_without_logging_or_env_override(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "api-secret"
+            path.write_text(KEY + "\n", encoding="utf-8")
+            with patch.dict(os.environ, {"INDIGENOUS_API_KEY": "", "INDIGENOUS_API_KEY_FILE": str(path)}):
+                self.assertEqual(configured_api_key(), KEY)
+            with patch.dict(os.environ, {"INDIGENOUS_API_KEY": KEY, "INDIGENOUS_API_KEY_FILE": str(path)}):
+                with self.assertRaisesRegex(ValueError, "not both"):
+                    configured_api_key()
+            path.write_bytes(b"x" * 512 + b"\r\n")
+            with patch.dict(os.environ, {"INDIGENOUS_API_KEY": "", "INDIGENOUS_API_KEY_FILE": str(path)}):
+                self.assertEqual(configured_api_key(), "x" * 512)
+
+    def test_unreadable_or_large_secret_file_fails_closed_without_path_in_error(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "private-path-do-not-echo"
+            for content in (None, "x" * 513):
+                if content:
+                    path.write_text(content, encoding="utf-8")
+                with patch.dict(os.environ, {"INDIGENOUS_API_KEY": "", "INDIGENOUS_API_KEY_FILE": str(path)}):
+                    with self.assertRaises(ValueError) as error:
+                        configured_api_key()
+                    self.assertNotIn(str(path), str(error.exception))
+
+    def test_invalid_bearer_characters_or_too_long_key_do_not_configure_service(self):
+        for key in ("x" * 513, "x" * 32 + "\n", "x" * 31 + "é", "x" * 31 + " "):
+            self.assertFalse(Settings(api_key=key).configured)
+
+
+class HealthProbeTests(unittest.TestCase):
+    def test_readiness_requires_asr_and_any_enabled_translation_model(self):
+        self.assertFalse(is_ready(None))
+        self.assertFalse(is_ready({"configured": False}))
+        payload = {"configured": True, "asr": {"ready": True}, "translation": {"enabled": True, "ready": False}}
+        self.assertFalse(is_ready(payload))
+        payload["translation"]["ready"] = True
+        self.assertTrue(is_ready(payload))
+        payload["translation"] = {"enabled": False, "ready": False}
+        self.assertTrue(is_ready(payload))
+
+    def test_probe_only_fetches_authenticated_state_and_does_not_infer(self):
+        response = Mock(status=200)
+        response.read.return_value = b'{"configured":true,"asr":{"ready":true},"translation":{"enabled":false}}'
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        opener = Mock()
+        opener.open.return_value = response
+        with patch.dict(os.environ, {"INDIGENOUS_API_KEY": KEY, "INDIGENOUS_API_KEY_FILE": ""}):
+            self.assertTrue(check(opener))
+        request = opener.open.call_args.args[0]
+        self.assertEqual(request.full_url, "http://127.0.0.1:8080/health")
+        self.assertEqual(request.get_header("Authorization"), f"Bearer {KEY}")
+        self.assertIsNone(request.data)
+
 
 class HTTPTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -203,6 +259,14 @@ class HTTPTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(payload["asr"]["ready"])
         self.assertIn(b"no-store", headers[b"cache-control"])
         self.runtime._asr_loader.assert_not_called()
+
+    async def test_public_liveness_never_exposes_configuration_or_loads_models(self):
+        status, payload, _ = await self.request("/", authenticated=False)
+        self.assertEqual(status, 200)
+        self.assertEqual(payload, {"service": "nawinchay-indigenous", "process": "running", "modelReadiness": "authentication-required"})
+        self.assertNotIn(KEY, json.dumps(payload))
+        self.runtime._asr_loader.assert_not_called()
+        self.assertEqual((await self.request("/health", authenticated=False))[0], 401)
 
     async def test_unconfigured_service_denies_even_health(self):
         from app import create_app
@@ -244,6 +308,36 @@ class HTTPTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["error"], "unsupported-translation-language")
         self.assertEqual((await self.request("/translate", "POST", body=b"bad"))[0], 415)
         self.assertEqual((await self.request("/translate", "POST", body=b"bad", content_type="application/json"))[0], 400)
+
+
+class DeploymentDocsTests(unittest.TestCase):
+    def test_vercel_variables_match_frontend_contract_and_keep_python_secret_separate(self):
+        document = (HERE / "DEPLOY_VPS.md").read_text(encoding="utf-8")
+        for name in ("INDIGENOUS_BACKEND_URL", "INDIGENOUS_BACKEND_TOKEN", "INDIGENOUS_TRANSLATION_RESEARCH_ONLY"):
+            self.assertIn(f"`{name}`" if name != "INDIGENOUS_TRANSLATION_RESEARCH_ONLY" else f"`{name}=true`", document)
+        self.assertNotIn("INDIGENOUS_API_URL", document)
+        self.assertIn("`INDIGENOUS_API_KEY_FILE` y `INDIGENOUS_API_KEY` pertenecen al backend Python", document)
+        # Keep this service test runnable as a standalone copied folder; when
+        # inside the monorepo, also check the actual frontend policy source.
+        policy = HERE.parents[1] / "src" / "lib" / "server" / "voice-policy.ts"
+        if policy.is_file():
+            source = policy.read_text(encoding="utf-8")
+            self.assertIn("INDIGENOUS_BACKEND_URL", source)
+            self.assertIn("INDIGENOUS_BACKEND_TOKEN", source)
+
+    def test_dokploy_service_keeps_selected_resources_private_and_routes_only_meta(self):
+        compose = (HERE / "compose.dokploy.yaml").read_text(encoding="utf-8")
+        self.assertIn("  meta:\n", compose)
+        self.assertIn("context: .", compose)
+        self.assertIn("${INDIGENOUS_MEMORY_LIMIT:-7g}", compose)
+        self.assertIn("${INDIGENOUS_CPU_LIMIT:-2}", compose)
+        self.assertIn("${INDIGENOUS_ASR_MODEL:-omniASR_CTC_300M_v2}", compose)
+        self.assertIn("${INDIGENOUS_API_KEY:?", compose)
+        self.assertNotIn("\n    ports:", compose)
+        self.assertNotIn("INDIGENOUS_API_KEY_FILE:", compose)
+        self.assertIn('      - "8080"', compose)
+        self.assertIn("model_cache:/home/app/.cache", compose)
+        self.assertNotIn("traefik.http.routers", compose)
 
 
 if __name__ == "__main__":

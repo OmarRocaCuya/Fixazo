@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import io
 import os
+from pathlib import Path
 import threading
 import wave
 from dataclasses import dataclass
@@ -28,6 +29,27 @@ class ServiceError(Exception):
         self.status = status
 
 
+def configured_api_key() -> str:
+    """Support Docker's explicit *_FILE convention, never echo secret paths."""
+    value = os.getenv("INDIGENOUS_API_KEY", "")
+    secret_file = os.getenv("INDIGENOUS_API_KEY_FILE", "")
+    if not secret_file:
+        return value
+    if value:
+        raise ValueError("Configure either INDIGENOUS_API_KEY or INDIGENOUS_API_KEY_FILE, not both")
+    try:
+        with Path(secret_file).open("rb") as stream:
+            raw = stream.read(515)
+        if len(raw) > 514:
+            raise ValueError("secret too large")
+        value = raw.decode("utf-8").strip()
+        if len(value) > 512:
+            raise ValueError("secret too large")
+        return value
+    except (OSError, UnicodeError, ValueError):
+        raise ValueError("Cannot read the configured API secret file") from None
+
+
 @dataclass(frozen=True)
 class Settings:
     api_key: str = ""
@@ -44,7 +66,7 @@ class Settings:
         if model not in ASR_MODELS or device not in ("auto", "cuda", "cpu"):
             raise ValueError("Unsupported model/device configuration")
         return cls(
-            api_key=os.getenv("INDIGENOUS_API_KEY", ""), asr_model=model, device=device,
+            api_key=configured_api_key(), asr_model=model, device=device,
             research_translation=os.getenv("ENABLE_RESEARCH_TRANSLATION") == "true",
             research_accepted=os.getenv("NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED") == "true",
             warmup=os.getenv("INDIGENOUS_WARMUP") == "true",
@@ -52,7 +74,7 @@ class Settings:
 
     @property
     def configured(self) -> bool:
-        return len(self.api_key.strip()) >= 32
+        return 32 <= len(self.api_key) <= 512 and all(33 <= ord(character) <= 126 for character in self.api_key)
 
     @property
     def translation_enabled(self) -> bool:
