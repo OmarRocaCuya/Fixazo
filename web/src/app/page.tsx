@@ -5,6 +5,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import EstadoNoticia from "@/components/periodico/EstadoNoticia";
 import { ExplorarVozYLenguas, NavPeriodico } from "@/components/periodico/NavPeriodico";
+import { RachaChip } from "@/components/periodico/Racha";
 import { noticiasPublicadas, type NoticiaGuardada } from "@/lib/periodico/ediciones";
 
 const LIMA = { timeZone: "America/Lima" } as const;
@@ -53,7 +54,10 @@ async function Edicion() {
     <div className="pd-wrap">
       <div className="pd-top">
         <span className="pd-hoy">{ultima ? `Edición del ${fechaEdicion(ultima)}` : ""}</span>
-        <NavPeriodico actual="/" />
+        <div className="pd-top-der">
+          <RachaChip />
+          <NavPeriodico actual="/" />
+        </div>
       </div>
       <header className="pd-masthead">
         <h1>Fixazo</h1>

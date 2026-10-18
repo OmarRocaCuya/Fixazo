@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { guardarAvance, guardarResultado, leerAvance, leerResultados, registrarVozQuiz, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
 import { acumularMetricas, emocionDesdeEstimacion, type MetricasVoz } from "@/lib/periodico/voz-quiz";
 import { estimarEmocionRespuesta } from "@/lib/browser/quiz-emotion";
+import { calcularRacha, type Racha } from "@/lib/periodico/racha";
 import type { Fragmento, NoticiaPublica, PreguntaOpciones, PreguntaVozPublica, RespuestaVoz } from "@/lib/periodico/tipos";
 import { apoyoAdaptativo, capacidadEvaluador, eleccionesParaJuez, MAX_INTENTOS_OPCIONES, opcionDesdeVoz, puedeContinuar, registrarIntento, restaurarIntentos, resumenProtocolo, type IntentosOpciones } from "@/lib/periodico/adaptacion";
 import { countFillers } from "@/lib/signals/prosody";
@@ -213,6 +214,8 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
     return primeraSinRespuesta >= 0 ? Math.min(solicitada, primeraSinRespuesta) : solicitada;
   });
   const [fin, setFin] = useState<ResultadoNoticia | null>(terminada);
+  // Solo al terminar en esta visita: reabrir una noticia no suma otro día.
+  const [racha, setRacha] = useState<Racha | null>(null);
   const [borradorOpcion, setBorradorOpcion] = useState<BorradorOpcion | null>(null);
   const [respuestaVoz, setRespuestaVoz] = useState("");
   const [porVoz, setPorVoz] = useState(false);
@@ -311,7 +314,9 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         pausasLargas: metricasExplicacion?.pausasLargas ?? null, segundosHablando: metricasExplicacion?.segundosHablando ?? null, porVoz: v.porVoz,
       } : null,
     };
-    guardarResultado(r); setFin(leerResultados()[noticia.id] ?? r); setRespuestaVoz(""); setBorradorOpcion(null);
+    guardarResultado(r);
+    setRacha(calcularRacha(Object.values(leerResultados()).filter((x) => !x.enCurso).map((x) => x.fecha)));
+    setFin(leerResultados()[noticia.id] ?? r); setRespuestaVoz(""); setBorradorOpcion(null);
     setTimeout(() => bajar(ultimo.current), 300);
   }
 
@@ -347,7 +352,10 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         </div>
       ))}
       {visibles < pasos.length - 1 && !fin && <p className="pd-candado">Confirma tu elección y pulsa Continuar para abrir el siguiente paso.</p>}
-      {fin && <div ref={ultimo}><InformeFinal resultado={fin} /></div>}
+      {fin && <div ref={ultimo}>
+        {racha?.estado === "hoy" && <p className="pd-racha-fin">🔥 Sumaste el día {racha.dias} de tu racha{racha.marca ? `. ${racha.marca} días seguidos leyendo con criterio` : ""}</p>}
+        <InformeFinal resultado={fin} />
+      </div>}
     </div>
   );
 }

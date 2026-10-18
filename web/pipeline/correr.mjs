@@ -1,19 +1,20 @@
 // Pipeline del periódico: Exa busca en la lista cerrada de medios → filtra → empareja 2 medios → Tavily extrae → Haiku genera → el código valida → guarda.
-// Uso:  node pipeline/correr.mjs            (una noticia)
-//       node pipeline/correr.mjs --cada 30  (una noticia cada 30 minutos, para la demo)
+// Uso (desde web/):  node pipeline/correr.mjs            (una noticia)
+//                    node pipeline/correr.mjs --cada 30  (una noticia cada 30 minutos)
+// También lo usa la app en /generar (botón de demo) vía /api/periodico/generar.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { armarNoticia, dominio, esNota, filtrarCandidatas, limpiarTexto, MEDIOS, medioDe, mismoHecho, validarGeneracion } from './pasos.mjs';
 
 try {
-  process.loadEnvFile('.env.local');
+  process.loadEnvFile(/* turbopackIgnore: true */ '.env.local');
 } catch {
   /* las claves pueden venir del entorno */
 }
 
 const MODELO = 'anthropic/claude-haiku-5.5'; // ponytail: único modelo permitido por el equipo
-const DIR = 'web/data/ediciones'; // dentro de web/ para que se despliegue con la app
+const DIR = process.env.EDICIONES_DIR ?? join(process.cwd(), 'data', 'ediciones'); // se corre desde web/, como la app
 const CONSULTAS = ['inteligencia artificial', 'ChatGPT OpenAI anuncio', 'inteligencia artificial jóvenes estudiantes', 'inteligencia artificial empleo', 'deepfake inteligencia artificial'];
 let creditos = 0;
 let usd = 0;
@@ -161,28 +162,37 @@ async function generar(notaA, notaB, errores) {
 // --- Orquestación --------------------------------------------------------------
 async function leerUsadas() {
   try {
-    return new Set(JSON.parse(await readFile(join(DIR, 'usadas.json'), 'utf8')));
+    return new Set(JSON.parse(await readFile(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, 'usadas.json'), 'utf8')));
   } catch {
     return new Set();
   }
 }
 
-export async function unaNoticia() {
+// En Vercel no se puede escribir en disco: las notas ya usadas se recuerdan en memoria para no repetir en cada clic.
+const usadasEnMemoria = new Set();
+
+/** Genera una noticia. `alPaso({ paso, texto })` recibe el avance (lo muestra el botón de demo). */
+export async function unaNoticia({ alPaso } = {}) {
   const usadas = await leerUsadas();
+  for (const u of usadasEnMemoria) usadas.add(u);
   const t0 = Date.now();
   creditos = 0;
   usd = 0;
-  const log = (m) => console.log(`  ${m}`);
+  const log = (m, paso, texto = m) => {
+    console.log(`  ${m}`);
+    if (paso) alPaso?.({ paso, texto });
+  };
+  alPaso?.({ paso: 'buscar', texto: 'Buscando noticias de IA de las últimas 24 horas en 19 medios confiables…' });
 
   // 1 · Recolectar y 2 · filtrar
   const resultados = (await Promise.all(CONSULTAS.map((q) => buscar(q, 1)))).flat();
   const candidatas = filtrarCandidatas(resultados, usadas)
     .filter((r) => enEspanol(r.title) && esNota(r.url) && medioDe(r.url).lista === 'A')
     .sort((a, b) => new Date(b.published_date ?? 0) - new Date(a.published_date ?? 0));
-  log(`1-2 · ${resultados.length} resultados, ${candidatas.length} candidatas aptas en español`);
+  log(`1-2 · ${resultados.length} resultados, ${candidatas.length} candidatas aptas en español`, 'filtrar', `${resultados.length} notas encontradas · ${candidatas.length} aptas para jóvenes, en español y que no son opinión`);
 
   for (const principal of candidatas.slice(0, 4)) {
-    log(`→ probando: ${principal.title.slice(0, 80)} (${dominio(principal.url)})`);
+    log(`→ probando: ${principal.title.slice(0, 80)} (${dominio(principal.url)})`, 'elegir', `${medioDe(principal.url).medio}: «${principal.title.slice(0, 90)}»`);
     // 3 · Emparejar con otro medio que cuente el mismo hecho
     const palabrasClave = principal.title.split(/\s+/).filter((w) => w.length > 4).slice(0, 7).join(' ');
     const encontradas = [...(await buscar(principal.title, 4, 8, 'AB')), ...(await buscar(palabrasClave, 4, 8, 'AB'))];
@@ -190,7 +200,7 @@ export async function unaNoticia() {
       .filter((r) => esNota(r.url) && medioDe(r.url).medio !== medioDe(principal.url).medio && mismoHecho(principal.title, r.title, 2) && enEspanol(r.title))
       .sort((a, b) => deLista(b.url) - deLista(a.url)); // primero un segundo medio de la lista A
     const pareja = parecidas[0] ?? null;
-    log(`3 · pareja: ${pareja ? `${pareja.title.slice(0, 70)} (${dominio(pareja.url)})` : 'ninguna; se usará otra voz de la misma nota'}`);
+    log(`3 · pareja: ${pareja ? `${pareja.title.slice(0, 70)} (${dominio(pareja.url)})` : 'ninguna; se usará otra voz de la misma nota'}`, 'pareja', pareja ? `El mismo hecho en ${medioDe(pareja.url).medio}` : 'No hay otro medio con el mismo hecho: se usará otra voz dentro de la nota');
 
     // 4 · Extraer el texto completo (solo para trabajar; no se publica entero)
     const ext = await extraer([principal.url, ...(pareja ? [pareja.url] : [])]);
@@ -198,22 +208,26 @@ export async function unaNoticia() {
     const notaA = { url: principal.url, titular: principal.title, texto: textoDe(principal.url) };
     const notaB = pareja ? { url: pareja.url, titular: pareja.title, texto: textoDe(pareja.url) } : null;
     if (notaA.texto.split(' ').length < 120) {
-      log('4 · la nota principal no se pudo leer bien; siguiente');
+      log('4 · la nota principal no se pudo leer bien; siguiente', 'extraer', 'No se pudo leer bien el texto; se prueba con otra noticia');
+      usadasEnMemoria.add(principal.url);
       usadas.add(principal.url);
       continue;
     }
-    log(`4 · extraídas: A ${notaA.texto.split(' ').length} palabras${notaB ? `, B ${notaB.texto.split(' ').length}` : ''}`);
+    log(`4 · extraídas: A ${notaA.texto.split(' ').length} palabras${notaB ? `, B ${notaB.texto.split(' ').length}` : ''}`, 'extraer', `Texto extraído: ${notaA.texto.split(' ').length} palabras${notaB ? ` y ${notaB.texto.split(' ').length} del segundo medio` : ''}`);
+    alPaso?.({ paso: 'generar', texto: 'Claude Haiku elige fragmentos textuales y escribe las 8 preguntas…' });
 
     // 5 · Generar y 6 · validar (con un intento de corrección)
     let g = await generar(notaA, notaB?.texto ? notaB : null);
     const fuenteBTexto = () => (g.fuente_b?.misma_nota || !notaB?.texto ? notaA.texto : notaB.texto);
     let errores = validarGeneracion(g, notaA.texto, fuenteBTexto());
     if (errores.length && g.apta) {
-      log(`6 · ${errores.length} problemas, se pide corrección: ${errores.slice(0, 3).join(' | ')}`);
+      log(`6 · ${errores.length} problemas, se pide corrección: ${errores.slice(0, 3).join(' | ')}`, 'validar', `El código encontró ${errores.length} ${errores.length === 1 ? 'problema' : 'problemas'} (${errores[0]}) y pide una corrección`);
       g = await generar(notaA, notaB?.texto ? notaB : null, errores);
       errores = validarGeneracion(g, notaA.texto, fuenteBTexto());
     }
     usadas.add(principal.url);
+    usadasEnMemoria.add(principal.url);
+    alPaso?.({ paso: 'validar', texto: errores.length ? `No pasó el control: ${errores[0]}` : 'Citas literales y cifras comprobadas en el texto' });
 
     const ahora = new Date();
     const dia = ahora.toLocaleDateString('sv-SE', { timeZone: 'America/Lima' });
@@ -233,19 +247,26 @@ export async function unaNoticia() {
       costo: { creditos_tavily: creditos, usd: Number(usd.toFixed(5)), segundos: Math.round((Date.now() - t0) / 1000) },
       noticia: errores.length ? null : armarNoticia(id, g, fuenteA, fuenteB),
     };
-    await mkdir(join(DIR, dia), { recursive: true });
-    await writeFile(join(DIR, dia, `${hora}-${slug(g.titular || principal.title)}.json`), JSON.stringify(registro, null, 2));
-    await writeFile(join(DIR, 'usadas.json'), JSON.stringify([...usadas], null, 2));
-    log(`7 · ${registro.estado.toUpperCase()}: ${g.titular || principal.title} · ${creditos} créditos Tavily · US$${usd.toFixed(4)} · ${registro.costo.segundos}s`);
+    try {
+      await mkdir(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, dia), { recursive: true });
+      await writeFile(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, dia, `${hora}-${slug(g.titular || principal.title)}.json`), JSON.stringify(registro, null, 2));
+      await writeFile(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ DIR, 'usadas.json'), JSON.stringify([...usadas], null, 2));
+      registro.guardada = true;
+    } catch {
+      registro.guardada = false; // disco de solo lectura (Vercel): se devuelve sin guardar
+    }
+    log(`7 · ${registro.estado.toUpperCase()}: ${g.titular || principal.title} · ${creditos} créditos Tavily · US$${usd.toFixed(4)} · ${registro.costo.segundos}s`,
+      registro.estado === 'publicada' ? 'listo' : 'rechazada',
+      registro.estado === 'publicada' ? `Lista en ${registro.costo.segundos} s · US$ ${usd.toFixed(3)}` : 'El control la rechazó; se prueba con otra noticia');
     if (!errores.length) return registro;
   }
-  log('No se publicó ninguna noticia en esta vuelta.');
+  log('No se publicó ninguna noticia en esta vuelta.', 'nada', 'Esta vez ninguna noticia pasó el control. Prueba de nuevo en unos minutos.');
   return null;
 }
 
 const cada = process.argv.includes('--cada') ? Number(process.argv[process.argv.indexOf('--cada') + 1]) : 0;
 // pathToFileURL: la ruta puede tener espacios ("Hack the Andes 2026").
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   do {
     console.log(`[${new Date().toLocaleTimeString('es-PE', { timeZone: 'America/Lima' })}] Nueva vuelta del pipeline`);
     await unaNoticia().catch((e) => console.error('  Error:', e.message));

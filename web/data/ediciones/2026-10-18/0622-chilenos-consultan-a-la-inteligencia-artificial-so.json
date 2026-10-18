@@ -1,0 +1,30 @@
+{
+  "id": "2026-10-18-0622-chilenos-consultan-a-la-inteligencia-artificial-so",
+  "creada": "2026-10-18T11:22:43.940Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_a.citas[0] no está literal en la nota",
+    "mirada_a no es textual",
+    "Contenido sensible para menores"
+  ],
+  "fuentes": [
+    {
+      "medio": "El Tiempo",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Riesgos de la inteligencia artificial para la salud mental: algunas precauciones frente a ese terapeuta que llevamos en el bolsillo",
+      "url": "https://www.eltiempo.com/salud/riesgos-de-la-inteligencia-artificial-para-la-salud-mental-algunas-precauciones-frente-a-ese-terapeuta-que-llevamos-en-el-bolsillo-3594076"
+    },
+    {
+      "medio": "BioBioChile",
+      "fecha": "13 de octubre de 2026",
+      "titular": "3 de cada 10 chilenos le preguntan a la inteligencia artificial por sus problemas de salud | Ciencia y Tecnología | BioBioChile",
+      "url": "https://www.biobiochile.cl/noticias/ciencia-y-tecnologia/pc-e-internet/2026/10/14/3-de-cada-10-chilenos-le-preguntan-a-la-inteligencia-artificial-por-sus-problemas-de-salud.shtml"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 2,
+    "usd": 0.05238,
+    "segundos": 35
+  },
+  "noticia": null
+}
