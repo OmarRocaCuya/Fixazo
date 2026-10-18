@@ -6,7 +6,7 @@ import threading
 from fastapi import FastAPI, Request
 from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from core import MAX_AUDIO_BYTES, MAX_BODY_BYTES, Runtime, ServiceError, Settings, authorize
 
@@ -97,8 +97,7 @@ def create_app(settings: Settings | None = None, engine: Runtime | None = None) 
         # This probes configuration/load state, NOT model quality or accuracy.
         return engine.status()
 
-    @api.post("/transcribe")
-    async def transcribe(request: Request):
+    async def read_audio(request: Request, infer):
         if not request.headers.get("content-type", "").startswith("multipart/form-data"):
             raise ServiceError("multipart-required", 415)
         try:
@@ -107,11 +106,19 @@ def create_app(settings: Settings | None = None, engine: Runtime | None = None) 
                     raise ServiceError("file-and-language-required", 422)
                 audio = await form["file"].read(MAX_AUDIO_BYTES + 1)
                 language = form["language"]
-                return await run_in_threadpool(engine.transcribe, audio, language)
+                return await run_in_threadpool(infer, audio, language)
         except ServiceError:
             raise
         except Exception:
             raise ServiceError("invalid-multipart-audio", 422) from None
+
+    @api.post("/transcribe")
+    async def transcribe(request: Request):
+        return await read_audio(request, engine.transcribe)
+
+    @api.post("/transcribe-timed")
+    async def transcribe_timed(request: Request):
+        return await read_audio(request, engine.transcribe_timed)
 
     @api.post("/translate")
     async def translate(request: Request):
@@ -125,6 +132,33 @@ def create_app(settings: Settings | None = None, engine: Runtime | None = None) 
         except Exception:
             raise ServiceError("invalid-json", 400) from None
         return await run_in_threadpool(engine.translate, payload)
+
+    @api.post("/speak")
+    async def speak(request: Request):
+        if request.headers.get("content-type", "").split(";")[0] != "application/json":
+            raise ServiceError("json-required", 415)
+        raw = await request.body()
+        if len(raw) > 4000:
+            raise ServiceError("speech-request-too-large", 413)
+        try:
+            payload = await request.json()
+        except Exception:
+            raise ServiceError("invalid-json", 400) from None
+        audio, language, model = await run_in_threadpool(engine.speak, payload)
+        return Response(audio.wav, media_type="audio/wav", headers={"X-Speech-Language": language, "X-Speech-Model": model, "X-Speech-Research-Only": "true", "X-Speech-Duration": str(audio.seconds)})
+
+    @api.post("/dialogue")
+    async def dialogue(request: Request):
+        if request.headers.get("content-type", "").split(";")[0] != "application/json":
+            raise ServiceError("json-required", 415)
+        raw = await request.body()
+        if len(raw) > 40_000:
+            raise ServiceError("dialogue-request-too-large", 413)
+        try:
+            payload = await request.json()
+        except Exception:
+            raise ServiceError("invalid-json", 400) from None
+        return await run_in_threadpool(engine.dialogue, payload)
 
     return api
 

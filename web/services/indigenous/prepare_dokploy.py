@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 
-BUILD_FILES = ("Dockerfile", "requirements.txt", "requirements-models.txt", "constraints.txt", "app.py", "core.py", "healthcheck.py")
+BUILD_FILES = ("Dockerfile", "requirements.txt", "requirements-models.txt", "constraints.txt", "app.py", "core.py", "healthcheck.py", "ctc_timing.py", "speech.py", "dialogue.py")
 SERVICE_PATH = "web/services/indigenous"
 CONTEXT = re.compile(r"(?m)^ {6}context:[ \t]*\.[ \t]*$")
 MAX_SOURCE_BYTES = 2_000_000
@@ -19,7 +19,7 @@ def build_payload(compose_id: str, compose_file: str, sources: dict[str, str]) -
     if not isinstance(compose_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", compose_id):
         raise ValueError("Invalid compose ID")
     if set(sources) != set(BUILD_FILES):
-        raise ValueError("Build sources must match the exact seven-file allowlist")
+        raise ValueError("Build sources must match the exact reviewed allowlist")
     if len(CONTEXT.findall(compose_file)) != 1:
         raise ValueError("Expected exactly one unquoted build context '.' in the reviewed Compose")
     compose_file = CONTEXT.sub("      context: ../files/indigenous", compose_file, count=1)

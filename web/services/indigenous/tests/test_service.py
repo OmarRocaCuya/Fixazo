@@ -227,7 +227,7 @@ class HTTPTests(unittest.IsolatedAsyncioTestCase):
         self.runtime = engine(Settings(api_key=KEY, research_translation=True, research_accepted=True))
         self.app = create_app(self.runtime.settings, self.runtime)
 
-    async def request(self, path, method="GET", *, body=b"", chunks=None, authenticated=True, content_type=None):
+    async def request(self, path, method="GET", *, body=b"", chunks=None, authenticated=True, content_type=None, binary=False):
         headers = [(b"authorization", f"Bearer {KEY}".encode())] if authenticated else []
         if content_type:
             headers.append((b"content-type", content_type.encode()))
@@ -244,7 +244,7 @@ class HTTPTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.wait_for(self.app(scope, receive, send), timeout=3)
         start = next(event for event in sent if event["type"] == "http.response.start")
         raw = b"".join(event.get("body", b"") for event in sent if event["type"] == "http.response.body")
-        return start["status"], json.loads(raw), dict(start["headers"])
+        return start["status"], raw if binary else json.loads(raw), dict(start["headers"])
 
     @staticmethod
     def multipart(audio, language="quy_Latn"):

@@ -23,7 +23,7 @@ class DokployPreparationTests(unittest.TestCase):
         files = sources()
         result = build_payload("new-compose-id", COMPOSE, files)
         self.assertEqual(set(result), {"composeFile", "mounts", "sha256s"})
-        self.assertEqual(len(result["mounts"]), 7)
+        self.assertEqual(len(result["mounts"]), 10)
         self.assertEqual(set(result["sha256s"]), set(BUILD_FILES))
         for mount in result["mounts"]:
             filename = mount["filePath"].removeprefix("indigenous/")
@@ -81,7 +81,7 @@ class DokployPreparationTests(unittest.TestCase):
             compose, files = read_snapshot(HERE)
         self.assertEqual(compose, COMPOSE)
         self.assertEqual(files, sources())
-        self.assertEqual(len(calls), 10)
+        self.assertEqual(len(calls), 3 + len(BUILD_FILES))
         self.assertEqual(sum(command == ["rev-parse", "--verify", "HEAD"] for command in calls), 1)
 
     def test_git_failure_never_prints_raw_diagnostics(self):

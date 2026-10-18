@@ -36,10 +36,20 @@ class DependencyContractTests(unittest.TestCase):
         self.assertIn(("omnilingual_asr.models.inference.pipeline", "ASRInferencePipeline"), from_imports)
         self.assertIn(("transformers", "AutoTokenizer"), from_imports)
         self.assertIn(("transformers", "AutoModelForSeq2SeqLM"), from_imports)
+        self.assertIn(("transformers", "VitsModel"), from_imports)
+        self.assertIn(("llama_cpp", "Llama"), from_imports)
         # Imports catch NumPy/Arrow and Torch/fairseq2 ABI failures. They must
         # never become a model constructor, from_pretrained or weight download.
         calls = [node for node in ast.walk(parsed) if isinstance(node, ast.Call)]
         self.assertTrue(all(isinstance(call.func, ast.Name) and call.func.id == "print" for call in calls))
+
+    def test_local_dialogue_uses_pinned_portable_cpu_build(self):
+        self.assertIn("llama-cpp-python==0.3.36", (HERE / "constraints.txt").read_text(encoding="utf-8"))
+        docker = (HERE / "Dockerfile").read_text(encoding="utf-8")
+        self.assertIn('CMAKE_ARGS="-DGGML_CUDA=OFF -DGGML_NATIVE=OFF"', docker)
+        self.assertIn("CMAKE_BUILD_PARALLEL_LEVEL=2", docker)
+        self.assertIn("cmake ninja-build", docker)
+        self.assertIn("speech.py dialogue.py", docker)
 
 
 if __name__ == "__main__":

@@ -31,6 +31,10 @@ INDIGENOUS_ASR_MODEL=ELEGIR_CTC_O_LLM_TRAS_REVISAR_RAM
 INDIGENOUS_TORCH_THREADS=2
 ENABLE_RESEARCH_TRANSLATION=true
 NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED=true
+# Opcionales autorizados; revisar memoria antes de habilitar.
+ENABLE_RESEARCH_SPEECH=true
+MMS_NONCOMMERCIAL_RESEARCH_ACCEPTED=true
+ENABLE_LOCAL_READING_LLM=true
 ```
 
 Los valores `ELEGIR_…` son marcadores, no configuración ejecutable. El usuario confirmó investigación/demo no comercial; eso justifica los dos indicadores NLLB para esta demo, no una licencia comercial. No activar voz infantil sin el consentimiento/política del piloto correspondientes.
@@ -85,4 +89,6 @@ Cuando HTTPS responda y ambas pruebas reales pasen, el operador configura `INDIG
 
 Usar etiquetas de imagen por revisión, conservar la anterior y actualizar **solo** el servicio de este proyecto. Para volver, restaurar `INDIGENOUS_IMAGE_TAG` a la imagen anterior y ejecutar `up -d --no-build` sobre este Compose; verificar carga y pruebas de nuevo. No ejecutar `docker system prune`, borrar volúmenes, detener todos los contenedores ni usar `down` sobre otros proyectos. Una reversión de código no justifica rotar o borrar secretos por sorpresa.
 
-**Comprobado localmente:** 42 pruebas de core, ASGI, secretos, readiness, contratos Dokploy y payload de fuentes comprometidas; sin pesos ni inferencia real. El operador confirmó inventario y seleccionó Dokploy; seguir [su guía](DEPLOY_DOKPLOY.md). **Pendiente:** build Linux, carga de modelos, pruebas reales, dominio administrado y conexión con Vercel.
+**Comprobado localmente:** pruebas de core, ASGI, CTC, MMS, diálogo, secretos, readiness, contratos Dokploy y fuentes comprometidas; sin pesos ni inferencia nativa de las funciones nuevas. El operador confirmó inventario y seleccionó Dokploy; seguir [su guía](DEPLOY_DOKPLOY.md). Registrar por separado build Linux, carga, pruebas reales, dominio administrado y conexión con Vercel.
+
+Las funciones nuevas son `/transcribe-timed` (CTC, hasta 15 s, estimaciones de frames reales), `/speak` (MMS Ayacucho/aimara central no comercial, texto 300 caracteres, audio 30 s) y `/dialogue` (Qwen local CPU, contexto 2048, respuesta 300 caracteres). Conservan bearer, límites y semáforo global. MMS/Qwen cargan solo ante petición habilitada; `enabled:true` no equivale a disponibilidad ni calidad. Probar primero con texto/audio adulto público y medir latencia/memoria nativa. El healthcheck no carga modelos perezosos. No elevar límites ni tocar otras aplicaciones automáticamente. Ver [README](README.md) para licencias, revisiones y errores explícitos sin fallback fingido.

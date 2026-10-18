@@ -8,3 +8,5 @@ omnilingual-asr @ git+https://github.com/facebookresearch/omnilingual-asr.git@81
 transformers
 huggingface-hub
 sentencepiece
+# Optional local reading dialogue; model weights are lazy, never built in.
+llama-cpp-python

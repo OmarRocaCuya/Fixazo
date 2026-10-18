@@ -21,3 +21,4 @@ pyarrow==21.0.0
 transformers==4.57.6
 huggingface-hub==0.36.2
 sentencepiece==0.2.1
+llama-cpp-python==0.3.36
