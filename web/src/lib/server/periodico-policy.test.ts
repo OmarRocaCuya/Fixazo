@@ -17,13 +17,13 @@ describe("periodico private process guard", () => {
     expect(preflightPeriodicoRequest(request({ "sec-fetch-site": "cross-site" }))?.status).toBe(403);
   });
   it("keys the quota by a hashed IP, so another IP keeps its own budget", () => {
-    for (let i = 0; i < 40; i++) { const admission = reservePeriodicoJudge(request()); expect(admission.ok).toBe(true); if (admission.ok) admission.release(); }
+    for (let i = 0; i < 200; i++) { const admission = reservePeriodicoJudge(request()); expect(admission.ok).toBe(true); if (admission.ok) admission.release(); }
     expect(reservePeriodicoJudge(request())).toEqual({ ok: false, error: "periodico-rate-limit" });
     const other = reservePeriodicoJudge(request({ "X-Forwarded-For": "198.51.100.250" })); expect(other.ok).toBe(true); if (other.ok) other.release();
   });
   it("expires the bounded quota and makes release idempotent", () => {
     vi.useFakeTimers();
-    for (let i = 0; i < 40; i++) { const admission = reservePeriodicoJudge(request()); expect(admission.ok).toBe(true); if (admission.ok) { admission.release(); admission.release(); } }
+    for (let i = 0; i < 200; i++) { const admission = reservePeriodicoJudge(request()); expect(admission.ok).toBe(true); if (admission.ok) { admission.release(); admission.release(); } }
     expect(reservePeriodicoJudge(request())).toEqual({ ok: false, error: "periodico-rate-limit" });
     vi.advanceTimersByTime(10 * 60 * 1000);
     const fresh = reservePeriodicoJudge(request()); expect(fresh.ok).toBe(true); if (fresh.ok) fresh.release();

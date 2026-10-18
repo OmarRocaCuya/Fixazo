@@ -4,8 +4,8 @@ import { createHash } from "node:crypto";
 // cap. Configure a provider budget before enabling the judge. Access is open
 // (no private code): same-origin plus a per-IP quota and a global ceiling.
 const WINDOW_MS = 10 * 60 * 1000;
-const IP_LIMIT = 40;
-const GLOBAL_LIMIT = 600;
+const IP_LIMIT = 200;
+const GLOBAL_LIMIT = 1500;
 const MAX_ACTIVE = 3;
 const buckets = new Map<string, { count: number; resetAt: number }>();
 let active = 0;

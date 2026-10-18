@@ -165,9 +165,9 @@ describe("private periodico admission (no adult attestation) and no-evaluation",
     await Promise.all(pending);
     expect((await POST(request())).status).toBe(200); expect(judge).toHaveBeenCalledTimes(4);
   });
-  it("enforces the per-IP quota (40 per 10 min) before more paid calls", async () => {
-    for (let i = 0; i < 40; i++) expect((await POST(request())).status).toBe(200);
-    const response = await POST(request()); expect(response.status).toBe(429); expect(await response.json()).toMatchObject({ cuenta: false, error: "periodico-rate-limit" }); expect(judge).toHaveBeenCalledTimes(40);
+  it("enforces the per-IP quota (200 per 10 min) before more paid calls", async () => {
+    for (let i = 0; i < 200; i++) expect((await POST(request())).status).toBe(200);
+    const response = await POST(request()); expect(response.status).toBe(429); expect(await response.json()).toMatchObject({ cuenta: false, error: "periodico-rate-limit" }); expect(judge).toHaveBeenCalledTimes(200);
     expect((await POST(request(input, { "X-Forwarded-For": "198.51.100.77" }))).status).toBe(200);
   });
 });

@@ -46,7 +46,7 @@ describe("cloud voice policy", () => {
     expect(getVoicePolicyStatus("openai").reason).toBe("access-not-configured");
     const anon = (ip: string) => request({ "X-Voice-Access-Code": "", "X-Forwarded-For": ip });
     expect(authorizeVoiceRequest(anon("203.0.113.9"), "meta").ok).toBe(true);
-    for (let i = 1; i < 90; i++) authorizeVoiceRequest(anon("203.0.113.9"), "meta");
+    for (let i = 1; i < 600; i++) authorizeVoiceRequest(anon("203.0.113.9"), "meta");
     expect(authorizeVoiceRequest(anon("203.0.113.9"), "meta")).toMatchObject({ ok: false, status: 429 });
     // Another visitor is not starved by the first one.
     expect(authorizeVoiceRequest(anon("198.51.100.4"), "meta").ok).toBe(true);
@@ -95,11 +95,11 @@ describe("cloud voice policy", () => {
     vi.advanceTimersByTime(600_001);
     expect(authorizeVoiceRequest(request(), "deepgram").ok).toBe(true);
   });
-  it("bounds Meta guided-reading chunks at 90 requests without changing other provider budgets", () => {
+  it("bounds Meta guided-reading chunks at 600 requests without changing other provider budgets", () => {
     vi.useFakeTimers();
     vi.stubEnv("INDIGENOUS_BACKEND_URL", "https://indigenous.example");
     vi.stubEnv("INDIGENOUS_BACKEND_TOKEN", "backend-token-longer-than-thirty-two-chars");
-    for (let i = 0; i < 90; i++) expect(authorizeVoiceRequest(request(), "meta").ok).toBe(true);
+    for (let i = 0; i < 600; i++) expect(authorizeVoiceRequest(request(), "meta").ok).toBe(true);
     expect(authorizeVoiceRequest(request(), "meta")).toMatchObject({ ok: false, status: 429 });
     for (let i = 0; i < 12; i++) expect(authorizeVoiceRequest(request(), "deepgram").ok).toBe(true);
     expect(authorizeVoiceRequest(request(), "deepgram")).toMatchObject({ status: 429 });

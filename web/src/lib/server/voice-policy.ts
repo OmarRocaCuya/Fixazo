@@ -82,7 +82,7 @@ export function authorizeVoiceRequest(request: Request, provider: VoiceProvider)
     : [digest(`${provider}:credential:${supplied}`).toString("hex"), digest(`${provider}:${ip}:${supplied}`).toString("hex")];
   // Meta's guided reading uses short ASR chunks plus separate speech turns.
   // This remains a bounded per-process guard, not a distributed spending quota.
-  const limit = provider === "meta" ? 90 : provider === "openai" ? 30 : 12;
+  const limit = provider === "meta" ? 600 : provider === "openai" ? 30 : 12;
   if (keys.some((key) => (buckets.get(key)?.count ?? 0) >= limit)) return { ok: false, status: 429, error: "voice-rate-limit" };
   for (const key of keys) {
     const current = buckets.get(key);
