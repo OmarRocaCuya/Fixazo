@@ -10,6 +10,7 @@ class FakeRecognition {
   static instances: FakeRecognition[] = [];
   static throwOnStart = false;
   static throwOnConstruct = false;
+  static emitOnStart = true;
   lang = "";
   continuous = false;
   interimResults = false;
@@ -17,7 +18,8 @@ class FakeRecognition {
   onresult: ((event: ResultEvent) => void) | null = null;
   onerror: ((event: { error: string }) => void) | null = null;
   onend: (() => void) | null = null;
-  start = vi.fn(() => { if (FakeRecognition.throwOnStart) throw new Error("unavailable"); });
+  onstart: (() => void) | null = null;
+  start = vi.fn(() => { if (FakeRecognition.throwOnStart) throw new Error("unavailable"); if (FakeRecognition.emitOnStart) this.onstart?.(); });
   stop = vi.fn();
   abort = vi.fn();
 
@@ -38,6 +40,7 @@ beforeEach(() => {
   FakeRecognition.instances = [];
   FakeRecognition.throwOnStart = false;
   FakeRecognition.throwOnConstruct = false;
+  FakeRecognition.emitOnStart = true;
   vi.stubGlobal("window", { SpeechRecognition: FakeRecognition, isSecureContext: true });
 });
 
@@ -48,6 +51,31 @@ afterEach(() => {
 });
 
 describe("WebSpeechTranscriber", () => {
+  it("signals readiness only on native start and only once per turn", () => {
+    FakeRecognition.emitOnStart = false;
+    const onReady = vi.fn();
+    const transcriber = new WebSpeechTranscriber();
+    transcriber.start({ onText: vi.fn(), onReady });
+    expect(onReady).not.toHaveBeenCalled();
+    const ready = latest().onstart!;
+    ready(); ready();
+    expect(onReady).toHaveBeenCalledOnce();
+    transcriber.abort(); ready();
+    expect(onReady).toHaveBeenCalledOnce();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("fails a stalled native startup without leaving the reading clock waiting forever", async () => {
+    FakeRecognition.emitOnStart = false;
+    const onError = vi.fn();
+    const transcriber = new WebSpeechTranscriber();
+    transcriber.start({ onText: vi.fn(), onError });
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(onError).toHaveBeenCalledExactlyOnceWith("start-failed");
+    expect(latest().onstart).toBeNull();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it("replaces cumulative and corrected results instead of duplicating finals", async () => {
     const transcriber = new WebSpeechTranscriber();
     const onText = vi.fn();

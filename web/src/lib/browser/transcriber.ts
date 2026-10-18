@@ -1,3 +1,7 @@
+import { DeepgramTranscriber } from "./deepgram-transcriber";
+import { LocalWhisperTranscriber } from "./local-whisper";
+import type { AsrResult, CloudVoiceAccess } from "@/lib/voice/types";
+
 // Speech-to-text behind one small interface so the engine can be swapped:
 //  - WebSpeechTranscriber: browser Web Speech API (es-PE). In Chrome the browser's
 //    recognizer may send speech to Google servers (the UI says so).
@@ -9,10 +13,14 @@ export interface TranscriberHandlers {
   /** Full text so far (final + interim). */
   onText: (text: string, isFinal: boolean) => void;
   onError?: (code: string) => void;
+  /** Called once when the microphone/recognizer can accept this turn. */
+  onReady?: () => void;
+  /** Informational provider timestamps; confidence is never a child score. */
+  onResult?: (result: AsrResult) => void;
 }
 
 export interface Transcriber {
-  readonly kind: "web-speech" | "omnilingual";
+  readonly kind: "web-speech" | "omnilingual" | "deepgram" | "local-whisper";
   start(handlers: TranscriberHandlers): void;
   /** Stops and resolves with the best transcript available. */
   stop(): Promise<string>;
@@ -31,6 +39,7 @@ interface SpeechRecognitionLike {
   onresult: ((e: SREvent) => void) | null;
   onerror: ((e: { error: string }) => void) | null;
   onend: (() => void) | null;
+  onstart: (() => void) | null;
   start(): void;
   stop(): void;
   abort(): void;
@@ -45,6 +54,8 @@ interface RecognitionSession {
   stopping: boolean;
   finished: boolean;
   restarts: number;
+  ready: boolean;
+  startTimer: ReturnType<typeof setTimeout> | null;
   restartTimer: ReturnType<typeof setTimeout> | null;
   stopTimer: ReturnType<typeof setTimeout> | null;
   stopPromise: Promise<string> | null;
@@ -85,7 +96,7 @@ export class WebSpeechTranscriber implements Transcriber {
     }
     const session: RecognitionSession = {
       rec: null, handlers, committed: "", results: [], stopping: false,
-      finished: false, restarts: 0, restartTimer: null, stopTimer: null,
+      finished: false, restarts: 0, ready: false, startTimer: null, restartTimer: null, stopTimer: null,
       stopPromise: null, resolveStop: null,
     };
     this.session = session;
@@ -112,6 +123,12 @@ export class WebSpeechTranscriber implements Transcriber {
     rec.interimResults = true;
     rec.maxAlternatives = 1;
     const isCurrent = () => this.session === session && session.rec === rec && !session.finished;
+    rec.onstart = () => {
+      if (!isCurrent() || session.stopping) return;
+      if (session.startTimer) clearTimeout(session.startTimer);
+      session.startTimer = null;
+      if (!session.ready) { session.ready = true; session.handlers.onReady?.(); }
+    };
     rec.onresult = (e) => {
       if (!isCurrent()) return;
       // The result list is cumulative for this recognizer. Replacing it handles
@@ -132,6 +149,8 @@ export class WebSpeechTranscriber implements Transcriber {
     };
     rec.onend = () => {
       if (!isCurrent()) return;
+      if (session.startTimer) clearTimeout(session.startTimer);
+      session.startTimer = null;
       this.detach(rec);
       session.rec = null;
       if (session.stopping) {
@@ -153,6 +172,7 @@ export class WebSpeechTranscriber implements Transcriber {
       }, RESTART_DELAY_MS);
     };
     try {
+      if (!session.ready) session.startTimer = setTimeout(() => this.fail(session, "start-failed"), 10_000);
       rec.start();
     } catch {
       this.fail(session, "start-failed");
@@ -200,11 +220,13 @@ export class WebSpeechTranscriber implements Transcriber {
     rec.onresult = null;
     rec.onerror = null;
     rec.onend = null;
+    rec.onstart = null;
   }
 
   private finish(session: RecognitionSession, abort = false) {
     if (session.finished) return;
     session.finished = true;
+    if (session.startTimer) clearTimeout(session.startTimer);
     if (session.restartTimer) clearTimeout(session.restartTimer);
     if (session.stopTimer) clearTimeout(session.stopTimer);
     const rec = session.rec;
@@ -245,7 +267,18 @@ export class OmnilingualAsrTranscriber implements Transcriber {
   abort() {}
 }
 
-export function createTranscriber(lang: "es" | "qu"): Transcriber | null {
+export interface TranscriberOptions {
+  provider?: "browser" | "deepgram" | "local-whisper";
+  cloudAccess?: CloudVoiceAccess;
+}
+
+export function createTranscriber(lang: "es" | "qu", options: TranscriberOptions = {}): Transcriber | null {
+  if (options.provider === "local-whisper") return lang === "es" && LocalWhisperTranscriber.isSupported() ? new LocalWhisperTranscriber() : null;
+  if (options.provider === "deepgram") {
+    // Nova-3 does not support Quechua. Never silently switch languages/models.
+    return lang === "es" && options.cloudAccess && DeepgramTranscriber.isSupported()
+      ? new DeepgramTranscriber(options.cloudAccess) : null;
+  }
   if (lang === "qu") return OmnilingualAsrTranscriber.isConfigured() ? new OmnilingualAsrTranscriber("") : null;
   return speechRecognitionSupported() ? new WebSpeechTranscriber("es-PE") : null;
 }
