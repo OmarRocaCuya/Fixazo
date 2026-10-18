@@ -1,4 +1,30 @@
-# Verificación de la demo — 17 de octubre de 2026
+# Verificación de la demo
+
+## Despliegue Meta/NLLB — 18 de octubre de 2026
+
+- Fuente ejecutable: `228fe98bf9f1b1bc50c2b11b312ea2c73ca5d3d5`, rama `codex/nawinchay-voice-mvp`.
+- Producción Vercel: `dpl_vw9VoE6EX2YaQv3TpEHYoBFYo4Uu`, estado `READY`, proyecto exclusivo `nawinchay-voice-mvp`, raíz **`web`**, Node 24.x. Demo: https://nawinchay-voice-mvp.vercel.app/lenguas.
+- Backend en el proyecto separado **Nawinchay Meta Lab** de Dokploy: imagen `nawinchay-meta:228fe98`, límite 7 GiB/2 CPU, una inferencia simultánea, caché de pesos persistente, sin puertos de host publicados y APIs privadas por bearer. Sin cambios a los otros proyectos ni al proxy global.
+- Modelos realmente cargados: **`omniASR_CTC_300M_v2`** y **`facebook/nllb-200-distilled-600M`**, con los pines de revisión del servicio. HTTPS válido y capacidad `backendReachable/asr.ready/translation.ready=true` verificados a través de Vercel.
+- Se detectó y reparó un fallo real de importación: PyArrow 26 requería NumPy 2, incompatible con NumPy 1.x del stack. Se fijaron `numpy==1.26.4` y `pyarrow==21.0.0`; el build Linux pasó `pip check` y el preflight offline del pipeline nativo.
+- **419 pruebas web** (28 suites), TypeScript y ESLint correctos; **45 pruebas Python** correctas. El build remoto Next/Turbopack pasó y generó 18 entradas.
+
+### Pruebas reales, no simuladas
+
+- Meta transcribió una muestra **adulta sintética** de 7,574 s, PCM16/mono/16 kHz, en aproximadamente **4,93 s** de solicitud directa. También respondió mediante los proxies de preview y **producción pública** de Vercel. La muestra es Microsoft Zira en inglés leyendo castellano y presenta errores de reconocimiento: confirma inferencia, **no precisión** ni calidad en lenguas indígenas.
+- NLLB tradujo `La niña lee un libro.` a Ayacucho (`quy_Latn`) en 6,15 s y aimara central (`ayr_Latn`) en 2,86 s. Son tiempos observados de solicitudes individuales, no un benchmark ni garantía de latencia.
+- En la **UI pública de producción**, `Chay wamraqa librota leen.` produjo `El niño está leyendo un libro.` mediante NLLB; la interfaz mostró original, propuesta y advertencia de revisión. El cambio de género ilustra por qué no debe tratarse como traducción certificada.
+- El backend devolvió **HTTP 401** a `/health` sin bearer; la consulta autorizada pasó por HTTPS válido. No se desactivó autenticación ni validación de certificados.
+- Deepgram devolvió un rechazo real de credenciales/permisos al solicitar el grant (`asr-credentials-rejected`). Su clave **no se habilitó en producción** ni se reemplazó por un token permanente en el cliente. OpenAI no está configurado.
+- Se conservó `main` en `01ba51199e574fa9db299fd2f6cb0d657a7e087d`; los commits publicados solo afectan `web/`. Los cambios locales previos de Fixazo no se incluyeron.
+
+### Límites de esta entrega
+
+Solo demo no comercial con voz adulta/sintética, código privado y consentimiento explícito. No hay validación con niños, hablantes peruanos ni corpus de quechua/aimara; no se midieron WER/CER o calidad humana de traducción. No se verificó un micrófono físico de Opera ni rendimiento móvil.
+
+CTC no condiciona el reconocimiento con la variante elegida y no aporta timestamps de palabras: la variante es declarada, no una detección confirmada. Este laboratorio funciona por turnos de hasta 30 s, **no es seguimiento alineado del texto ni un agente conversacional/TTS indígena**. No infiere emociones, salud, identidad o calidad del acento. Las limitaciones de la verificación inicial que siguen se refieren al estado anterior al despliegue, no al estado actual del backend.
+
+## Verificación inicial — 17 de octubre de 2026
 
 ## Ejecutado
 
