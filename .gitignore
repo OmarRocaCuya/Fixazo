@@ -6,3 +6,6 @@ node_modules/
 
 # Registro de uso: identificadores de alumnos, no va al repo
 web/data/registro/
+
+# Generated runtime logs are not application content
+web/data/*.log

@@ -60,7 +60,8 @@ export function guardia(retro: string, prohibido: string[], texto: string): bool
 }
 
 /**
- * Combina las corridas del juez (3, como el juez de Daniel): un criterio cumple si la mayoría
+ * Solo combina con al menos dos corridas válidas; sin cuórum no hay evaluación.
+ * Un criterio cumple si la mayoría
  * de las corridas que respondieron lo marca con una cita literal; es "dudoso" si no coinciden.
  */
 export function agregarCorridas(
@@ -68,6 +69,7 @@ export function agregarCorridas(
   criterios: Criterio[],
   texto: string,
 ): RespuestaVoz["criterios"] {
+  if (corridas.length < 2) return [];
   return criterios.map((c) => {
     const votos = corridas.map((k) => {
       const e = k.criterios.find((x) => x.id === c.id);

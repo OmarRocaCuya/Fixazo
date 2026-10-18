@@ -57,7 +57,8 @@ describe("reglas del periódico", () => {
     const r = agregarCorridas([corrida(true, true), corrida(true, false), corrida(true, true)], criterios, texto);
     expect(r.map((c) => [c.id, c.cumple, c.dudoso])).toEqual([["quien_gana", true, false], ["otra_mirada", true, true]]);
     const inventada = agregarCorridas([{ retro: "", criterios: [{ id: "quien_gana", cumple: true, cita: "habla de privacidad" }] }], criterios, texto);
-    expect(inventada[0].cumple).toBe(false);
-    expect(agregarCorridas([], criterios, texto).every((c) => !c.cumple)).toBe(true);
+    expect(inventada).toEqual([]);
+    expect(agregarCorridas([], criterios, texto)).toEqual([]);
+    expect(agregarCorridas([corrida(false, false)], criterios, texto)).toEqual([]);
   });
 });

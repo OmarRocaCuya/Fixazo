@@ -75,6 +75,8 @@ export type PasoPublico = Fragmento | PreguntaOpciones | PreguntaVozPublica;
 export type NoticiaPublica = Omit<Noticia, "pasos"> & { pasos: PasoPublico[] };
 
 export interface RespuestaVoz {
+  evaluacion: "evaluada" | "no_evaluable";
+  cuenta: boolean;
   criterios: Array<{ id: string; nombre: string; cumple: boolean; cita: string; dudoso: boolean }>;
   retro: string;
   listo: boolean;

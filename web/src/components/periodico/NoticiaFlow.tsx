@@ -7,10 +7,11 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AudioAnalyzer } from "@/lib/browser/audio";
 import { createTranscriber, speechRecognitionSupported, type Transcriber } from "@/lib/browser/transcriber";
 import { voiceErrorMessage } from "@/lib/browser/voice-support";
-import { guardarAvance, guardarResultado, idAlumno, leerAvance, leerResultados, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
+import { guardarAvance, guardarResultado, leerAvance, leerResultados, type Avance, type ResultadoNoticia } from "@/lib/periodico/progreso";
 import type { Fragmento, NoticiaPublica, PreguntaOpciones, PreguntaVozPublica, RespuestaVoz } from "@/lib/periodico/tipos";
 import { countFillers, detectLongPauses } from "@/lib/signals/prosody";
 import type { FrameFeature } from "@/lib/types";
+import { applyVoiceEvaluation, RecordingAnswer } from "./voz-state";
 
 type Elegidas = Record<string, number>;
 
@@ -85,6 +86,7 @@ function useBrillo() {
 }
 
 interface FinVoz {
+  evaluada: boolean;
   listo: boolean;
   intentos: number;
   criterios: RespuestaVoz["criterios"];
@@ -93,99 +95,148 @@ interface FinVoz {
   porVoz: boolean;
 }
 
-function BloqueVoz({ p, noticiaId, onFin }: { p: PreguntaVozPublica; noticiaId: string; onFin: (r: FinVoz) => void }) {
+export function BloqueVoz({ p, noticiaId, onFin }: { p: PreguntaVozPublica; noticiaId: string; onFin: (r: FinVoz) => void }) {
   const brillo = useBrillo();
   const [texto, setTexto] = useState("");
   const [estado, setEstado] = useState<"quieto" | "escuchando" | "pensando" | "listo">("quieto");
   const [retro, setRetro] = useState<{ texto: string; bien: boolean } | null>(null);
   const [aviso, setAviso] = useState("");
   const [pista, setPista] = useState(0);
+  const [capacidad, setCapacidad] = useState({ enabled: false, reason: "Comprobando disponibilidad de evaluación…" });
+  const [codigo, setCodigo] = useState("");
+  const [autorizado, setAutorizado] = useState(false);
   const intentos = useRef(0);
   const [respondidas, setRespondidas] = useState(0);
   const porVoz = useRef(false);
   const frames = useRef<FrameFeature[]>([]);
   const trans = useRef<Transcriber | null>(null);
   const audio = useRef<AudioAnalyzer | null>(null);
+  const recording = useRef(new RecordingAnswer());
+  const recordingEpoch = useRef(0);
+  const stopping = useRef(false);
+  const requestEpoch = useRef(0);
+  const pending = useRef<AbortController | null>(null);
+  const micTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const puedeHablar = useSyncExternalStore(() => () => undefined, speechRecognitionSupported, () => false);
 
-  useEffect(() => () => {
-    trans.current?.abort();
-    audio.current?.stop();
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch("/api/periodico/responder", { signal: controller.signal, cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("unavailable");
+        const data = await response.json();
+        if (!controller.signal.aborted) setCapacidad({ enabled: data.enabled === true && data.adultOnly === true, reason: typeof data.reason === "string" ? data.reason : "Evaluación no disponible." });
+      })
+      .catch(() => { if (!controller.signal.aborted) setCapacidad({ enabled: false, reason: "Evaluación no disponible. Puedes leer y continuar sin evaluación." }); });
+    return () => controller.abort();
   }, []);
 
+  useEffect(() => {
+    const answer = recording.current;
+    const stop = () => {
+      answer.cancel();
+      trans.current?.abort(); trans.current = null;
+      audio.current?.stop(); audio.current = null;
+      if (micTimer.current) clearTimeout(micTimer.current);
+      requestEpoch.current++; pending.current?.abort();
+      document.body.classList.remove("pd-escuchando", "pd-pensando");
+    };
+    const visibility = () => {
+      if (document.visibilityState !== "hidden") return;
+      const active = trans.current !== null || pending.current !== null;
+      stop();
+      if (active) {
+        setEstado((current) => current === "listo" ? current : "quieto");
+        setAviso("La captura o espera se detuvo al salir de esta pantalla. No se contará una evaluación pendiente.");
+      }
+    };
+    document.addEventListener("visibilitychange", visibility);
+    return () => { stop(); document.removeEventListener("visibilitychange", visibility); };
+  }, []);
+
+  function terminarSinEvaluacion() {
+    requestEpoch.current++; pending.current?.abort();
+    recording.current.cancel(); trans.current?.abort(); audio.current?.stop();
+    if (micTimer.current) clearTimeout(micTimer.current);
+    setEstado("listo"); brillo.estado("quieto");
+    setRetro({ texto: "Lectura terminada sin evaluación de voz. No se registra una habilidad como lograda o por practicar.", bien: false });
+    onFin({ evaluada: false, listo: false, intentos: intentos.current, criterios: [], texto, frames: [], porVoz: false });
+  }
+
   async function enviar(t: string) {
-    if (!t.trim()) return;
-    setEstado("pensando");
-    brillo.estado("pensando");
-    let d: RespuestaVoz & { cuenta?: boolean };
+    if (!t.trim() || !capacidad.enabled || !autorizado || !codigo.trim() || estado !== "quieto") return;
+    const epoch = ++requestEpoch.current;
+    const controller = new AbortController(); pending.current = controller;
+    setEstado("pensando"); brillo.estado("pensando");
+    let d: RespuestaVoz;
     try {
       const r = await fetch("/api/periodico/responder", {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        signal: AbortSignal.timeout(20_000),
-        body: JSON.stringify({ noticiaId, preguntaId: p.id, texto: t, intento: intentos.current + 1, alumno: idAlumno() }),
+        headers: { "content-type": "application/json", "x-voice-access-code": codigo.trim() },
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20_000)]),
+        body: JSON.stringify({ noticiaId, preguntaId: p.id, texto: t, intento: intentos.current + 1, consent: true, adultConfirmed: true }),
       });
-      if (!r.ok) throw new Error(String(r.status));
       d = await r.json();
+      if (!r.ok && d.evaluacion !== "no_evaluable") throw new Error("unavailable");
+      if (typeof d.retro !== "string" || !Array.isArray(d.criterios) || !["evaluada", "no_evaluable"].includes(d.evaluacion)) throw new Error("invalid-response");
     } catch {
-      d = { criterios: [], retro: `Sigamos pensando. ${p.pistas[0] ?? ""}`, listo: false, ia: false, cuenta: false };
+      d = { evaluacion: "no_evaluable", criterios: [], retro: "No se pudo evaluar tu respuesta. No gastaste un intento. Puedes reintentar o continuar sin evaluación.", listo: false, ia: false, cuenta: false };
     }
-    brillo.estado("quieto");
-    if (d.cuenta) {
-      intentos.current++;
-      setRespondidas(intentos.current);
-    }
-    setRetro({ texto: d.retro, bien: d.listo });
-    if (d.listo || intentos.current >= 2) {
+    if (requestEpoch.current !== epoch || controller.signal.aborted) return;
+    pending.current = null; brillo.estado("quieto");
+    const outcome = applyVoiceEvaluation(d, intentos.current);
+    intentos.current = outcome.attempts; setRespondidas(outcome.attempts);
+    setRetro({ texto: outcome.evaluated ? d.retro : `Sin evaluación: ${d.retro}`, bien: outcome.evaluated && d.listo });
+    if (outcome.complete) {
       setEstado("listo");
-      onFin({ listo: d.listo, intentos: intentos.current, criterios: d.criterios, texto: t, frames: frames.current, porVoz: porVoz.current });
+      onFin({ evaluada: true, listo: d.listo, intentos: outcome.attempts, criterios: d.criterios, texto: t, frames: frames.current, porVoz: porVoz.current });
     } else setEstado("quieto");
   }
 
   async function alternarMic() {
+    if (!autorizado || stopping.current) return;
     if (estado === "escuchando") {
-      const final = (await trans.current?.stop()) ?? texto;
-      audio.current?.stop();
-      audio.current = null;
-      const t = final.trim() || texto;
-      setTexto(t);
-      if (t.trim()) void enviar(t);
-      else {
-        setEstado("quieto");
-        brillo.estado("quieto");
-      }
-      return;
+      const tr = trans.current; if (!tr) return;
+      const epoch = recordingEpoch.current;
+      stopping.current = true;
+      audio.current?.stop(); audio.current = null;
+      if (micTimer.current) clearTimeout(micTimer.current);
+      let final = "";
+      try { final = await tr.stop(); } catch { /* keep the last displayed partial */ }
+      tr.abort(); stopping.current = false;
+      const answer = recording.current.finish(epoch, final);
+      if (answer === null) return;
+      trans.current = null; setTexto(answer); setEstado("quieto"); brillo.estado("quieto");
+      return; // Reviewing text and sending it are separate, explicit actions.
     }
+    if (estado !== "quieto") return;
     const tr = createTranscriber("es");
-    if (!tr) {
-      setAviso(voiceErrorMessage("unsupported"));
-      return;
-    }
+    if (!tr) { setAviso(voiceErrorMessage("unsupported")); return; }
     trans.current = tr;
-    const base = texto.trim() ? `${texto.trim()} ` : "";
-    setAviso("");
-    setRetro(null);
-    frames.current = [];
-    porVoz.current = true;
+    const epoch = recording.current.begin(texto); recordingEpoch.current = epoch;
+    setAviso(""); setRetro(null); frames.current = []; porVoz.current = true;
+    setEstado("escuchando"); brillo.estado("escuchando");
     tr.start({
-      onText: (t) => setTexto(base + t),
+      onText: (t) => { const next = recording.current.partial(epoch, t); if (next !== null) setTexto(next); },
       onError: (code) => {
-        setAviso(voiceErrorMessage(code));
-        setEstado("quieto");
-        brillo.estado("quieto");
-        audio.current?.stop();
+        if (recordingEpoch.current !== epoch || trans.current !== tr) return;
+        recording.current.cancel(); trans.current = null;
+        setAviso(voiceErrorMessage(code)); setEstado("quieto"); brillo.estado("quieto");
+        audio.current?.stop(); audio.current = null;
+        if (micTimer.current) clearTimeout(micTimer.current);
       },
     });
-    setEstado("escuchando");
-    brillo.estado("escuchando");
-    const an = new AudioAnalyzer();
-    audio.current = an;
-    an.start()
-      .then(() => an.subscribe((f) => {
-        frames.current.push(f);
-        brillo.nivel(f.rms * 8);
-      }))
-      .catch(() => undefined); // sin medidor el brillo respira igual
+    if (trans.current !== tr) return; // start() may report a synchronous failure.
+    const an = new AudioAnalyzer(); audio.current = an;
+    an.start().then(() => {
+      if (trans.current !== tr || recordingEpoch.current !== epoch) { an.stop(); return; }
+      an.subscribe((f) => { if (frames.current.length < 2000) frames.current.push(f); brillo.nivel(f.rms * 8); });
+    }).catch(() => an.stop());
+    micTimer.current = setTimeout(() => {
+      if (trans.current !== tr) return;
+      recording.current.cancel(); tr.abort(); trans.current = null; an.stop(); audio.current = null;
+      setEstado("quieto"); brillo.estado("quieto"); setAviso("Se alcanzó el límite de 60 segundos. Revisa lo transcrito antes de enviarlo.");
+    }, 60_000);
   }
 
   return (
@@ -193,51 +244,44 @@ function BloqueVoz({ p, noticiaId, onFin }: { p: PreguntaVozPublica; noticiaId: 
       <div className="pd-bloque pd-pregunta">
         <div className="pd-tipo">{p.etiqueta}</div>
         <h2>{p.titulo}</h2>
+        <p className="muted small">Puedes responder por escrito y terminar la lectura sin evaluación. La evaluación por IA es una demo solo para adultos; puede equivocarse.</p>
+        <p className="pd-aviso" role="status">{capacidad.reason}</p>
+        {(puedeHablar || capacidad.enabled) && (
+          <label className="pd-aviso">
+            <input type="checkbox" checked={autorizado} disabled={estado !== "quieto"} onChange={(e) => setAutorizado(e.target.checked)} />{" "}
+            Soy adulto y autorizo usar solo mi voz adulta o audio sintético. El reconocedor del navegador puede enviar audio a su proveedor; al pedir evaluación, mi respuesta escrita se envía al proveedor de IA. No incluiré datos personales ni voces de menores.
+          </label>
+        )}
+        {capacidad.enabled && (
+          <label>Código privado de la demo
+            <input type="password" value={codigo} autoComplete="off" disabled={estado !== "quieto"} onChange={(e) => setCodigo(e.target.value)} />
+          </label>
+        )}
         <textarea
-          id={`r-${p.id}`}
-          className="pd-respuesta"
-          rows={3}
-          aria-label="Tu respuesta"
-          placeholder={puedeHablar ? "Lo que digas aparece aquí. También puedes escribir." : "Escribe tu respuesta aquí…"}
-          value={texto}
-          disabled={estado === "listo" || estado === "pensando"}
-          onChange={(e) => setTexto(e.target.value)}
+          id={`r-${p.id}`} className="pd-respuesta" rows={3} aria-label="Tu respuesta"
+          placeholder="Escribe tu respuesta aquí. El micrófono es opcional y requiere autorización adulta."
+          value={texto} disabled={estado !== "quieto"} onChange={(e) => setTexto(e.target.value)}
         />
         {aviso && <p className="pd-aviso">{aviso}</p>}
         {pista > 0 && <p className="pd-retro">Pista: {p.pistas[pista - 1]}</p>}
-        {retro && <p className={`pd-retro${retro.bien ? " bien" : ""}`}>{retro.texto}</p>}
-        {estado === "listo" && !retro?.bien && <p className="pd-aviso">Seguimos. Mañana volvemos a esta idea.</p>}
-        {estado !== "listo" && (
+        {retro && <p className={`pd-retro${retro.bien ? " bien" : ""}`} role="status">{retro.texto}</p>}
+        {estado === "listo" && retro?.bien === false && respondidas >= 2 && <p className="pd-aviso">Terminaste los intentos evaluados. Puedes revisar esta idea con un docente.</p>}
+        {estado === "quieto" && (
           <div className="pd-acciones">
-            {texto.trim() && estado === "quieto" && (
-              <button type="button" className="btn primary" onClick={() => void enviar(texto)}>Enviar</button>
-            )}
-            {pista < p.pistas.length && estado === "quieto" && (
-              <button type="button" className="btn ghost" onClick={() => setPista((n) => n + 1)}>Pedir pista</button>
-            )}
+            {capacidad.enabled && texto.trim() && <button type="button" className="btn primary" disabled={!autorizado || !codigo.trim()} onClick={() => void enviar(texto)}>Pedir evaluación de mi respuesta</button>}
+            {pista < p.pistas.length && <button type="button" className="btn ghost" onClick={() => setPista((n) => n + 1)}>Pedir pista</button>}
+            <button type="button" className="btn ghost" onClick={terminarSinEvaluacion}>Continuar sin evaluación</button>
           </div>
         )}
       </div>
       {estado !== "listo" && puedeHablar && (
         <div className="pd-zona-mic">
-          <p className="pd-estado" aria-live="polite">
-            {estado === "escuchando" ? "Te escucho… toca para terminar" : estado === "pensando" ? "Leyendo tu respuesta…" : respondidas ? "Toca para responder otra vez" : "Toca para hablar"}
-          </p>
-          <button
-            type="button"
-            className={`pd-mic${estado === "escuchando" ? " activo" : ""}`}
-            aria-pressed={estado === "escuchando"}
-            aria-label={estado === "escuchando" ? "Terminar de hablar" : "Empezar a hablar"}
-            disabled={estado === "pensando"}
-            onClick={() => void alternarMic()}
-          >
-            <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <rect x="9" y="3" width="6" height="11" rx="3" />
-              <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
-            </svg>
+          <p className="pd-estado" aria-live="polite">{estado === "escuchando" ? "Te escucho… toca para terminar" : estado === "pensando" ? "Leyendo tu respuesta…" : respondidas ? "Toca para ampliar tu respuesta" : "Micrófono opcional (voz adulta)"}</p>
+          <button type="button" className={`pd-mic${estado === "escuchando" ? " activo" : ""}`} aria-pressed={estado === "escuchando"}
+            aria-label={estado === "escuchando" ? "Terminar de hablar" : "Empezar a hablar"} disabled={estado === "pensando" || !autorizado} onClick={() => void alternarMic()}>
+            <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
             <span className="stop" aria-hidden="true" />
           </button>
-          <button type="button" className="pd-escribir" onClick={() => document.getElementById(`r-${p.id}`)?.focus()}>o escribe tu respuesta</button>
         </div>
       )}
     </>
@@ -295,7 +339,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
       if (p.id.endsWith("-contraprueba")) decision = p.opciones[elegidas[p.id]];
     }
     const voz = pasos.find((p) => p.tipo === "voz");
-    if (voz) habilidades[voz.habilidad] = v.listo;
+    if (voz && v.evaluada) habilidades[voz.habilidad] = v.listo;
     const senales = countFillers(v.texto);
     const r: ResultadoNoticia = {
       noticiaId: noticia.id,
@@ -305,7 +349,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
       postura,
       seguridad,
       decision,
-      voz: {
+      voz: v.evaluada ? {
         listo: v.listo,
         intentos: v.intentos,
         criterios: v.criterios.map(({ nombre, cumple }) => ({ nombre, cumple })),
@@ -314,7 +358,7 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
         pausasLargas: v.porVoz && v.frames.length ? detectLongPauses(v.frames).length : null,
         segundosHablando: v.porVoz && v.frames.length ? Math.round((v.frames.at(-1)!.t - v.frames[0].t) / 1000) : null,
         porVoz: v.porVoz,
-      },
+      } : null,
     };
     guardarResultado(r);
     setFin(r);
@@ -326,10 +370,10 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
       <div className="pd-luz halo" aria-hidden="true"><i /></div>
       <div className="pd-luz linea" aria-hidden="true" />
       <header className="pd-noticia-cabeza">
-        <div className="eyebrow">{noticia.seccion} · noticia del día</div>
+        <div className="eyebrow">{noticia.seccion} · archivo de lectura</div>
         <h1>{noticia.titular}</h1>
         <p className="pd-bajada">{noticia.bajada}</p>
-        <p className="muted small">{noticia.minutos} min · {pasos.filter((p) => p.tipo !== "fragmento").length} preguntas · 🎤 1 con tu voz</p>
+        <p className="muted small">{noticia.minutos} min · {pasos.filter((p) => p.tipo !== "fragmento").length} preguntas · respuesta escrita o voz adulta opcional</p>
       </header>
       {pasos.slice(0, visibles + 1).map((p, k) => (
         <div key={"id" in p ? p.id : `frag-${k}`} ref={k === visibles ? ultimo : undefined}>
@@ -353,7 +397,8 @@ function Flujo({ noticia, inicial, terminada }: { noticia: NoticiaPublica; inici
       {fin && (
         <div className="pd-bloque pd-pregunta" ref={ultimo}>
           <div className="pd-tipo">Terminaste esta noticia</div>
-          <h2>Lo que hiciste hoy</h2>
+          <h2>Lo que hiciste en esta lectura</h2>
+          {!fin.voz && <p className="muted">Sin evaluación de voz. Esta respuesta no afecta tus habilidades.</p>}
           <ul className="pd-lista-logros">
             {Object.entries(fin.habilidades).map(([h, ok]) => (
               <li key={h}><span>{h}</span><span className="muted">{ok ? "Lo lograste" : "Para practicar"}</span></li>
