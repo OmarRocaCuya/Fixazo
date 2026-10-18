@@ -8,6 +8,7 @@ import { buildJudgmentChain, scoreInfiere, scoreObtiene, scoreReflexiona } from 
 import { PAUSE_OFFER } from "@/lib/signals/pace";
 import { CONFIDENCE_LABELS, Face, Icon, LevelCell, MoodPicker, SignalRow, moodLabel } from "@/components/ui";
 import { ReadingText } from "./ReadingText";
+import { MultilingualReadingSession } from "./MultilingualReadingSession";
 import { READ_LIMIT_S, SessionController, type SessionAsrProvider, type Snapshot } from "./controller";
 
 const PILLS = ["CHECK_IN", "READ", "Q_OBTIENE", "Q_INFIERE", "STANCE", "COUNTER", "CHECK_OUT"] as const;
@@ -33,6 +34,7 @@ export function SessionScreen() {
   const [ctl] = useState(() => new SessionController());
   const snap = useSyncExternalStore(ctl.subscribe, ctl.getSnapshot, ctl.getServerSnapshot);
   const [adultOpen, setAdultOpen] = useState(false);
+  const [multilingualOpen, setMultilingualOpen] = useState(false);
 
   useEffect(() => {
     ctl.init();
@@ -42,6 +44,11 @@ export function SessionScreen() {
   const ctx = snap.ctx;
   const state: SessionState | null = ctx ? (ctx.state === "PAUSED" ? (ctx.resumeState ?? "CHECK_IN") : ctx.state) : null;
   const current = state ? stepIndex(state) : -1;
+
+  const spanishPassage = snap.mission?.lang === "qu" ? snap.mission.textEs : snap.mission?.text;
+  if (multilingualOpen && snap.phase === "intro" && snap.mission && spanishPassage) {
+    return <MultilingualReadingSession passage={spanishPassage} title={snap.mission.title} onClose={() => setMultilingualOpen(false)} />;
+  }
 
   return (
     <div className="session">
@@ -86,6 +93,12 @@ export function SessionScreen() {
 
       <div className="s-body">
         <section className="kid-zone" aria-label="Zona del niño">
+          {snap.phase === "intro" && snap.mission && <div className="notice info stack-sm">
+            <strong>Sesión multilingüe · demo adulta</strong>
+            <p className="small">Prueba esta lectura en quechua Ayacucho o aimara con Meta, traducción y voz por turnos. Solo voces adultas o sintéticas; no modifica la evaluación ni crea informes.</p>
+            <button type="button" className="btn subtle" disabled={!spanishPassage || snap.localPreparing || snap.micTesting || snap.micBusy} onClick={() => { ctl.cancelMicrophoneTest(); setMultilingualOpen(true); }}>Abrir lectura multilingüe de esta misión</button>
+            {!spanishPassage && <p className="small">Esta misión no tiene texto original en castellano para preparar la prueba. No sustituimos ni etiquetamos el texto quechua como castellano.</p>}
+          </div>}
           <KidZone snap={snap} ctl={ctl} onDone={(id) => router.push(`/informe?id=${encodeURIComponent(id)}`)} />
         </section>
         {(snap.phase === "running" || snap.phase === "saving") && snap.mission && (

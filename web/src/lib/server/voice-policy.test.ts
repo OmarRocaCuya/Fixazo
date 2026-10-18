@@ -68,4 +68,17 @@ describe("cloud voice policy", () => {
     vi.advanceTimersByTime(600_001);
     expect(authorizeVoiceRequest(request(), body, "deepgram").ok).toBe(true);
   });
+  it("bounds Meta guided-reading chunks at 90 requests without changing other provider budgets", () => {
+    vi.useFakeTimers();
+    vi.stubEnv("INDIGENOUS_BACKEND_URL", "https://indigenous.example");
+    vi.stubEnv("INDIGENOUS_BACKEND_TOKEN", "backend-token-longer-than-thirty-two-chars");
+    for (let i = 0; i < 90; i++) expect(authorizeVoiceRequest(request(), body, "meta").ok).toBe(true);
+    expect(authorizeVoiceRequest(request(), body, "meta")).toMatchObject({ ok: false, status: 429 });
+    for (let i = 0; i < 12; i++) expect(authorizeVoiceRequest(request(), body, "deepgram").ok).toBe(true);
+    expect(authorizeVoiceRequest(request(), body, "deepgram")).toMatchObject({ status: 429 });
+    for (let i = 0; i < 30; i++) expect(authorizeVoiceRequest(request(), body, "openai").ok).toBe(true);
+    expect(authorizeVoiceRequest(request(), body, "openai")).toMatchObject({ status: 429 });
+    vi.advanceTimersByTime(600_001);
+    expect(authorizeVoiceRequest(request(), body, "meta").ok).toBe(true);
+  });
 });

@@ -1,0 +1,18 @@
+.session { max-width: 1000px; margin-inline: auto; padding: clamp(20px, 4vw, 48px); display: grid; gap: 24px; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.header h1 { margin-bottom: 8px; }
+.authorization { display: grid; gap: 16px; padding-block: 8px; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.check { display: flex; align-items: flex-start; gap: 12px; max-width: 75ch; }
+.check input { flex: 0 0 auto; width: 22px; height: 22px; margin-top: 2px; accent-color: var(--accent); }
+.passage { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); display: grid; gap: 20px; }
+.text { font-size: clamp(1.25rem, 2.6vw, 1.65rem); line-height: 1.9; max-width: 68ch; overflow-wrap: anywhere; }
+.observed { background: var(--accent-soft); color: var(--ink); border-radius: 3px; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 5px; }
+.original { margin-top: 12px; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 75ch; }
+.dialogue { display: grid; gap: 18px; padding-block: 12px; }
+.question, .answer { display: grid; gap: 8px; padding: 18px 20px; max-width: 75ch; border-radius: 12px; overflow-wrap: anywhere; }
+.question { background: var(--accent-soft); }
+.answer { background: var(--surface); border: 1px solid var(--line); }
+.status { min-height: 3em; padding-block: 12px; border-top: 1px solid var(--line); max-width: 75ch; overflow-wrap: anywhere; }
+.session summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+@media (max-width: 640px) { .header { flex-direction: column; } .fields { grid-template-columns: 1fr; gap: 16px; } .session { gap: 20px; } .passage { padding: 20px; } }
