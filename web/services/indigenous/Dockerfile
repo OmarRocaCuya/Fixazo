@@ -12,10 +12,11 @@ COPY requirements*.txt constraints.txt ./
 RUN pip install --no-cache-dir -c constraints.txt torch torchaudio --index-url https://download.pytorch.org/whl/${TORCH_VARIANT} \
     && pip install --no-cache-dir -c constraints.txt fairseq2[arrow] --extra-index-url https://fair.pkg.atmeta.com/fairseq2/whl/pt2.8.0/${TORCH_VARIANT} \
     && pip install --no-cache-dir -r requirements.txt -r requirements-models.txt
-RUN useradd --create-home --uid 10001 app
-COPY --chown=app:app app.py core.py ./
+# Run without root; the same UID owns the writable model cache and secret file.
+RUN useradd --create-home --uid 1000 app && mkdir -p /home/app/.cache && chown app:app /home/app/.cache
+COPY --chown=app:app app.py core.py healthcheck.py ./
 USER app
-ENV FAIRSEQ2_CACHE_DIR=/home/app/.cache/fairseq2 HF_HOME=/home/app/.cache/huggingface
+ENV HOME=/home/app XDG_CACHE_HOME=/home/app/.cache HF_HOME=/home/app/.cache/huggingface
 EXPOSE 8080
 # A single worker owns the model/semaphore. No audio-bearing access logs.
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1", "--no-access-log", "--log-level", "warning"]

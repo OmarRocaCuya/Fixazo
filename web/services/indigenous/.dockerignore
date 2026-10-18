@@ -11,3 +11,10 @@ models
 **/*.pth
 **/*.safetensors
 **/*.bin
+build
+DEPLOY_VPS.md
+Caddyfile.example
+compose.vps.yaml
+compose.dokploy.yaml
+DEPLOY_DOKPLOY.md
+prepare_dokploy.py

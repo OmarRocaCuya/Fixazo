@@ -1,0 +1,55 @@
+# Dokploy-managed Docker Compose service; select service "meta", port 8080
+# in Dokploy Domains. Dokploy supplies routing labels/network automatically.
+# Use GitHub source + compose path web/services/indigenous/compose.dokploy.yaml.
+# Paths below are relative to THIS compose file, not the repository root.
+services:
+  meta:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TORCH_VARIANT: cpu
+    image: ${INDIGENOUS_IMAGE_TAG:-nawinchay-meta:dokploy}
+    restart: unless-stopped
+    init: true
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    mem_limit: ${INDIGENOUS_MEMORY_LIMIT:-7g}
+    cpus: ${INDIGENOUS_CPU_LIMIT:-2}
+    # No host ports: only Dokploy's selected domain routes to this service.
+    expose:
+      - "8080"
+    environment:
+      # Set in Dokploy's environment/secret store, never in this repository.
+      # Explicit interpolation is necessary: UI variables are not automatically
+      # injected into a Compose container. Do NOT also set the *_FILE option.
+      INDIGENOUS_API_KEY: ${INDIGENOUS_API_KEY:?Set the private backend API key in Dokploy}
+      INDIGENOUS_ASR_MODEL: ${INDIGENOUS_ASR_MODEL:-omniASR_CTC_300M_v2}
+      INDIGENOUS_DEVICE: cpu
+      INDIGENOUS_WARMUP: "true"
+      ENABLE_RESEARCH_TRANSLATION: ${ENABLE_RESEARCH_TRANSLATION:-false}
+      NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED: ${NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED:-false}
+      OMP_NUM_THREADS: ${INDIGENOUS_TORCH_THREADS:-2}
+      MKL_NUM_THREADS: ${INDIGENOUS_TORCH_THREADS:-2}
+      TOKENIZERS_PARALLELISM: "false"
+    volumes:
+      - model_cache:/home/app/.cache
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,uid=1000,gid=1000
+    healthcheck:
+      test: [CMD, python, -B, healthcheck.py]
+      interval: 30s
+      timeout: 5s
+      start_period: 30m
+      retries: 3
+    stop_grace_period: 45s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
+volumes:
+  model_cache:

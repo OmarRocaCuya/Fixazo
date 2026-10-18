@@ -1,6 +1,6 @@
 # Servicio privado Meta: voz indígena y traducción de investigación
 
-Este servicio se ejecuta **fuera de Vercel**. Next.js en Vercel es la interfaz/proxy; un proceso Linux conserva los modelos en memoria. No se han descargado pesos ni comprobado inferencia real en este entorno. Las pruebas usan dobles de modelo, no resultados inventados.
+Este servicio de referencia usa un **proceso Linux separado del servidor Next.js** para conservar modelos en memoria. El usuario eligió su VPS con Dokploy: ver [DEPLOY_DOKPLOY.md](DEPLOY_DOKPLOY.md); la [guía Compose manual](DEPLOY_VPS.md) queda como alternativa operativa. No se han descargado pesos ni comprobado inferencia real en este entorno. Las pruebas usan dobles de modelo, no resultados inventados. No se afirma que cualquier modalidad de contenedores de Vercel sea técnicamente imposible; esta versión FP32 conjunta no está validada bajo sus cuotas.
 
 ## Qué hace cada modelo
 
@@ -74,7 +74,7 @@ Publicar mediante HTTPS privado con límite de peticiones, control de acceso y l
 
 ## Contrato HTTP privado
 
-Todas las rutas requieren `Authorization: Bearer <INDIGENOUS_API_KEY>`; falta de configuración devuelve 503 y credencial incorrecta 401. Se usa `Cache-Control: no-store, private`. No hay CORS público, documentación Swagger ni logs de acceso en el comando de arranque.
+Todas las rutas de la API requieren `Authorization: Bearer <INDIGENOUS_API_KEY>`; falta de configuración devuelve 503 y credencial incorrecta 401. La única excepción es `GET /` / `HEAD /`, una sonda pública del proceso sin configuración ni disponibilidad de modelos. Se usa `Cache-Control: no-store, private`. No hay CORS público, documentación Swagger ni logs de acceso en el comando de arranque.
 
 ### GET `/health`
 
@@ -120,4 +120,4 @@ pip install -r requirements-test.txt
 python -B -m unittest discover -s tests -v
 ```
 
-26 pruebas cubren autorización, validación WAV real, límites de carga/chunks, independencia de traducción/ASR, revisión humana, variante no intercambiable, in-memory multipart, carga real/errores y exclusión mutua. **No prueban calidad del modelo**, latencia, memoria de GPU ni compilación del contenedor. En el sandbox Windows de Codex, `asyncio` puede bloquear al abrir su socket interno; las pruebas HTTP se ejecutaron con permiso fuera de ese sandbox, sin llamadas a modelos.
+42 pruebas cubren autorización, validación WAV real, límites de carga/chunks, independencia de traducción/ASR, revisión humana, variante no intercambiable, in-memory multipart, carga real/errores, exclusión mutua, liveness sin datos, secretos por archivo, readiness, contratos Dokploy y payload de fuentes comprometidas por allowlist. **No prueban calidad del modelo**, latencia, memoria de GPU ni compilación del contenedor. En el sandbox Windows de Codex, `asyncio` puede bloquear al abrir su socket interno; las pruebas HTTP se ejecutaron con permiso fuera de ese sandbox, sin llamadas a modelos.

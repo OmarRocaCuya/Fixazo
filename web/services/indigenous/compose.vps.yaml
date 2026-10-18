@@ -1,0 +1,55 @@
+# An isolated service. Do not run until RAM/CPU/port/proxy inventory is reviewed.
+# Secrets and the deployment env file must live OUTSIDE this checkout.
+name: nawinchay-meta
+services:
+  meta:
+    build:
+      context: .
+      args:
+        TORCH_VARIANT: cpu
+    image: ${INDIGENOUS_IMAGE_TAG:-nawinchay-meta:local}
+    restart: unless-stopped
+    init: true
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    # Required: the operator must leave headroom for the VPS's existing apps.
+    mem_limit: ${INDIGENOUS_MEMORY_LIMIT:?Set the reviewed container RAM limit}
+    cpus: ${INDIGENOUS_CPU_LIMIT:?Set the reviewed container CPU limit}
+    ports:
+      - "127.0.0.1:${INDIGENOUS_BIND_PORT:-18080}:8080"
+    environment:
+      INDIGENOUS_API_KEY_FILE: /run/secrets/indigenous_api_key
+      INDIGENOUS_ASR_MODEL: ${INDIGENOUS_ASR_MODEL:?Choose CTC or LLM after VPS RAM review}
+      INDIGENOUS_DEVICE: cpu
+      INDIGENOUS_WARMUP: "true"
+      ENABLE_RESEARCH_TRANSLATION: ${ENABLE_RESEARCH_TRANSLATION:-false}
+      NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED: ${NLLB_NONCOMMERCIAL_RESEARCH_ACCEPTED:-false}
+      OMP_NUM_THREADS: ${INDIGENOUS_TORCH_THREADS:-2}
+      MKL_NUM_THREADS: ${INDIGENOUS_TORCH_THREADS:-2}
+      TOKENIZERS_PARALLELISM: "false"
+    secrets:
+      - indigenous_api_key
+    volumes:
+      - model_cache:/home/app/.cache
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,uid=1000,gid=1000
+    healthcheck:
+      test: [CMD, python, -B, healthcheck.py]
+      interval: 30s
+      timeout: 5s
+      start_period: 30m
+      retries: 3
+    stop_grace_period: 45s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
+secrets:
+  indigenous_api_key:
+    file: ${INDIGENOUS_KEY_FILE:?Set an absolute external secret file path}
+volumes:
+  model_cache:
