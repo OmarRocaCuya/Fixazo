@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 
-BUILD_FILES = ("Dockerfile", "requirements.txt", "requirements-models.txt", "constraints.txt", "app.py", "core.py", "healthcheck.py", "ctc_timing.py", "speech.py", "dialogue.py")
+BUILD_FILES = ("Dockerfile", "requirements.txt", "requirements-models.txt", "constraints.txt", "app.py", "core.py", "healthcheck.py", "ctc_timing.py", "speech.py", "dialogue.py", "emotion.py", "requirements-emotion.txt", "requirements-test.txt")
 SERVICE_PATH = "web/services/indigenous"
 CONTEXT = re.compile(r"(?m)^ {6}context:[ \t]*\.[ \t]*$")
 MAX_SOURCE_BYTES = 2_000_000

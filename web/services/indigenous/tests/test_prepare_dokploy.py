@@ -19,11 +19,22 @@ def sources():
 
 
 class DokployPreparationTests(unittest.TestCase):
+    def test_allowlist_covers_every_file_the_dockerfile_copies(self):
+        dockerfile = (HERE / "Dockerfile").read_text(encoding="utf-8")
+        copied = set()
+        for line in dockerfile.splitlines():
+            if line.startswith("COPY "):
+                parts = [p for p in line.split()[1:-1] if not p.startswith("--")]
+                for part in parts:
+                    copied.update(p.name for p in HERE.glob(part)) if "*" in part else copied.add(part)
+        self.assertTrue(copied)
+        self.assertEqual(copied - set(BUILD_FILES), set())
+
     def test_exact_allowlist_and_paths_and_sha256s(self):
         files = sources()
         result = build_payload("new-compose-id", COMPOSE, files)
         self.assertEqual(set(result), {"composeFile", "mounts", "sha256s"})
-        self.assertEqual(len(result["mounts"]), 10)
+        self.assertEqual(len(result["mounts"]), 13)
         self.assertEqual(set(result["sha256s"]), set(BUILD_FILES))
         for mount in result["mounts"]:
             filename = mount["filePath"].removeprefix("indigenous/")
