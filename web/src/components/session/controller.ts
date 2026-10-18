@@ -1,0 +1,855 @@
+// Session orchestrator for the browser. Owns the state machine, the agent voice,
+// the transcriber and the on-device audio analyzer, and exposes an immutable
+// snapshot to React (useSyncExternalStore).
+import type { Confidence, Consent, Decision, FrameFeature, Mission, Mood, Permissions, Profile, TurnRecord, TurnState } from "@/lib/types";
+import { initialContext, start, transition, type Effect, type MachineContext, type MachineEvent, type Utterance } from "@/lib/session/machine";
+import { liveReadingProgress, readingMetrics } from "@/lib/signals/reading";
+import { summarizeTurnAudio } from "@/lib/signals/summary";
+import { detectLongPauses, f0RangeSemitones, prosodyScore, speechOnset } from "@/lib/signals/prosody";
+import { classifyPace, computeBaseline, paceFeatures, shouldOfferBreak, type PaceFeatures } from "@/lib/signals/pace";
+import { noiseFloorDb } from "@/lib/signals/context";
+import { answerLength } from "@/lib/signals/text";
+import { buildReport, type JudgeOutcome } from "@/lib/report/build";
+import { getStore, type PausedSession } from "@/lib/storage";
+import { notifyStore } from "@/lib/useStore";
+import { AgentVoice } from "@/lib/browser/tts";
+import { AudioAnalyzer } from "@/lib/browser/audio";
+import { createTranscriber, type Transcriber } from "@/lib/browser/transcriber";
+import { getVoiceSupport, voiceErrorMessage, type VoiceSupport } from "@/lib/browser/voice-support";
+import type { JudgeResponse } from "@/lib/judge/rubric";
+
+export const READ_LIMIT_S = 60;
+const NO_RESPONSE_MS = 8000;
+const END_OF_TURN_MS = 2500;
+const MOOD_TIMEOUT_MS = 15000;
+const BARGE_IN_RMS = 0.06;
+const BARGE_IN_FRAMES = 8;
+
+export type Phase = "loading" | "no-mission" | "intro" | "running" | "saving" | "finished" | "error";
+
+export interface KidLine {
+  who: "agente" | "nino";
+  show: string;
+  showEs?: string;
+}
+
+export interface LiveSignals {
+  pcpm: number | null;
+  accuracy: number | null;
+  selfCorrections: number;
+  longPauses: number | null;
+  prosody: number | null;
+  differentIdx: number[];
+  noise: "ok" | "alto" | null;
+}
+
+export interface Snapshot {
+  phase: Phase;
+  error: string | null;
+  mission: Mission | null;
+  profile: Profile | null;
+  permissions: Permissions;
+  ctx: MachineContext | null;
+  utterance: Utterance | null;
+  agentSpeaking: boolean;
+  listening: boolean;
+  caption: string;
+  simulation: boolean;
+  simulationForced: string | null;
+  muted: boolean;
+  micError: string | null;
+  readElapsed: number;
+  readProgress: number;
+  readProvisional: boolean;
+  live: LiveSignals;
+  lines: KidLine[];
+  paceOffer: boolean;
+  reportId: string | null;
+  resumable: boolean;
+  judgeMode: "ia" | "reglas" | null;
+  speechSupported: boolean;
+  usingWebSpeech: boolean;
+  voiceSupport: VoiceSupport | null;
+  micTesting: boolean;
+  micTestMessage: string | null;
+  micBusy: boolean;
+}
+
+const EMPTY_LIVE: LiveSignals = { pcpm: null, accuracy: null, selfCorrections: 0, longPauses: null, prosody: null, differentIdx: [], noise: null };
+const DEFAULT_PERMS: Permissions = { voice: true, process: true, mood: true };
+
+const ANSWER_STATES = new Set(["Q_OBTIENE", "Q_INFIERE", "STANCE", "REVISE"]);
+
+function initialSnapshot(): Snapshot {
+  return {
+    phase: "loading",
+    error: null,
+    mission: null,
+    profile: null,
+    permissions: DEFAULT_PERMS,
+    ctx: null,
+    utterance: null,
+    agentSpeaking: false,
+    listening: false,
+    caption: "",
+    simulation: false,
+    simulationForced: null,
+    muted: false,
+    micError: null,
+    readElapsed: 0,
+    readProgress: 0,
+    readProvisional: false,
+    live: EMPTY_LIVE,
+    lines: [],
+    paceOffer: false,
+    reportId: null,
+    resumable: false,
+    judgeMode: null,
+    speechSupported: false,
+    usingWebSpeech: false,
+    voiceSupport: null,
+    micTesting: false,
+    micTestMessage: null,
+    micBusy: false,
+  };
+}
+
+export class SessionController {
+  private snap: Snapshot = initialSnapshot();
+  private listeners = new Set<() => void>();
+  private ctx: MachineContext | null = null;
+  private mission: Mission | null = null;
+  private profile: Profile | null = null;
+  private permissions: Permissions = DEFAULT_PERMS;
+  private voice = new AgentVoice(() => this.clock());
+  private analyzer = new AudioAnalyzer();
+  private transcriber: Transcriber | null = null;
+  private epoch = 0;
+  private disposed = false;
+
+  // Turn bookkeeping (derived numbers only; frames are dropped after summary).
+  private turns: TurnRecord[] = [];
+  private turnFrames: FrameFeature[] = [];
+  private turnStart = 0;
+  private turnText = "";
+  private transcriptPrefix = "";
+  private lastTextAt = 0;
+  private onsetAt: number | null = null;
+  private lastVoicedAt = 0;
+  private turnBargeIn = false;
+  private bargeIns = 0;
+  private loudRun = 0;
+  private baseline: PaceFeatures | null = null;
+  private breakOffered = false;
+  private answerLengths: number[] = [];
+  private startedAt = 0;
+  private timers: ReturnType<typeof setTimeout>[] = [];
+  private ticker: ReturnType<typeof setInterval> | null = null;
+  private bargeTicker: ReturnType<typeof setInterval> | null = null;
+  private unsubscribeFrames: (() => void) | null = null;
+  private recentNoise: FrameFeature[] = [];
+  private micRequest = 0;
+  private micProbe: AudioAnalyzer | null = null;
+  private probeRequest = 0;
+  private probeTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // ----------------------------------------------------------------- store
+  subscribe = (cb: () => void) => {
+    this.listeners.add(cb);
+    return () => this.listeners.delete(cb);
+  };
+  getSnapshot = () => this.snap;
+  getServerSnapshot = () => SERVER_SNAPSHOT;
+
+  private patch(p: Partial<Snapshot>) {
+    if (this.disposed) return;
+    this.snap = { ...this.snap, ...p };
+    for (const l of this.listeners) l();
+  }
+
+  private clock() {
+    return this.analyzer.running ? this.analyzer.now() : typeof performance !== "undefined" ? performance.now() : Date.now();
+  }
+
+  // ------------------------------------------------------------- lifecycle
+  init() {
+    this.disposed = false;
+    this.snap = initialSnapshot();
+    const store = getStore();
+    const consent: Consent | null = store.loadConsent();
+    this.permissions = consent?.permissions ?? DEFAULT_PERMS;
+    this.profile = store.loadProfile() ?? { alias: "tu hijo", grade: 4, homeLang: "es", readingLang: "es" };
+    this.mission = store.currentMission();
+    if (!this.mission) {
+      this.patch({ phase: "no-mission", profile: this.profile, permissions: this.permissions });
+      return;
+    }
+    const paused = store.loadPaused();
+    const resumable = !!paused && paused.missionId === this.mission.id && Date.now() - Date.parse(paused.pausedAt) < 24 * 3600 * 1000;
+    const support = getVoiceSupport(this.mission.lang);
+    const forced = this.forcedSimulationReason(support);
+    this.patch({
+      phase: "intro",
+      mission: this.mission,
+      profile: this.profile,
+      permissions: this.permissions,
+      simulation: forced !== null,
+      simulationForced: forced,
+      resumable,
+      speechSupported: support.canTranscribe,
+      voiceSupport: support,
+    });
+    fetch("/api/judge")
+      .then((r) => r.json())
+      .then((j: { mode?: "ia" | "reglas" }) => this.patch({ judgeMode: j.mode === "ia" ? "ia" : "reglas" }))
+      .catch(() => this.patch({ judgeMode: "reglas" }));
+  }
+
+  dispose() {
+    this.disposed = true;
+    this.epoch++;
+    this.micRequest++;
+    this.stopMicProbe();
+    this.clearTimers();
+    this.stopListening();
+    this.voice.cancel();
+    this.unsubscribeFrames?.();
+    this.unsubscribeFrames = null;
+    this.analyzer.stop();
+    this.listeners.clear();
+  }
+
+  private forcedSimulationReason(support = getVoiceSupport(this.mission?.lang ?? "es")): string | null {
+    if (!this.permissions.voice) return "La familia no dio permiso de voz: la sesión funciona escribiendo lo que dice el niño.";
+    return support.canTranscribe ? null : support.message;
+  }
+
+  // ---------------------------------------------------------------- begin
+  async begin(resume = false) {
+    if (!this.mission || !this.profile || this.snap.phase !== "intro") return;
+    this.stopMicProbe();
+    const epoch = ++this.epoch;
+    const store = getStore();
+    this.turns = [];
+    this.bargeIns = 0;
+    this.baseline = null;
+    this.breakOffered = false;
+    this.answerLengths = [];
+    this.startedAt = Date.now();
+    this.patch({ phase: "running", lines: [], reportId: null, error: null });
+
+    if (!this.snap.simulation) await this.startMic(epoch);
+    if (this.disposed || epoch !== this.epoch) return;
+
+    const paused = resume ? store.loadPaused() : null;
+    store.savePaused(null);
+    if (paused && paused.ctx) {
+      this.ctx = paused.ctx as MachineContext;
+      this.turns = (paused.turns ?? []) as TurnRecord[];
+      this.startedAt = paused.startedAt || this.startedAt;
+      this.patch({ ctx: this.ctx });
+      this.dispatch({ type: "RESUME" });
+      return;
+    }
+    const r = start(initialContext({ alias: this.profile.alias, moodEnabled: this.permissions.mood }), this.mission);
+    this.ctx = r.ctx;
+    this.patch({ ctx: this.ctx });
+    void this.handleEffects(r.effects, ++this.epoch);
+  }
+
+  private async startMic(epoch = this.epoch): Promise<boolean> {
+    const request = ++this.micRequest;
+    const support = getVoiceSupport(this.mission?.lang ?? "es");
+    const forced = this.forcedSimulationReason(support);
+    this.patch({ voiceSupport: support, speechSupported: support.canTranscribe, simulationForced: forced });
+    if (forced) {
+      this.useManualInput(forced);
+      return false;
+    }
+    this.patch({ micBusy: true });
+    try {
+      await this.analyzer.start();
+      if (this.disposed || request !== this.micRequest || epoch !== this.epoch) {
+        this.analyzer.stop();
+        return false;
+      }
+      this.unsubscribeFrames?.();
+      this.unsubscribeFrames = this.analyzer.subscribe((f) => this.onFrame(f));
+      this.transcriber = createTranscriber(this.mission?.lang ?? "es");
+      if (!this.transcriber) {
+        this.useManualInput(voiceErrorMessage("unsupported"));
+        return false;
+      }
+      this.patch({ micError: null, usingWebSpeech: this.transcriber?.kind === "web-speech" });
+      return true;
+    } catch (error) {
+      this.analyzer.stop();
+      if (this.disposed || request !== this.micRequest || epoch !== this.epoch) return false;
+      this.transcriber = null;
+      const name = error instanceof Error ? error.name : "";
+      this.useManualInput(voiceErrorMessage(name === "NotAllowedError" ? "not-allowed" : name === "SecurityError" ? "insecure-context" : "audio-capture"));
+      return false;
+    } finally {
+      if (request === this.micRequest) this.patch({ micBusy: false });
+    }
+  }
+
+  async retryMic() {
+    if (this.snap.simulationForced || this.snap.micBusy || this.ctx?.state === "PAUSED") return;
+    const epoch = this.epoch;
+    const caption = this.snap.caption;
+    if (await this.startMic(epoch)) {
+      if (epoch !== this.epoch || this.snap.phase !== "running") return;
+      this.patch({ simulation: false });
+      this.restartCurrentTurn(caption);
+    }
+  }
+
+  /** Physical microphone check only: no recognizer, recording, or saved frames. */
+  async testMicrophone() {
+    if (this.snap.phase !== "intro" || this.snap.micTesting || !this.permissions.voice || !this.snap.voiceSupport?.canRecord) return;
+    const request = ++this.probeRequest;
+    const probe = new AudioAnalyzer();
+    this.micProbe = probe;
+    this.patch({ micTesting: true, micTestMessage: "Permite el micrófono y di unas palabras. Solo medimos el nivel de sonido durante 2,5 segundos." });
+    let peak = 0;
+    try {
+      await probe.start();
+      if (this.disposed || request !== this.probeRequest || this.snap.phase !== "intro") {
+        probe.stop();
+        return;
+      }
+      probe.subscribe((frame) => { peak = Math.max(peak, frame.rms); });
+      this.probeTimer = setTimeout(() => {
+        if (request !== this.probeRequest) return;
+        this.stopMicProbe();
+        this.patch({ micTestMessage: peak > 0.005
+          ? "El micrófono recibe sonido. Esto no garantiza la transcripción: depende de un servicio distinto del navegador."
+          : "El permiso funciona, pero no detectamos sonido suficiente. Revisa el micrófono elegido y su volumen. La transcripción se comprueba por separado." });
+      }, 2500);
+    } catch (error) {
+      probe.stop();
+      if (request !== this.probeRequest || this.disposed) return;
+      this.stopMicProbe();
+      this.patch({ micTestMessage: voiceErrorMessage(error instanceof Error && error.name === "NotAllowedError" ? "not-allowed" : "audio-capture") });
+    }
+  }
+
+  private stopMicProbe() {
+    this.probeRequest++;
+    if (this.probeTimer) clearTimeout(this.probeTimer);
+    this.probeTimer = null;
+    this.micProbe?.stop();
+    this.micProbe = null;
+    this.patch({ micTesting: false });
+  }
+
+  cancelMicrophoneTest() {
+    this.stopMicProbe();
+    this.patch({ micTestMessage: "Prueba cancelada. No se guardó audio." });
+  }
+
+  /** A technical failure never becomes an educational answer or silence. */
+  private useManualInput(message: string | null) {
+    this.clearTimers();
+    this.stopListening();
+    this.voice.cancel();
+    this.unsubscribeFrames?.();
+    this.unsubscribeFrames = null;
+    this.analyzer.stop();
+    this.turnFrames = [];
+    this.recentNoise = [];
+    this.patch({
+      micError: message, simulation: true, usingWebSpeech: false,
+      agentSpeaking: false, caption: this.turnText || this.snap.caption,
+      listening: this.snap.phase === "running" && !!this.ctx && (this.ctx.state === "READ" || (ANSWER_STATES.has(this.ctx.state) && !this.ctx.awaitingConfidence)),
+      live: { ...this.snap.live, longPauses: null, prosody: null, noise: null },
+    });
+  }
+
+  // -------------------------------------------------------------- machine
+  private dispatch(ev: MachineEvent) {
+    if (!this.ctx || !this.mission) return;
+    const r = transition(this.ctx, ev, this.mission);
+    if (r.ctx === this.ctx && r.effects.length === 0) return;
+    const epoch = ++this.epoch;
+    this.clearTimers();
+    this.stopListening();
+    this.ctx = r.ctx;
+    this.patch({ ctx: r.ctx, caption: "" });
+    void this.handleEffects(r.effects, epoch);
+  }
+
+  private async handleEffects(effects: Effect[], epoch: number) {
+    let say: Utterance | null = null;
+    for (const e of effects) {
+      if (e.type === "say") say = e.utterance;
+      if (e.type === "log" && process.env.NODE_ENV !== "production") console.debug("[ñawinchay]", e.name, e.payload ?? "");
+    }
+    if (say) {
+      this.patch({ utterance: say, lines: [...this.snap.lines, { who: "agente" as const, show: say.show, showEs: say.showEs }].slice(-8) });
+      const speaking = this.voice.speak(say.speak, () => this.patch({ agentSpeaking: true }));
+      if (!this.snap.simulation) {
+        this.patch({ agentSpeaking: !this.voice.muted });
+        this.watchBargeIn(epoch);
+        await speaking;
+        if (epoch !== this.epoch) return;
+        this.patch({ agentSpeaking: false });
+      } else {
+        void speaking.then(() => epoch === this.epoch && this.patch({ agentSpeaking: false }));
+      }
+    }
+    if (epoch !== this.epoch) return;
+    this.afterStateSettled(epoch);
+  }
+
+  private afterStateSettled(epoch: number, preservedText = "") {
+    const ctx = this.ctx;
+    if (!ctx || this.disposed || epoch !== this.epoch) return;
+    switch (ctx.state) {
+      case "CHECK_IN":
+      case "CHECK_OUT":
+        this.timers.push(setTimeout(() => epoch === this.epoch && this.dispatch({ type: "TIMEOUT" }), MOOD_TIMEOUT_MS));
+        break;
+      case "READ":
+        this.beginTurn("READ", epoch, preservedText);
+        break;
+      case "Q_OBTIENE":
+      case "Q_INFIERE":
+      case "REVISE":
+        this.beginTurn(ctx.state, epoch, preservedText);
+        break;
+      case "STANCE":
+        if (!ctx.awaitingConfidence) this.beginTurn("STANCE", epoch, preservedText);
+        break;
+      case "REPORT":
+        void this.generateReport(epoch);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private restartCurrentTurn(preservedText = "") {
+    const epoch = ++this.epoch;
+    this.clearTimers();
+    this.stopListening();
+    this.voice.cancel();
+    this.patch({ agentSpeaking: false });
+    this.afterStateSettled(epoch, preservedText);
+  }
+
+  // ---------------------------------------------------------------- turns
+  private beginTurn(state: TurnState, epoch: number, preservedText = "") {
+    this.turnFrames = [];
+    this.turnText = preservedText;
+    this.transcriptPrefix = preservedText;
+    this.onsetAt = null;
+    this.lastVoicedAt = 0;
+    this.lastTextAt = 0;
+    this.turnStart = this.clock();
+    if (state === "READ") this.patch({ readElapsed: 0, readProgress: 0, readProvisional: false, live: EMPTY_LIVE });
+    this.patch({ listening: true, caption: preservedText });
+    const voiceMode = !this.snap.simulation && this.transcriber;
+
+    if (voiceMode && this.transcriber) {
+      this.transcriber.start({
+        onText: (text, isFinal) => {
+          if (epoch !== this.epoch) return;
+          this.turnText = [preservedText, text].filter(Boolean).join(" ");
+          this.lastTextAt = this.clock();
+          this.patch({ caption: this.turnText });
+          if (state === "READ") this.updateReadingLive(this.turnText, isFinal);
+        },
+        onError: (code) => {
+          if (this.disposed || epoch !== this.epoch) return;
+          this.epoch++; // invalidate callbacks; do not restart or advance the question
+          this.useManualInput(voiceErrorMessage(code));
+        },
+      });
+    }
+    // start() may report an unsupported/service error synchronously.
+    if (epoch !== this.epoch || this.disposed) return;
+
+    this.ticker = setInterval(() => {
+      if (epoch !== this.epoch) return;
+      const now = this.clock();
+      if (this.analyzer.running && this.recentNoise.length >= 10) {
+        const nf = noiseFloorDb(this.recentNoise);
+        const noise = nf !== null && nf > -35 ? "alto" : "ok";
+        if (noise !== this.snap.live.noise) this.patch({ live: { ...this.snap.live, noise } });
+      }
+      if (state === "READ") {
+        const elapsed = (now - this.turnStart) / 1000;
+        this.patch({ readElapsed: Math.min(READ_LIMIT_S, elapsed) });
+        if (this.analyzer.running && !this.snap.simulation) {
+          this.patch({ live: { ...this.snap.live, longPauses: detectLongPauses(this.turnFrames).length } });
+        }
+        // In simulation the adult controls the end of the reading.
+        if (!this.snap.simulation && elapsed >= READ_LIMIT_S) void this.endVoiceTurn("read", epoch);
+        return;
+      }
+      if (this.snap.simulation || !voiceMode) return;
+      const spoke = this.onsetAt !== null || this.turnText.length > 0;
+      if (!spoke && now - this.turnStart > NO_RESPONSE_MS) void this.endVoiceTurn("silence", epoch);
+      else if (spoke) {
+        const lastActivity = Math.max(this.lastVoicedAt, this.lastTextAt, this.onsetAt ?? 0);
+        if (now - lastActivity > END_OF_TURN_MS) void this.endVoiceTurn("answer", epoch);
+      }
+    }, 250);
+  }
+
+  private onFrame(f: FrameFeature) {
+    // Noise check while nobody speaks.
+    if (!f.voiced) {
+      this.recentNoise.push(f);
+      if (this.recentNoise.length > 40) this.recentNoise.shift();
+    }
+    if (this.voice.speaking) {
+      this.loudRun = f.voiced && f.rms > BARGE_IN_RMS ? this.loudRun + 1 : 0;
+      return;
+    }
+    if (!this.snap.listening) return;
+    this.turnFrames.push(f);
+    if (this.turnFrames.length > 4000) this.turnFrames.shift();
+    if (f.voiced) {
+      this.lastVoicedAt = f.t;
+      if (this.onsetAt === null && speechOnset(this.turnFrames.slice(-3)) !== null) this.onsetAt = f.t;
+    }
+  }
+
+  private watchBargeIn(epoch: number) {
+    if (this.mission?.lang !== "es") return; // Quechua runs strictly by turns (PRD RF-56).
+    this.loudRun = 0;
+    this.bargeTicker = setInterval(() => {
+      if (epoch !== this.epoch || !this.voice.speaking) {
+        if (this.bargeTicker) clearInterval(this.bargeTicker);
+        this.bargeTicker = null;
+        return;
+      }
+      if (this.loudRun >= BARGE_IN_FRAMES && ANSWER_STATES.has(this.ctx?.state ?? "")) {
+        if (this.bargeTicker) clearInterval(this.bargeTicker);
+        this.bargeTicker = null;
+        this.turnBargeIn = true;
+        this.bargeIns++;
+        this.voice.cancel();
+      }
+    }, 100);
+  }
+
+  private updateReadingLive(text: string, isFinal: boolean) {
+    if (!this.mission) return;
+    const secs = Math.max(1, (this.clock() - this.turnStart) / 1000);
+    const m = readingMetrics(this.mission.text, text, secs);
+    const progress = liveReadingProgress(this.mission.text, text);
+    this.patch({
+      readProgress: progress.reachedIndex,
+      readProvisional: !isFinal,
+      // Interim hypotheses can be replaced. Do not present their differences or
+      // metrics as committed evidence, and never end the turn from an interim.
+      ...(isFinal ? { live: { ...this.snap.live, pcpm: m.pcpm, accuracy: m.accuracy, selfCorrections: m.selfCorrections, differentIdx: m.differentIndices } } : {}),
+    });
+    if (!this.snap.simulation && isFinal && progress.complete) {
+      void this.endVoiceTurn("read", this.epoch);
+    }
+  }
+
+  private async endVoiceTurn(kind: "answer" | "silence" | "read", epoch: number) {
+    if (epoch !== this.epoch || !this.ctx) return;
+    this.epoch++; // freeze this turn
+    const frozen = this.epoch;
+    this.clearTimers();
+    this.patch({ listening: false });
+    let text: string;
+    try {
+      // The handler may have included a preserved prefix from before a retry.
+      const result = await this.transcriber?.stop();
+      text = result ? [this.transcriptPrefix, result].filter(Boolean).join(" ").trim() : this.turnText.trim();
+    } catch {
+      if (frozen === this.epoch) this.useManualInput(voiceErrorMessage("network"));
+      return;
+    }
+    if (frozen !== this.epoch) return;
+    if (!text) {
+      this.useManualInput(voiceErrorMessage("no-speech"));
+      return;
+    }
+    const frames = this.turnFrames;
+    this.turnFrames = [];
+    const audio = this.analyzer.running
+      ? summarizeTurnAudio(frames, { questionEndMs: this.turnStart, childBaselineF0: this.baseline?.meanF0 ?? null })
+      : null;
+
+    if (kind === "read") {
+      const readingSeconds = Math.min(READ_LIMIT_S, Math.max(1, (this.clock() - this.turnStart) / 1000));
+      this.baseline = computeBaseline(frames);
+      const unobservable = liveReadingProgress(this.mission!.text, text).matchedWords === 0;
+      this.turns.push({ state: "READ", transcript: text, simulated: false, audio, readingSeconds, unobservable, at: Date.now() });
+      this.finishReadingLive(text, readingSeconds, frames);
+      this.forceDispatch({ type: "READ_DONE" });
+      return;
+    }
+    const unobservable = audio ? audio.snrDb !== null && audio.snrDb < 6 && answerLength(text) < 2 : false;
+    this.turns.push({ state: this.ctx.state as TurnState, transcript: text, simulated: false, audio, bargeIn: this.turnBargeIn, unobservable, at: Date.now() });
+    this.turnBargeIn = false;
+    this.checkPace(frames, text);
+    this.patch({ lines: [...this.snap.lines, { who: "nino" as const, show: text }].slice(-8) });
+    this.forceDispatch({ type: "ANSWER", text });
+  }
+
+  private finishReadingLive(text: string, seconds: number, frames: FrameFeature[]) {
+    if (!this.mission) return;
+    const m = readingMetrics(this.mission.text, text, seconds);
+    const range = frames.length ? f0RangeSemitones(frames) : null;
+    const pauses = frames.length ? detectLongPauses(frames).length : null;
+    this.patch({
+      readProgress: m.reachedIndex,
+      readProvisional: false,
+      live: {
+        ...this.snap.live,
+        pcpm: m.pcpm,
+        accuracy: m.accuracy,
+        selfCorrections: m.selfCorrections,
+        differentIdx: m.differentIndices,
+        longPauses: pauses,
+        prosody: pauses !== null ? prosodyScore({ pcpm: m.pcpm, longPausesPerMin: pauses / (seconds / 60), f0RangeSemitones: range }) : null,
+      },
+    });
+  }
+
+  /** Live-only pace check. The result is NEVER stored: it can only show a break offer. */
+  private checkPace(frames: FrameFeature[], text: string) {
+    this.answerLengths.push(answerLength(text));
+    if (!this.baseline || this.breakOffered) return;
+    const onset = speechOnset(frames);
+    const pace = classifyPace(this.baseline, paceFeatures(onset === null ? frames : frames.filter((f) => f.t >= onset)), this.answerLengths);
+    if (shouldOfferBreak(pace)) {
+      this.breakOffered = true;
+      this.patch({ paceOffer: true });
+    }
+  }
+
+  /** Dispatch even though endVoiceTurn bumped the epoch. */
+  private forceDispatch(ev: MachineEvent) {
+    this.dispatch(ev);
+  }
+
+  private stopListening() {
+    if (this.ticker) clearInterval(this.ticker);
+    this.ticker = null;
+    this.transcriber?.abort();
+    if (this.snap.listening) this.patch({ listening: false });
+  }
+
+  private clearTimers() {
+    for (const t of this.timers) clearTimeout(t);
+    this.timers = [];
+    if (this.ticker) clearInterval(this.ticker);
+    this.ticker = null;
+    if (this.bargeTicker) clearInterval(this.bargeTicker);
+    this.bargeTicker = null;
+  }
+
+  // -------------------------------------------------------------- actions
+  chooseMood(mood: Mood) {
+    this.dispatch({ type: "MOOD", mood });
+  }
+
+  /** "Terminé" during READ. */
+  finishReading() {
+    if (this.ctx?.state !== "READ") return;
+    if (this.snap.simulation) return;
+    void this.endVoiceTurn("read", this.epoch);
+  }
+
+  /** "Listo" during an answer turn (voice mode). */
+  doneSpeaking() {
+    if (!this.ctx || !ANSWER_STATES.has(this.ctx.state) || this.snap.simulation) return;
+    void this.endVoiceTurn("answer", this.epoch);
+  }
+
+  /** Simulation: the adult typed what the child said. Same pipeline as voice. */
+  submitSimulated(text: string, pauseSeconds: number | null, readSeconds: number | null) {
+    const ctx = this.ctx;
+    if (!ctx || !this.mission) return;
+    this.voice.cancel();
+    const t = text.trim();
+    if (!t) return; // An empty form is not evidence of a child's silence.
+    if (ctx.state === "READ") {
+      const seconds = Math.min(READ_LIMIT_S, Math.max(1, readSeconds ?? READ_LIMIT_S));
+      const unobservable = liveReadingProgress(this.mission.text, t).matchedWords === 0;
+      this.turns.push({ state: "READ", transcript: t, simulated: true, audio: null, readingSeconds: seconds, unobservable, at: Date.now() });
+      this.finishReadingLive(t, seconds, []);
+      this.dispatch({ type: "READ_DONE" });
+      return;
+    }
+    if (!ANSWER_STATES.has(ctx.state) || (ctx.state === "STANCE" && ctx.awaitingConfidence)) return;
+    this.turns.push({
+      state: ctx.state as TurnState,
+      transcript: t,
+      simulated: true,
+      audio: null,
+      simulatedLatencyMs: pauseSeconds !== null && pauseSeconds >= 0 ? Math.round(pauseSeconds * 1000) : null,
+      at: Date.now(),
+    });
+    this.answerLengths.push(answerLength(t));
+    this.patch({ lines: [...this.snap.lines, { who: "nino" as const, show: t }].slice(-8) });
+    this.dispatch({ type: "ANSWER", text: t });
+  }
+
+  /** Preserve the manual draft for a retry; compare it only on submission. */
+  previewSimulatedReading(text: string) {
+    if (this.ctx?.state !== "READ" || !this.snap.simulation) return;
+    this.turnText = text;
+    this.patch({ caption: text });
+  }
+
+  simulateSilence() {
+    if (!this.ctx || !ANSWER_STATES.has(this.ctx.state)) return;
+    this.voice.cancel();
+    this.dispatch({ type: "SILENCE" });
+  }
+
+  setConfidence(value: Confidence) {
+    this.dispatch({ type: "CONFIDENCE", value });
+  }
+
+  decide(value: Decision) {
+    this.dispatch({ type: "DECISION", value });
+  }
+
+  pause() {
+    this.voice.cancel();
+    this.patch({ paceOffer: false });
+    this.dispatch({ type: "PAUSE" });
+  }
+
+  resume() {
+    this.dispatch({ type: "RESUME" });
+  }
+
+  /** "Terminar después": keep progress for 24 h. */
+  finishLater() {
+    if (!this.ctx || !this.mission) return;
+    const p: PausedSession = {
+      missionId: this.mission.id,
+      pausedAt: new Date().toISOString(),
+      state: this.ctx.resumeState ?? this.ctx.state,
+      ctx: this.ctx,
+      turns: this.turns,
+      startedAt: this.startedAt,
+    };
+    getStore().savePaused(p);
+    notifyStore();
+  }
+
+  dismissPaceOffer() {
+    this.patch({ paceOffer: false });
+  }
+
+  toggleMute() {
+    this.voice.muted = !this.voice.muted;
+    if (this.voice.muted) this.voice.cancel();
+    this.patch({ muted: this.voice.muted });
+  }
+
+  async toggleSimulation() {
+    if (this.snap.simulationForced || this.snap.micBusy || this.ctx?.state === "PAUSED") return;
+    const next = !this.snap.simulation;
+    if (this.snap.phase === "intro") {
+      this.patch({ simulation: next });
+      return;
+    }
+    if (this.snap.phase !== "running") return;
+    if (next) {
+      this.epoch++;
+      this.useManualInput(null);
+      // The mode can be switched while the agent speaks, before a turn starts.
+      if (!this.snap.listening) this.afterStateSettled(this.epoch, this.snap.caption);
+    } else {
+      await this.retryMic();
+    }
+  }
+
+  // --------------------------------------------------------------- report
+  private async generateReport(epoch: number) {
+    if (!this.ctx || !this.mission || !this.profile) return;
+    this.patch({ phase: "saving" });
+    const ctx = this.ctx;
+    const mission = this.mission;
+    const judge: Partial<Record<"infiere" | "reflexiona", JudgeOutcome>> = {};
+    if (this.snap.judgeMode === "ia") {
+      const ask = async (kind: "infiere" | "reflexiona", answer: string) => {
+        const q = mission.questions[kind === "infiere" ? 1 : 2];
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 20000);
+        try {
+          const res = await fetch("/api/judge", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            signal: ctrl.signal,
+            body: JSON.stringify({
+              kind,
+              question: q.textEs ?? q.text,
+              answer,
+              readingText: mission.textEs ?? mission.text,
+              counterText: kind === "reflexiona" ? mission.counter.text : undefined,
+              decision: kind === "reflexiona" ? ctx.decision : null,
+              evidenceKeys: q.evidenceKeys,
+            }),
+          });
+          const j = (await res.json()) as JudgeResponse;
+          if (j.source === "ia") judge[kind] = { level: j.level, status: j.status, quote: j.quote, runs: j.runs };
+        } catch {
+          /* rules stay in place */
+        } finally {
+          clearTimeout(t);
+        }
+      };
+      await Promise.all([ask("infiere", ctx.answers.infiere ?? ""), ask("reflexiona", ctx.answers.revise ?? "")]);
+    }
+    if (epoch !== this.epoch) return;
+    const simulated = this.turns.length > 0 && this.turns.every((t) => t.simulated);
+    const id = `r-${Date.now().toString(36)}`;
+    try {
+      const report = buildReport(
+        {
+          mission,
+          profile: this.profile,
+          permissions: this.permissions,
+          ctx,
+          turns: this.turns,
+          startedAt: this.startedAt,
+          endedAt: Date.now(),
+          simulated,
+          bargeIns: this.bargeIns,
+          judge,
+        },
+        { id },
+      );
+      const store = getStore();
+      store.saveReport(report); // guardrails run here
+      store.saveChat([
+        ...store.loadChat(),
+        {
+          id: `c-${Date.now().toString(36)}`,
+          who: "asistente",
+          text: `El informe de la sesión de ${this.profile.alias} ya está listo: «${report.headline}».`,
+          chips: ["Ver el informe"],
+          at: new Date().toISOString(),
+          reportId: id,
+        },
+      ]);
+      notifyStore();
+      this.turns = [];
+      this.analyzer.stop();
+      this.unsubscribeFrames = null;
+      this.dispatch({ type: "REPORT_SAVED" });
+      this.patch({ phase: "finished", reportId: id });
+    } catch (e) {
+      this.patch({ phase: "error", error: e instanceof Error ? e.message : "No se pudo guardar el informe." });
+    }
+  }
+}
+
+const SERVER_SNAPSHOT = initialSnapshot();
