@@ -1,5 +1,5 @@
 // Portada del periódico: ediciones guardadas en data/ediciones, sin programador automático configurado.
-// La app de familia de Ñawinchay sigue disponible en /consentimiento y /chat.
+// La app de familia de Fixazo sigue disponible en /consentimiento y /chat.
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
@@ -59,7 +59,7 @@ async function Edicion() {
         <Link className="pd-insights" href="/insights">Mis insights</Link>
       </div>
       <header className="pd-masthead">
-        <h1>Ñawinchay</h1>
+        <h1>Fixazo</h1>
         <div className="pd-lema">Periódico para leer con criterio</div>
       </header>
       <div className="pd-barra">

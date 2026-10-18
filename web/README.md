@@ -1,4 +1,4 @@
-# Ñawinchay · MVP educativo
+# Fixazo · MVP educativo
 
 Web para practicar lectura y razonamiento con alias, misiones, evidencia provisional y revisión de la familia o docente. **No es una evaluación clínica ni un producto validado con escolares peruanos.**
 

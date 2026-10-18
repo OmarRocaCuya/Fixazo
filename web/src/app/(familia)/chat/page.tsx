@@ -24,7 +24,7 @@ function greeting(alias: string): ChatMessage {
   return {
     id: "greeting",
     who: "asistente",
-    text: `Hola. Soy Ñawinchay. Pega aquí la lectura de la tarea de ${alias} y armo una misión de 8 minutos para hacerla con voz. También puedes probar con una misión de ejemplo.`,
+    text: `Hola. Soy Fixazo. Pega aquí la lectura de la tarea de ${alias} y armo una misión de 8 minutos para hacerla con voz. También puedes probar con una misión de ejemplo.`,
     chips: [CHIP_SAMPLE_ES, CHIP_SAMPLE_QU, CHIP_PASTE],
     at: "",
   };
@@ -233,7 +233,7 @@ function Chat() {
     <div className="chat-layout">
       <section className="chat-col" aria-label="Conversación">
         <div className="spread">
-          <h1>Chat con Ñawinchay</h1>
+          <h1>Chat con Fixazo</h1>
           <button type="button" className="chip" onClick={() => setEntiendo((v) => !v)} aria-expanded={entiendo}>
             <Icon name="book" /> Entiendo
           </button>
@@ -256,7 +256,7 @@ function Chat() {
           {reminder && <p className="small muted">Recordatorio guardado: {new Date(reminder).toLocaleString("es-PE", { hour: "numeric", minute: "2-digit", day: "numeric", month: "short" })}</p>}
           {messages.map((m, i) => (
             <div key={m.id} className={`bubble ${m.who === "asistente" ? "asst" : "fam"}`}>
-              <span className="who">{m.who === "asistente" ? "Ñawinchay" : "Tú"}</span>
+              <span className="who">{m.who === "asistente" ? "Fixazo" : "Tú"}</span>
               <p style={{ whiteSpace: "pre-line" }}>{m.text}</p>
               {m.chips && i === lastAsstIdx && (
                 <div className="chips" style={{ marginTop: 6 }}>
@@ -271,7 +271,7 @@ function Chat() {
           ))}
           {busy && (
             <div className="bubble asst" role="status">
-              <span className="who">Ñawinchay</span>
+              <span className="who">Fixazo</span>
               <span className="row" style={{ gap: 10 }}>
                 {busy}
                 <span className="typing" aria-hidden="true">

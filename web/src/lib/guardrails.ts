@@ -1,4 +1,4 @@
-// Guardrails: what Ñawinchay must NEVER compute or store.
+// Guardrails: what Fixazo must NEVER compute or store.
 //  (a) labeled emotions — mood only by the child's self-report;
 //  (b) voice identity: voiceprints, speaker embeddings, speaker IDs — only an alias;
 //  (c) judgments about accent or way of speaking;

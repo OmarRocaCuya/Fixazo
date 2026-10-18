@@ -505,7 +505,7 @@ export class SessionController {
     let say: Utterance | null = null;
     for (const e of effects) {
       if (e.type === "say") say = e.utterance;
-      if (e.type === "log" && process.env.NODE_ENV !== "production") console.debug("[ñawinchay]", e.name, e.payload ?? "");
+      if (e.type === "log" && process.env.NODE_ENV !== "production") console.debug("[fixazo]", e.name, e.payload ?? "");
     }
     if (say) {
       this.patch({ utterance: say, lines: [...this.snap.lines, { who: "agente" as const, show: say.show, showEs: say.showEs }].slice(-8) });

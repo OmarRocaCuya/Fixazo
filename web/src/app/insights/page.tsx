@@ -47,7 +47,7 @@ export default function Insights() {
   return (
     <div className="pd-wrap pd-angosto">
       <div className="pd-top">
-        <Link className="pd-marca" href="/">Ñawinchay · Periódico</Link>
+        <Link className="pd-marca" href="/">Fixazo · Periódico</Link>
         <Link className="pd-insights" href="/">Volver al periódico</Link>
         <Link className="pd-insights" href="/chat">Lectura por voz</Link>
       </div>

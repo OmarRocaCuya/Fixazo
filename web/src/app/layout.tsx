@@ -24,7 +24,7 @@ const mono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Ñawinchay",
+  title: "Fixazo",
   description: "Escuchamos cómo lee y cómo piensa tu hijo, y te decimos qué hacer en casa.",
 };
 
