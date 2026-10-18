@@ -24,4 +24,15 @@
 - Los traces de portada y de la ruta del evaluador contienen los diez JSON de `data/ediciones` (nueve registros y el índice `usadas.json`).
 - Dos incompatibilidades de integración corregidas: `runtime` explícito no admitido con Cache Components y trazado excesivo por rutas de archivos dinámicas. Se conserva Node como runtime predeterminado y la comprobación de capacidades usa `connection()`.
 
-El build y los dobles de los tests no acreditan llamadas reales de OpenRouter ni una evaluación validada con estudiantes. La prueba del despliegue y del navegador se registra a continuación cuando se complete.
+El build y los dobles de los tests no acreditan llamadas reales de OpenRouter ni una evaluación validada con estudiantes.
+
+## Despliegue y verificación de producción — 18 de octubre de 2026
+
+- Los cuatro commits de integración se publicaron en `codex/nawinchay-voice-mvp`. El código desplegado corresponde a `55e70aa354533df5b4b03da6bb73dc23562ca727`; este registro posterior no cambia el código ejecutable.
+- Preview `dpl_7PhvFSuK1PMoN2HKof9zSKLFysMn`: estado READY, portada HTTP 200, seis enlaces de noticias, marca Ñawinchay y navegación de voz presentes.
+- Producción `dpl_F9vs5LRrtUuA9X6w7Dkdq42EavHN`: estado READY y asignada al proyecto exclusivo `nawinchay-voice-mvp`, cuya carpeta raíz sigue siendo `web`. URL pública: https://nawinchay-voice-mvp.vercel.app/.
+- La portada publicada se comprobó en el navegador y se observó la carga de una noticia. No se realizó una grabación real, una evaluación pagada ni una validación pedagógica con estudiantes como parte de esta prueba.
+- API publicada del periódico: capacidades `enabled: false`, motivo `periodico-judge-disabled`; POST sin proveedor devuelve `no_evaluable` y `cuenta: false`.
+- La API de capacidades de voz sigue informando ASR listo, marcas de palabras disponibles y diálogo local listo para `quy_Latn` y `ayr_Latn`. Es una comprobación de disponibilidad, no una medición de precisión ni de latencia de extremo a extremo.
+- También pasaron las **9 pruebas originales de Fixazo**. Los archivos de su aplicación raíz y su proyecto de Vercel no se modificaron por esta integración.
+- El avance rápido del checkout principal se detuvo de forma segura porque sobrescribiría cambios pendientes en `web/src/app/(familia)/privacidad/page.tsx`. Ese checkout permanece en `59fa693` con sus cambios intactos; la integración publicada se conserva en el worktree aislado. No se usó stash, reset ni push forzado y no se modificaron `main` ni `periodico`.
