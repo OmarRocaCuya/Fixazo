@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-18-0045-la-publicidad-politica-con-ia-crece-en-elecciones-",
+  "creada": "2026-10-18T05:45:07.209Z",
+  "estado": "rechazada",
+  "motivo": [
+    "mirada_a no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "Vietnam.vn",
+      "fecha": "17 de octubre de 2026",
+      "titular": "La publicidad política que utiliza inteligencia artificial está en auge en Estados Unidos.",
+      "url": "https://www.vietnam.vn/es/bung-no-quang-cao-chinh-tri-su-dung-ai-tai-my"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 16,
+    "usd": 0.00292,
+    "segundos": 34
+  },
+  "noticia": null
+}

@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro",
+  "creada": "2026-10-18T05:28:40.476Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "El Universo",
+      "fecha": "17 de octubre de 2026",
+      "titular": "A estudiantes de 20 colegios les preocupa la “falta de criterio” por la “alta influencia” de contenidos en redes sociales y la inteligencia artificial | Gran Guayaquil | Comunidad | El Universo",
+      "url": "https://www.eluniverso.com/comunidad/guayaquil/a-estudiantes-de-20-colegios-les-preocupa-la-falta-de-criterio-por-la-alta-influencia-de-contenidos-en-redes-sociales-y-la-inteligencia-artificial-nota"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 16,
+    "usd": 0.00151,
+    "segundos": 24
+  },
+  "noticia": {
+    "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro",
+    "seccion": "Educación",
+    "titular": "Estudiantes de Guayaquil temen perder criterio propio por redes e IA",
+    "bajada": "Compara lo que dicen los jóvenes con lo que comprobarías antes de creerlo.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "El Universo",
+        "texto": "les preocupa la “falta de criterio”"
+      },
+      {
+        "medio": "El Universo",
+        "texto": "expuso la JBG"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la noticia?",
+        "opciones": [
+          "Como un problema que preocupa a los jóvenes y a sus colegios",
+          "Como una celebración de un programa juvenil exitoso",
+          "Como una denuncia contra las redes sociales y la inteligencia artificial"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "El Universo",
+        "fecha": "17 de octubre de 2026",
+        "titular": "A estudiantes de 20 colegios les preocupa la “falta de criterio” por la “alta influencia” de contenidos en redes sociales y la inteligencia artificial | Gran Guayaquil | Comunidad | El Universo",
+        "texto": "A estudiantes de 20 colegios les preocupa la “falta de criterio” por la “alta influencia” de contenidos en redes sociales y la inteligencia artificial (…) En esta segunda edición, la problemática identificada por los jóvenes durante la jornada fue “la falta de criterio propio en jóvenes y adultos en tomas de decisiones”. (…) Esto lo atribuyeron a la “alta influencia” de los contenidos en redes sociales y la inteligencia artificial , que hace que tanto jóvenes como adultos actúen influenciados por sus conceptos y no por los propios.",
+        "url": "https://www.eluniverso.com/comunidad/guayaquil/a-estudiantes-de-20-colegios-les-preocupa-la-falta-de-criterio-por-la-alta-influencia-de-contenidos-en-redes-sociales-y-la-inteligencia-artificial-nota"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿qué problema identificaron los jóvenes en la jornada?",
+        "opciones": [
+          "La falta de criterio propio en jóvenes y adultos al tomar decisiones",
+          "La falta de deportes en los colegios de Guayaquil",
+          "El aumento de precios en la ciudad"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que los jóvenes identificaron “la falta de criterio propio en jóvenes y adultos en tomas de decisiones”.",
+        "otra": "Revisa la frase que empieza con “En esta segunda edición”. Ahí aparece el problema que señalaron.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién atribuye el problema a la influencia de redes sociales e inteligencia artificial?",
+        "opciones": [
+          "Los propios alumnos participantes, según lo que expresaron en la jornada",
+          "Un investigador de una universidad internacional",
+          "El dueño de una red social"
+        ],
+        "correcta": 0,
+        "bien": "El texto dice que lo atribuyeron los estudiantes en las jornadas. Ellos tienen interés en que su voz se escuche y se tome en serio.",
+        "otra": "Fíjate en quién aparece como sujeto en la frase “Esto lo atribuyeron a…”.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué buscarías para comprobar que la influencia de las redes es la causa principal del problema?",
+        "opciones": [
+          "Estudios o encuestas con datos sobre cómo las redes y la IA afectan la toma de decisiones de los jóvenes",
+          "Solo las opiniones de los alumnos que participaron",
+          "Un video viral sobre el tema"
+        ],
+        "correcta": 0,
+        "bien": "Buscar estudios con datos te permite ver si la causa atribuida es real o solo una percepción.",
+        "otra": "Las opiniones sirven como punto de partida, pero para comprobar una causa necesitas datos que la respalden.",
+        "habilidad": "Pensar cómo comprobarlo"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "Tú, ¿qué opinas sobre el uso de redes sociales por parte de los jóvenes?",
+        "opciones": [
+          "Las redes influyen mucho y conviene enseñar a usarlas con criterio",
+          "Las redes influyen poco y el problema está en otros factores",
+          "No tengo una opinión clara todavía"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "El Universo",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Esta institución señaló que los alumnos expresaron sus preocupaciones sobre la falta de acompañamiento familiar en la vida escolar y emocional. (…) Este programa busca que los jóvenes no sean solo escuchados, sino que participen activamente en la construcción de soluciones, fortalezcan su capacidad de liderazgo y aprendan a trabajar con personas de realidades distintas, expuso la JBG, institución que mantiene también programas deportivos para 15.000 niños y jóvenes .",
+        "url": "https://www.eluniverso.com/comunidad/guayaquil/a-estudiantes-de-20-colegios-les-preocupa-la-falta-de-criterio-por-la-alta-influencia-de-contenidos-en-redes-sociales-y-la-inteligencia-artificial-nota"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0028-estudiantes-de-guayaquil-temen-perder-criterio-pro-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué crees que los estudiantes atribuyen la falta de criterio a las redes y a la IA? Justifica con algo concreto de la noticia.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Fíjate en quién hace la atribución en el texto.",
+          "Piensa qué significa actuar según ideas que no son propias."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_de_la_noticia",
+              "nombre": "Usa algo concreto de la noticia",
+              "descripcion": "Menciona una frase, un dato o quién lo dice.",
+              "ejemploCumple": "Los alumnos dijeron que hay “alta influencia” de redes e IA, así que lo atribuyen a eso.",
+              "ejemploNoCumple": "Creo que las redes son malas.",
+              "repregunta": "¿Qué parte de la noticia te hace pensar eso? Pista: busca quién atribuye el problema."
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "Explica por qué esa causa tiene sentido, con tus palabras.",
+              "ejemploCumple": "Si las personas actúan según lo que ven en redes, pueden dejar de pensar por sí mismas.",
+              "ejemploNoCumple": "Es lo que dijeron y ya.",
+              "repregunta": "¿Qué pasa en la vida real que haga que eso sea posible?"
+            }
+          ],
+          "respuestaModelo": "Los estudiantes atribuyen la falta de criterio a la “alta influencia” de redes e IA porque, según ellos, las personas actúan según ideas ajenas y no propias.",
+          "prohibido": [
+            "alta influencia",
+            "actúan influenciados por sus conceptos",
+            "falta de criterio propio",
+            "redes sociales e inteligencia artificial"
+          ]
+        }
+      }
+    ]
+  }
+}

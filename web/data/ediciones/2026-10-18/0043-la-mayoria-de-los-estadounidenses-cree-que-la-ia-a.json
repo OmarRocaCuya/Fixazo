@@ -1,0 +1,24 @@
+{
+  "id": "2026-10-18-0043-la-mayoria-de-los-estadounidenses-cree-que-la-ia-a",
+  "creada": "2026-10-18T05:43:17.432Z",
+  "estado": "rechazada",
+  "motivo": [
+    "fragmento_b.citas[0] no está literal en la nota",
+    "fragmento_b.citas[1] no está literal en la nota",
+    "mirada_b no es textual"
+  ],
+  "fuentes": [
+    {
+      "medio": "Los Angeles Times",
+      "fecha": "17 de octubre de 2026",
+      "titular": "La mayoría de los estadounidenses cree que la IA avanza demasiado rápido, según sondeo AP-NORC - Los Angeles Times",
+      "url": "https://www.latimes.com/espanol/california/articulo/2026-10-17/la-mayoria-de-los-estadounidenses-cree-que-la-ia-avanza-demasiado-rapido-segun-sondeo-ap-norc"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 16,
+    "usd": 0.00384,
+    "segundos": 34
+  },
+  "noticia": null
+}

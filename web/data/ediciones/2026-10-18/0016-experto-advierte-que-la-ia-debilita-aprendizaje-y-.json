@@ -1,0 +1,197 @@
+{
+  "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y-",
+  "creada": "2026-10-18T05:16:49.260Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "Infobae",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Wayne Holmes: “La dependencia de la IA está debilitando el aprendizaje de los alumnos y la autonomía de los docentes” - Infobae",
+      "url": "https://www.infobae.com/educacion/2026/10/18/wayne-holmes-la-dependencia-de-la-ia-esta-debilitando-el-aprendizaje-de-los-alumnos-y-la-autonomia-de-los-docentes"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 16,
+    "usd": 0.00201,
+    "segundos": 21
+  },
+  "noticia": {
+    "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y-",
+    "seccion": "Educación",
+    "titular": "Experto advierte que la IA debilita aprendizaje y autonomía docente",
+    "bajada": "Compará cómo describe Holmes el riesgo de la IA en las aulas con lo que ya sabés del tema.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "Infobae",
+        "texto": "estas herramientas se incorporaron de forma prematura"
+      },
+      {
+        "medio": "Infobae",
+        "texto": "Pero eso es lo que ellos quieren"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que lo contará este medio sobre la IA en las escuelas?",
+        "opciones": [
+          "Como una herramienta que ayuda mucho a los alumnos sin riesgos",
+          "Como algo que avanza demasiado rápido y sin pruebas suficientes",
+          "Como una moda que va a desaparecer en pocos meses"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "Infobae",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Wayne Holmes: “La dependencia de la IA está debilitando el aprendizaje de los alumnos y la autonomía de los docentes” - Infobae",
+        "texto": "La inteligencia artificial está en las aulas: los estudiantes la usan de manera generalizada, los docentes también. (…) Para Wayne Holmes , uno de los principales especialistas internacionales en IA y educación, estas herramientas se incorporaron de forma prematura, sin evidencia suficiente que respalde su uso educativo. (…) Lo que hacen es ofrecer distintos recorridos para llegar al examen . El camino puede ser diferente para cada alumno, pero todos terminan en el mismo examen. Eso no es personalización.",
+        "url": "https://www.infobae.com/educacion/2026/10/18/wayne-holmes-la-dependencia-de-la-ia-esta-debilitando-el-aprendizaje-de-los-alumnos-y-la-autonomia-de-los-docentes"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el texto, ¿qué dice Holmes sobre la personalización del aprendizaje con IA?",
+        "opciones": [
+          "Que la IA personaliza el aprendizaje de verdad para cada alumno",
+          "Que los sistemas ofrecen caminos distintos, pero todos llevan al mismo examen",
+          "Que la personalización no existe porque los alumnos no usan computadoras"
+        ],
+        "correcta": 1,
+        "bien": "En el texto, Holmes dice que los recorridos cambian, pero todos terminan en el mismo examen, por eso no es personalización real.",
+        "otra": "La respuesta de la personalización verdadera no aparece en el texto. Vuelve al párrafo sobre el colectivo y el Uber.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién habla en esta nota y qué rol tiene?",
+        "opciones": [
+          "Un investigador de educación y IA de University College London",
+          "Un empresario dueño de una empresa de tecnología educativa",
+          "Un ministro de educación de Argentina"
+        ],
+        "correcta": 0,
+        "bien": "Holmes es profesor de Estudios Críticos de IA y Educación en UCL y asesor de la Unesco. Su interés es advertir sobre el uso de la IA en escuelas.",
+        "otra": "Este rol no coincide con lo que dice la nota sobre quién habla. Revisa la presentación que hace el texto del entrevistado.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué afirmación del texto necesita una fuente para comprobarse?",
+        "opciones": [
+          "Que la IA está en las aulas y la usan estudiantes y docentes",
+          "Que el 80% de los chicos en Australia usa redes privadas virtuales para seguir en redes sociales",
+          "Que Holmes es profesor en University College London"
+        ],
+        "correcta": 1,
+        "bien": "El 80% es un dato numérico sin fuente en la nota. Buscarías estudios oficiales de Australia para confirmarlo.",
+        "otra": "Las otras afirmaciones tienen una presentación clara del origen. Busca cuál tiene una cifra sin respaldo.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué postura te parece más razonable frente a la IA en las escuelas?",
+        "opciones": [
+          "Usarla sin límites porque ayuda a aprender más rápido",
+          "Enseñar sobre ella con cuidado y primero preguntarse si conviene usarla",
+          "Prohibirla por completo en todos los niveles escolares"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "Infobae",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Sam Altman, Elon Musk o Mark Zuckerberg dirijan la educación. (…) Pero eso es lo que ellos quieren, porque ven la educación como un gran mercado en el que pueden ganar muchísimo dinero . (…) No soy partidario de las prohibiciones porque no creo que funcionen .",
+        "url": "https://www.infobae.com/educacion/2026/10/18/wayne-holmes-la-dependencia-de-la-ia-esta-debilitando-el-aprendizaje-de-los-alumnos-y-la-autonomia-de-los-docentes"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0016-experto-advierte-que-la-ia-debilita-aprendizaje-y--voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué Holmes dice que la IA puede aumentar la desigualdad educativa?",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Mira el párrafo donde Holmes compara una escuela privada con zonas rurales.",
+          "Piensa en qué les falta a algunos alumnos según la nota."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_cita_textual",
+              "nombre": "Usa una cita del texto",
+              "descripcion": "La respuesta apoya la idea con una frase de la nota.",
+              "ejemploCumple": "Holmes dice que los estudiantes con más recursos siguen teniendo docentes humanos.",
+              "ejemploNoCumple": "Creo que la IA es muy mala para todos.",
+              "repregunta": "¿Qué frase de la nota muestra eso sobre los docentes humanos?"
+            },
+            {
+              "id": "compara_grupos",
+              "nombre": "Compara los dos grupos de estudiantes",
+              "descripcion": "La respuesta explica la diferencia entre alumnos ricos y pobres.",
+              "ejemploCumple": "Los alumnos ricos tienen profesores y los pobres dependen más de la tecnología.",
+              "ejemploNoCumple": "La IA es complicada y hay muchas opiniones.",
+              "repregunta": "¿Qué tipo de acceso tiene cada grupo según el texto?"
+            }
+          ],
+          "respuestaModelo": "Holmes explica que los alumnos de sectores altos siguen teniendo docentes humanos, mientras que los más pobres dependen cada vez más de computadoras, lo que invierte la brecha digital.",
+          "prohibido": [
+            "estudiantes ricos con docentes humanos",
+            "alumnos pobres dependen de la tecnología",
+            "la brecha digital se invierte"
+          ]
+        }
+      }
+    ]
+  }
+}

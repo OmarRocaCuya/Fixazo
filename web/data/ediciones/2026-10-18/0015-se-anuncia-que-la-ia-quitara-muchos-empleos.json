@@ -1,0 +1,200 @@
+{
+  "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos",
+  "creada": "2026-10-18T05:15:51.644Z",
+  "estado": "retirada",
+  "motivo": [
+    "Titular no neutro: contradice la nota (prompt anterior). Retirada a mano."
+  ],
+  "fuentes": [
+    {
+      "medio": "diariosocialista.net",
+      "fecha": "18 de octubre de 2026",
+      "titular": "La automatización iba a quitarnos el trabajo, pero sale cara",
+      "url": "https://diariosocialista.net/2026/10/18/la-automatizacion-iba-a-quitarnos-el-trabajo-pero-sale-cara"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 14,
+    "usd": 0.00331,
+    "segundos": 43
+  },
+  "noticia": {
+    "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos",
+    "seccion": "Tecnología",
+    "titular": "Se anuncia que la IA quitará muchos empleos",
+    "bajada": "Compara lo que dice esta nota con lo que dicen los datos y las empresas sobre el impacto laboral de la IA.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "diariosocialista.net",
+        "texto": "la IA no está quitando el trabajo a gran escala"
+      },
+      {
+        "medio": "diariosocialista.net",
+        "texto": "predicciones alarmistas sobre la pérdida"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que lo contará este medio?",
+        "opciones": [
+          "Como una amenaza que ya está destruyendo empleos",
+          "Como una tecnología que casi no afecta al trabajo",
+          "Como un cambio lento que sobre todo afecta a la contratación de jóvenes"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "diariosocialista.net",
+        "fecha": "18 de octubre de 2026",
+        "titular": "La automatización iba a quitarnos el trabajo, pero sale cara",
+        "texto": "Durante los últimos tres años, la narrativa dominante en el ámbito empresarial y mediático aseguraba que la inteligencia artificial generativa provocaría una ola sin precedentes de desempleo tecnológico. (…) Lo que sí detectan Massenkoff y McCrory es una ralentización discreta pero relevante en la contratación de jóvenes de entre 22 y 25 años en ocupaciones altamente expuestas, con una caída de aproximadamente el 14% en su tasa de entrada.",
+        "url": "https://diariosocialista.net/2026/10/18/la-automatizacion-iba-a-quitarnos-el-trabajo-pero-sale-cara"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento, ¿qué ha pasado con la contratación de jóvenes de 22 a 25 años en ocupaciones muy expuestas a la IA?",
+        "opciones": [
+          "Ha subido un 14% desde 2022",
+          "Ha caído cerca de un 14% en su tasa de entrada",
+          "No ha cambiado en absoluto"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que hay una caída de aproximadamente el 14% en su tasa de entrada, es decir, en cuántos entran a esos empleos.",
+        "otra": "Mira otra vez la frase sobre la contratación de jóvenes y fíjate en qué cifra aparece y en qué dirección cambia.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién hace las afirmaciones centrales sobre el impacto de la IA en el empleo?",
+        "opciones": [
+          "Un sindicato de trabajadores de la industria",
+          "Investigadores de Anthropic, una empresa que desarrolla IA",
+          "Un gobierno que regula la tecnología"
+        ],
+        "correcta": 1,
+        "bien": "Los estudios citados los hacen investigadores de Anthropic, empresa que vende IA y tiene interés en mostrar sus herramientas.",
+        "otra": "Piensa en quién publica el estudio y si tiene algún interés en el resultado.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Qué dato de la nota deberías comprobar antes de creerlo?",
+        "opciones": [
+          "El 94% de tareas que la IA podría cubrir teóricamente",
+          "La fecha de lanzamiento de ChatGPT",
+          "El nombre de la revista donde se publicó el reportaje"
+        ],
+        "correcta": 0,
+        "bien": "El 94% es una cifra teórica; conviene buscar el estudio original y ver cómo se calculó la cobertura real.",
+        "otra": "Las cifras sin contexto necesitan una fuente clara. Busca cómo se midió esa cifra en el estudio original.",
+        "habilidad": "Separar un dato de una afirmación"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "Según lo que lees, ¿la IA va a quitar muchos empleos en los próximos años?",
+        "opciones": [
+          "Sí, en gran parte de los sectores",
+          "No, el impacto será pequeño",
+          "Depende del sector y de cómo las empresas la usen"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "diariosocialista.net",
+        "fecha": "18 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Resulta llamativo que el propio consejero delegado de Anthropic, Dario Amodei, llegó a formular predicciones alarmistas sobre la pérdida de hasta el 50% de los empleos administrativos de nivel de entrada, una postura que él mismo ha tenido que matizar ante las evidencias cuantitativas recopiladas por su propio equipo.",
+        "url": "https://diariosocialista.net/2026/10/18/la-automatizacion-iba-a-quitarnos-el-trabajo-pero-sale-cara"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0015-se-anuncia-que-la-ia-quitara-muchos-empleos-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué el texto dice que la amenaza de la IA es más pequeña de lo que se anuncia? Justifica con dos ejemplos de la nota.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca en el texto las cifras que comparan lo teórico con lo real.",
+          "Fíjate en lo que dice el consejero delegado de Anthropic y en si lo mantiene o lo corrige."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_datos_del_texto",
+              "nombre": "Usa datos del texto",
+              "descripcion": "La respuesta menciona al menos un dato concreto de la nota.",
+              "ejemploCumple": "Dice que solo el 33% del uso real llega al 94% teórico.",
+              "ejemploNoCumple": "Dice que la IA no es tan peligrosa sin dar ninguna cifra.",
+              "repregunta": "¿Qué número o dato de la nota respalda lo que dices?"
+            },
+            {
+              "id": "compara_voces",
+              "nombre": "Compara voces",
+              "descripcion": "La respuesta contrasta lo que dicen los estudios con lo que anuncian algunas personas o medios.",
+              "ejemploCumple": "Los estudios muestran poco impacto, pero el CEO de Anthropic hizo predicciones alarmistas.",
+              "ejemploNoCumple": "Solo repite una frase de la nota sin compararla con nada.",
+              "repregunta": "¿Qué dice una voz y qué dice la otra sobre el mismo tema?"
+            }
+          ],
+          "respuestaModelo": "El texto dice que la amenaza es menor porque los estudios muestran un uso real muy por debajo de lo teórico (33% frente a 94%) y porque el propio CEO de Anthropic tuvo que matizar sus predicciones alarmistas.",
+          "prohibido": [
+            "uso real muy por debajo de lo teórico",
+            "33% frente a 94%",
+            "el CEO tuvo que matizar sus predicciones",
+            "los estudios no muestran aumento sistemático del desempleo"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal",
+  "creada": "2026-10-18T05:42:43.671Z",
+  "estado": "publicada",
+  "motivo": null,
+  "fuentes": [
+    {
+      "medio": "La Nación",
+      "fecha": "17 de octubre de 2026",
+      "titular": "Exviceministra propone conectar educación, empleo y salud frente a los desafíos de la IA",
+      "url": "https://www.lanacion.com.py/pais/2026/10/17/exviceministra-propone-conectar-educacion-empleo-y-salud-frente-a-los-desafios-de-la-ia?outputType=amp"
+    }
+  ],
+  "costo": {
+    "creditos_tavily": 16,
+    "usd": 0.00524,
+    "segundos": 21
+  },
+  "noticia": {
+    "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal",
+    "seccion": "Educación",
+    "titular": "Exviceministra propone unir educación, empleo y salud frente a la IA",
+    "bajada": "Compara cómo presenta esta nota la idea de la inteligencia artificial y las brechas sociales.",
+    "minutos": 4,
+    "miradas": [
+      {
+        "medio": "La Nación",
+        "texto": "Un joven no vive dividido en ministerios"
+      },
+      {
+        "medio": "La Nación",
+        "texto": "los sectores vulnerables corren el riesgo"
+      }
+    ],
+    "pasos": [
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-prediccion",
+        "etiqueta": "Paso 1 de 8 · antes de leer",
+        "titulo": "¿Cómo crees que contará este medio la propuesta de la exviceministra?",
+        "opciones": [
+          "Como una crítica dura al gobierno",
+          "Como una propuesta con ideas concretas sobre educación y empleo",
+          "Como un anuncio de una nueva ley"
+        ],
+        "correcta": null,
+        "bien": "Veamos si aciertas…",
+        "otra": "Veamos si aciertas…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "a",
+        "medio": "La Nación",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Exviceministra propone conectar educación, empleo y salud frente a los desafíos de la IA",
+        "texto": "Un joven no vive dividido en ministerios . Es simultáneamente estudiante, trabajador potencial, miembro de una familia, ciudadano y persona con necesidades afectivas, económicas y de salud (…) Claramente tener acceso a tecnología no significa necesariamente saber utilizarla para pensar",
+        "url": "https://www.lanacion.com.py/pais/2026/10/17/exviceministra-propone-conectar-educacion-empleo-y-salud-frente-a-los-desafios-de-la-ia?outputType=amp"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-comprension",
+        "etiqueta": "Paso 3 de 8 · toca una opción",
+        "titulo": "Según el fragmento A, ¿qué sostiene la exviceministra sobre el acceso a la tecnología?",
+        "opciones": [
+          "Que basta con tener acceso a la tecnología para aprender",
+          "Que tener acceso a tecnología no significa saber usarla para pensar",
+          "Que la tecnología debe prohibirse en las escuelas"
+        ],
+        "correcta": 1,
+        "bien": "El texto dice que tener acceso a tecnología no significa necesariamente saber utilizarla para pensar.",
+        "otra": "Revisa la cita textual: la idea central está al final del fragmento.",
+        "habilidad": "Entender qué dice"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-procedencia",
+        "etiqueta": "Paso 4 de 8 · toca una opción",
+        "titulo": "¿Quién dice que la inteligencia artificial puede profundizar las brechas sociales?",
+        "opciones": [
+          "Una exviceministra de Educación Básica y miembro de una junta directiva",
+          "Un ingeniero de una empresa de inteligencia artificial",
+          "Un periodista independiente sin vínculos con instituciones"
+        ],
+        "correcta": 0,
+        "bien": "Es la Dra. María del Carmen Giménez, exviceministra y miembro de la Junta Directiva del IDPPS, y su interés es promover las propuestas de ese instituto.",
+        "otra": "Fíjate en el cargo que se menciona al presentar a la persona que habla.",
+        "habilidad": "Ver quién habla y qué gana"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-variable",
+        "etiqueta": "Paso 5 de 8 · toca una opción",
+        "titulo": "¿Cuál de estas frases es una opinión y no un hecho?",
+        "opciones": [
+          "La IA puede profundizar las brechas de desigualdad existentes.",
+          "La formación técnica debe ganar escala y prestigio.",
+          "El instituto tiene una junta directiva."
+        ],
+        "correcta": 1,
+        "bien": "Que la formación técnica deba ganar prestigio es una opinión que se puede discutir, no un dato comprobable.",
+        "otra": "Un hecho se puede comprobar; piensa si la frase podría demostrarse con datos.",
+        "habilidad": "Separar hechos de opiniones"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-postura",
+        "etiqueta": "Paso 6 de 8 · tu opinión",
+        "titulo": "¿Qué crees que debería priorizar el país frente a la inteligencia artificial?",
+        "opciones": [
+          "Enseñar a pensar críticamente antes que usar herramientas",
+          "Garantizar el acceso a la tecnología para todos",
+          "Prohibir el uso de inteligencia artificial en las escuelas"
+        ],
+        "correcta": null,
+        "bien": "Anotado.",
+        "otra": "Anotado.",
+        "habilidad": null
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-seguridad",
+        "etiqueta": "Paso 6 de 8 · qué tan seguro estás",
+        "titulo": "¿Qué tan seguro estás de tu opinión?",
+        "opciones": [
+          "Poco",
+          "Más o menos",
+          "Muy seguro"
+        ],
+        "correcta": null,
+        "bien": "Ahora mira esto…",
+        "otra": "Ahora mira esto…",
+        "habilidad": null
+      },
+      {
+        "tipo": "fragmento",
+        "lado": "b",
+        "medio": "La Nación",
+        "fecha": "17 de octubre de 2026",
+        "titular": "Otra voz en la misma nota",
+        "texto": "Quienes poseen una base sólida aprovechan la herramienta para investigar y producir, mientras que los sectores vulnerables corren el riesgo de no poder evaluar críticamente los contenidos. (…) primero pienso; después uso la herramienta; finalmente vuelvo a pensar sobre lo que la herramienta produjo",
+        "url": "https://www.lanacion.com.py/pais/2026/10/17/exviceministra-propone-conectar-educacion-empleo-y-salud-frente-a-los-desafios-de-la-ia?outputType=amp"
+      },
+      {
+        "tipo": "opciones",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-contraprueba",
+        "etiqueta": "Paso 7 de 8 · contraprueba",
+        "titulo": "Con esto nuevo, ¿mantienes o cambias tu idea?",
+        "opciones": [
+          "Mantengo mi idea",
+          "Cambio mi idea"
+        ],
+        "correcta": null,
+        "bien": "Las dos valen si hay una buena razón.",
+        "otra": "Las dos valen si hay una buena razón.",
+        "habilidad": null
+      },
+      {
+        "tipo": "voz",
+        "id": "2026-10-18-0042-exviceministra-propone-unir-educacion-empleo-y-sal-voz",
+        "etiqueta": "Paso 8 de 8 · responde con tu voz",
+        "titulo": "¿Por qué la exviceministra dice que la tecnología no basta por sí sola? Justifícalo con el texto.",
+        "habilidad": "Explicar con razones",
+        "pistas": [
+          "Busca en el segundo párrafo qué grupo corre riesgo.",
+          "Piensa en la diferencia entre tener una herramienta y saber usarla."
+        ],
+        "privado": {
+          "criterios": [
+            {
+              "id": "usa_dato_concreto",
+              "nombre": "Usa algo concreto de la nota",
+              "descripcion": "La respuesta menciona una idea, frase o dato específico del texto.",
+              "ejemploCumple": "Ella dice que tener acceso a tecnología no significa saber usarla para pensar.",
+              "ejemploNoCumple": "La tecnología es importante para la educación.",
+              "repregunta": "¿Qué frase de la nota apoya tu respuesta?"
+            },
+            {
+              "id": "da_una_razon",
+              "nombre": "Da una razón",
+              "descripcion": "La respuesta explica por qué lo que se dijo tiene sentido.",
+              "ejemploCumple": "Porque los sectores vulnerables pueden no evaluar críticamente los contenidos, así que necesitan primero pensamiento crítico.",
+              "ejemploNoCumple": "Ella lo dice y ya.",
+              "repregunta": "¿Qué consecuencia tendría no pensar críticamente al usar la herramienta?"
+            }
+          ],
+          "respuestaModelo": "Ella dice que tener acceso a tecnología no basta para saber usarla para pensar, porque los sectores vulnerables pueden no evaluar críticamente los contenidos de la IA.",
+          "prohibido": [
+            "tener acceso no basta",
+            "no significa saber usarla para pensar",
+            "sectores vulnerables",
+            "evaluar críticamente los contenidos"
+          ]
+        }
+      }
+    ]
+  }
+}
