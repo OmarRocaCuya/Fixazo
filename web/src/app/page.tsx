@@ -3,6 +3,7 @@ import { TranslatedText } from "@/components/i18n/LanguageProvider";
 // Portada del periódico: ediciones guardadas en data/ediciones, sin programador automático configurado.
 // La app de familia de Fixazo sigue disponible en /chat (/consentimiento redirige ahí).
 import Link from "next/link";
+import { PracticeMemory } from "@/components/periodico/PracticeMemory";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import EstadoNoticia from "@/components/periodico/EstadoNoticia";
@@ -73,6 +74,7 @@ async function Edicion() {
         <div className="pd-lema"><TranslatedText text="Periódico para leer con criterio" /></div>
       </header>
 
+      <PracticeMemory />
       <Reveladas reservadas={reservadas} />
       {!principal ? (
         <p className="pd-vacio"><TranslatedText text="Todavía no hay noticias publicadas." /></p>
