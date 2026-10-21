@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { PracticeMemory } from "./PracticeMemory";
+import { nextPracticeGoal } from "@/lib/periodico/practice-goals";
 import { buildPeriodicoReport } from "@/lib/periodico/informe";
 import type { ResultadoNoticia } from "@/lib/periodico/progreso";
 import { FamilyShare } from "@/components/report/FamilyShare";
@@ -37,6 +39,7 @@ export function InformeFinal({ resultado }: { resultado: ResultadoNoticia }) {
       </div>
     </div>
     <ResumenVozQuiz emociones={resultado.emociones} metricas={resultado.audioQuiz} />
+    <PracticeMemory goal={nextPracticeGoal(resultado)} />
     <FamilyShare summary={report.share} />
   </section>;
 }

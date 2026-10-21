@@ -4,6 +4,7 @@ import { TranslatedText, useLanguage, usePublicTranslations } from "@/components
 // Mis insights: lo que el joven hizo en el periódico, desde su propio navegador.
 // Reusa MetricCard y la idea de calibración del informe de Daniel (seguridad declarada frente a lo logrado).
 import Link from "next/link";
+import { PracticeMemory } from "@/components/periodico/PracticeMemory";
 import { useSyncExternalStore } from "react";
 import { RachaSemana } from "@/components/periodico/Racha";
 import { voiceHistoryLabel } from "@/components/periodico/voz-state";
@@ -66,6 +67,7 @@ export default function Insights() {
         <p className="muted"><TranslatedText text="No es una nota: muestra qué ya haces y qué practicar. Se guarda solo en este navegador." /></p>
       </header>
 
+      <PracticeMemory />
       {enCurso.length > 0 && (
         <p className="pd-calibracion"><TranslatedText text="En curso:" />{" "}{enCurso.map((r) => r.titular).join(" · ")}<TranslatedText text=". Tus habilidades se actualizan mientras respondes." /></p>
       )}
