@@ -33,3 +33,5 @@ npm run dev -- --hostname 127.0.0.1 --port 4810
 4. Detén el proveedor y repite el guardado. Debe aparecer un aviso de que no se guardó, conservando la lectura local.
 
 Pruebas: `npm test -- src/lib/server/practice-memory.test.ts`.
+
+Si un guardado consentido llega al proveedor pero se pierde la confirmación, se conserva la identidad firmada de ese intento. La interfaz permite reintentar o borrar; no se afirma que los datos no se guardaron.

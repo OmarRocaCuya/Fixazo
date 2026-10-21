@@ -46,7 +46,8 @@ export function PracticeMemory({ goal }: { goal?: PracticeGoal }) {
         setNotice("Objetivo guardado para tu próxima lectura en este navegador.");
       }
     } catch {
-      setNotice(clear ? "No pudimos eliminar los objetivos. Se conservan para que puedas volver a intentarlo." : "No pudimos guardar el objetivo. Tu lectura y tus resultados siguen disponibles aquí.");
+      setState({ kind: "unavailable" });
+      setNotice(clear ? "No pudimos confirmar el borrado de los objetivos. Puedes volver a intentarlo." : "No pudimos confirmar el guardado del objetivo. Puedes reintentar o borrar los objetivos; tu lectura y tus resultados siguen disponibles aquí.");
     } finally { setBusy(false); }
   }
 

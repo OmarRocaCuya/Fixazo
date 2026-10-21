@@ -62,7 +62,16 @@ async function mutate(request: Request, clear: boolean) {
     const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
     response.headers.set("Set-Cookie", `${memoryCookie}=${clear ? "" : cookie}; Max-Age=${age}; Path=/; HttpOnly; SameSite=Strict${secure}`);
     return response;
-  } catch { return reply({ state: "unavailable" }, 503); }
+  } catch {
+    const response = reply({ state: "unavailable" }, 503);
+    // A consented write can reach the provider even when its receipt is lost.
+    // Keep the same identity so retrying or forgetting can still reach that data.
+    if (!clear) {
+      const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+      response.headers.set("Set-Cookie", `${memoryCookie}=${cookie}; Max-Age=${cookieAge}; Path=/; HttpOnly; SameSite=Strict${secure}`);
+    }
+    return response;
+  }
   finally { reservation.release(); }
 }
 export const POST = (request: Request) => mutate(request, false);

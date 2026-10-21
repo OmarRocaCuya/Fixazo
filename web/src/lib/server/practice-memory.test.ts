@@ -74,7 +74,7 @@ describe("optional practice memory", () => {
       vi.stubGlobal("fetch", vi.fn(async () => response));
       const result = await POST(request("POST", undefined, { goal: "explain" }));
       expect(result.status).toBe(503);
-      expect(result.headers.get("set-cookie")).toBeNull();
+      expect(result.headers.get("set-cookie")).toContain("fixazo_practice=");
     }
     vi.stubGlobal("fetch", vi.fn(async () => { throw new DOMException("timeout", "TimeoutError"); }));
     expect((await POST(request("POST", undefined, { goal: "explain" }))).status).toBe(503);
@@ -106,4 +106,24 @@ describe("optional practice memory", () => {
     vi.stubEnv("ATOMICMEMORY_API_URL", "https://api.atomicstrata.ai");
     vi.stubEnv("PRACTICE_MEMORY_COOKIE_SECRET", "short"); expect(memoryConfig()).toBeNull();
   });
+});
+
+
+it("retains the consented subject when a first-write receipt is lost", async () => {
+  let subject: string | undefined;
+  vi.stubGlobal("fetch", vi.fn(async (_input: unknown, init?: RequestInit) => {
+    subject = JSON.parse(String(init?.body)).user_id;
+    throw new DOMException("timeout", "TimeoutError");
+  }));
+  const response = await POST(request("POST", undefined, { goal: "evidence" }));
+  expect(response.status).toBe(503);
+  const cookie = response.headers.get("set-cookie")?.split(";")[0];
+  expect(practiceSubject(cookie?.split("=")[1], config.secret)).toBe(subject);
+  vi.stubGlobal("fetch", vi.fn(async (_input: unknown, init?: RequestInit) => {
+    expect(JSON.parse(String(init?.body)).user_id).toBe(subject);
+    return Response.json({ success: true, deleted_memories: 1, deleted_episodes: 0, deleted_documents: 0 });
+  }));
+  const deleted = await DELETE(request("DELETE", cookie));
+  expect(deleted.status).toBe(200);
+  expect(deleted.headers.get("set-cookie")).toContain("Max-Age=0");
 });
